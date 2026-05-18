@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ candidate.full_name }} | Candidate Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            padding: 30px;
+            color: #0f0c29;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: white;
+        }
+        .profile-photo-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #0f0c29;
+            border: 4px solid white;
+        }
+        .header-info {
+            flex: 1;
+        }
+        .header-info h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        .header-info p {
+            opacity: 0.8;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .status-AVA { background: #10b981; color: white; }
+        .status-SEL { background: #f59e0b; color: white; }
+        .status-CAN { background: #ef4444; color: white; }
+        .status-VIS { background: #3b82f6; color: white; }
+        .content { padding: 30px; }
+        .info-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-section h3 {
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFD700;
+            display: inline-block;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .info-item {
+            display: flex;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #64748b;
+            width: 140px;
+        }
+        .info-value {
+            color: #1e293b;
+            flex: 1;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .btn-back:hover {
+            background: #e2e8f0;
+            transform: translateX(-5px);
+        }
+        .btn-edit {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0f0c29;
+        }
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        @media (max-width: 768px) {
+            .header { flex-direction: column; text-align: center; }
+            .info-item { flex-direction: column; }
+            .info-label { width: 100%; margin-bottom: 5px; }
+            .button-group { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Profile Photo -->
+            {% if candidate.profile_photo %}
+                <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="profile-photo">
+            {% else %}
+                <div class="profile-photo-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+            {% endif %}
+            <div class="header-info">
+                <h1><i class="fas fa-user-circle"></i> {{ candidate.full_name }}</h1>
+                <p>Passport Number: {{ candidate.passport_number }} | Registered: {{ candidate.registered_at|date:"F d, Y" }}</p>
+                <span class="status-badge status-{{ candidate.application_status }}">
+                    <i class="fas 
+                        {% if candidate.application_status == 'AVA' %}fa-check-circle
+                        {% elif candidate.application_status == 'SEL' %}fa-user-check
+                        {% elif candidate.application_status == 'CAN' %}fa-times-circle
+                        {% elif candidate.application_status == 'VIS' %}fa-passport
+                        {% else %}fa-info-circle{% endif %}
+                    "></i>
+                    {{ candidate.get_application_status_display }}
+                </span>
+            </div>
+        </div>
+        <div class="content">
+            <!-- Personal Information -->
+            <div class="info-section">
+                <h3><i class="fas fa-id-card"></i> Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item"><div class="info-label">Full Name:</div><div class="info-value">{{ candidate.full_name }}</div></div>
+                    <div class="info-item"><div class="info-label">National ID (NIN):</div><div class="info-value">{{ candidate.nin }}</div></div>
+                    <div class="info-item"><div class="info-label">Passport Number:</div><div class="info-value">{{ candidate.passport_number }}</div></div>
+                    <div class="info-item"><div class="info-label">Passport Issue Date:</div><div class="info-value">{{ candidate.passport_issue_date|date:"F d, Y"|default:"Not specified" }}</div></div>
+                    <div class="info-item"><div class="info-label">Passport Expiry Date:</div><div class="info-value">{{ candidate.passport_expiry_date|date:"F d, Y"|default:"Not specified" }}</div></div>
+                    <div class="info-item"><div class="info-label">Date of Birth:</div><div class="info-value">{{ candidate.date_of_birth|date:"F d, Y" }} (Age: {{ candidate.age }})</div></div>
+                    <div class="info-item"><div class="info-label">Place of Birth:</div><div class="info-value">{{ candidate.place_of_birth|default:"Not specified" }}</div></div>
+                    <div class="info-item"><div class="info-label">Gender:</div><div class="info-value">{{ candidate.get_gender_display }}</div></div>
+                    <div class="info-item"><div class="info-label">Religion:</div><div class="info-value">{{ candidate.get_religion_display }}</div></div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="info-section">
+                <h3><i class="fas fa-address-book"></i> Contact Information</h3>
+                <div class="info-grid">
+                    <div class="info-item"><div class="info-label">Phone:</div><div class="info-value">{{ candidate.phone_number|default:"Not provided" }}</div></div>
+                    <div class="info-item"><div class="info-label">Alternative Phone:</div><div class="info-value">{{ candidate.alternative_phone|default:"Not provided" }}</div></div>
+                    <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ candidate.email|default:"Not provided" }}</div></div>
+                    <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ candidate.home_address|default:"Not provided" }}</div></div>
+                    <div class="info-item"><div class="info-label">Emergency Contact:</div><div class="info-value">{{ candidate.emergency_contact_name|default:"Not provided" }}</div></div>
+                    <div class="info-item"><div class="info-label">Emergency Phone:</div><div class="info-value">{{ candidate.emergency_contact_phone|default:"Not provided" }}</div></div>
+                </div>
+            </div>
+
+            <!-- Professional Information -->
+            <div class="info-section">
+                <h3><i class="fas fa-briefcase"></i> Professional Information</h3>
+                <div class="info-grid">
+                    <div class="info-item"><div class="info-label">Job Category:</div><div class="info-value">{{ candidate.get_job_category_display }}</div></div>
+                    <div class="info-item"><div class="info-label">Experience:</div><div class="info-value">{{ candidate.years_of_experience }} years</div></div>
+                    <div class="info-item"><div class="info-label">Skills:</div><div class="info-value">{{ candidate.skills|default:"Not specified" }}</div></div>
+                    <div class="info-item"><div class="info-label">Languages:</div><div class="info-value">{{ candidate.languages_spoken|default:"English" }}</div></div>
+                    <div class="info-item"><div class="info-label">Preferred Country:</div><div class="info-value">{{ candidate.preferred_country|default:"Not specified" }}</div></div>
+                    <div class="info-item"><div class="info-label">Expected Salary:</div><div class="info-value">${{ candidate.expected_salary|default:"Negotiable" }}</div></div>
+                </div>
+            </div>
+
+            <!-- Health Information -->
+            <div class="info-section">
+                <h3><i class="fas fa-stethoscope"></i> Health Information</h3>
+                <div class="info-grid">
+                    <div class="info-item"><div class="info-label">Health Clearance:</div><div class="info-value">{% if candidate.health_clearance %}✓ Cleared{% else %}⏳ Pending{% endif %}</div></div>
+                    <div class="info-item"><div class="info-label">Yellow Fever:</div><div class="info-value">{% if candidate.yellow_fever_status %}✓ Vaccinated{% else %}✗ Not Vaccinated{% endif %}</div></div>
+                    <div class="info-item"><div class="info-label">Blood Group:</div><div class="info-value">{{ candidate.blood_group|default:"Not specified" }}</div></div>
+                    <div class="info-item"><div class="info-label">Medical Conditions:</div><div class="info-value">{{ candidate.medical_conditions|default:"None" }}</div></div>
+                </div>
+            </div>
+
+            <!-- Documents Section -->
+<div class="info-section">
+    <h3><i class="fas fa-file-alt"></i> Documents & Media</h3>
+    
+    <!-- Video Section -->
+    {% if candidate.candidate_video %}
+    <div style="margin-bottom: 20px;">
+        <div class="info-label" style="margin-bottom: 10px;">
+            <i class="fas fa-video"></i> Candidate Video Introduction
+        </div>
+        <video width="100%" controls style="max-width: 500px; border-radius: 15px;">
+            <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    {% endif %}
+    
+    <!-- Documents Grid -->
+    <div class="documents-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+        {% if candidate.profile_photo %}
+        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
+            <i class="fas fa-camera" style="font-size: 2rem; color: #FFD700;"></i>
+            <div style="margin-top: 10px;">Profile Photo</div>
+            <a href="{{ candidate.profile_photo.url }}" target="_blank" style="color: #FFD700;">View Photo</a>
+        </div>
+        {% endif %}
+        
+        {% if candidate.passport_copy %}
+        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
+            <i class="fas fa-passport" style="font-size: 2rem; color: #FFD700;"></i>
+            <div style="margin-top: 10px;">Passport Copy</div>
+            <a href="{{ candidate.passport_copy.url }}" target="_blank" style="color: #FFD700;">View Document</a>
+        </div>
+        {% endif %}
+        
+        {% if candidate.cv_pdf %}
+        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
+            <i class="fas fa-file-pdf" style="font-size: 2rem; color: #FFD700;"></i>
+            <div style="margin-top: 10px;">CV/Resume</div>
+            <a href="{{ candidate.cv_pdf.url }}" target="_blank" style="color: #FFD700;">View Document</a>
+        </div>
+        {% endif %}
+        
+        {% if candidate.medical_certificate %}
+        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
+            <i class="fas fa-file-medical" style="font-size: 2rem; color: #FFD700;"></i>
+            <div style="margin-top: 10px;">Medical Certificate</div>
+            <a href="{{ candidate.medical_certificate.url }}" target="_blank" style="color: #FFD700;">View Document</a>
+        </div>
+        {% endif %}
+        
+        {% if candidate.training_certificates %}
+        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
+            <i class="fas fa-certificate" style="font-size: 2rem; color: #FFD700;"></i>
+            <div style="margin-top: 10px;">Training Certificates</div>
+            <a href="{{ candidate.training_certificates.url }}" target="_blank" style="color: #FFD700;">View Document</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+            <!-- Placement Information -->
+            <div class="info-section">
+                <h3><i class="fas fa-chart-simple"></i> Placement Information</h3>
+                <div class="info-grid">
+                    <div class="info-item"><div class="info-label">Application Status:</div><div class="info-value">{{ candidate.get_application_status_display }}</div></div>
+                    <div class="info-item"><div class="info-label">Registered By:</div><div class="info-value">{{ candidate.registered_by.username|default:"System" }}</div></div>
+                    <div class="info-item"><div class="info-label">Registered At:</div><div class="info-value">{{ candidate.registered_at|date:"F d, Y H:i" }}</div></div>
+                    <div class="info-item"><div class="info-label">Last Updated:</div><div class="info-value">{{ candidate.updated_at|date:"F d, Y H:i" }}</div></div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            {% if candidate.notes %}
+            <div class="info-section">
+                <h3><i class="fas fa-sticky-note"></i> Notes</h3>
+                <div class="info-item"><div class="info-value">{{ candidate.notes|linebreaks }}</div></div>
+            </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <a href="{% url 'candidate_update' candidate.pk %}" class="btn btn-edit">
+                    <i class="fas fa-edit"></i> Edit Candidate
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

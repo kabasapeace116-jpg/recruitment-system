@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAHIKENG INVESTMENTS | Register Candidate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Container */
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header with Logo */
+        .form-header {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 30px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-placeholder i {
+            font-size: 2rem;
+            color: #0f0c29;
+        }
+
+        .logo-text h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: right;
+        }
+
+        .header-title h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .header-title p {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: white;
+            padding: 20px 40px;
+            margin-bottom: 2px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0f0c29;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+            color: white;
+        }
+
+        .step-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .step.active .step-title {
+            color: #FFD700;
+            font-weight: 600;
+        }
+
+        /* Form Sections */
+        .form-section {
+            background: white;
+            padding: 40px;
+            margin-bottom: 2px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FFD700;
+            display: inline-block;
+        }
+
+        .section-title i {
+            color: #FFD700;
+            margin-right: 10px;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        label i {
+            margin-right: 8px;
+            color: #FFD700;
+        }
+
+        .required::after {
+            content: '*';
+            color: #ef4444;
+            margin-left: 4px;
+        }
+
+        input, select, textarea {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+        }
+
+        input[type="file"]:hover {
+            border-color: #FFD700;
+            background: #f1f5f9;
+        }
+
+        /* Checkbox Styling */
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checkbox-group input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-prev {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-prev:hover {
+            background: #e2e8f0;
+            transform: translateX(-5px);
+        }
+
+        .btn-next, .btn-submit {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0f0c29;
+        }
+
+        .btn-next:hover, .btn-submit:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        /* Messages */
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        /* File Preview */
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #64748b;
+            display: none;
+        }
+
+        .file-preview.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .steps {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .step {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .step-number {
+                margin-bottom: 0;
+            }
+            
+            .form-section {
+                padding: 25px;
+            }
+            
+            .form-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-title {
+                text-align: center;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Smooth scrolling for the whole page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Form section transition */
+.form-section {
+    transition: all 0.3s ease;
+}
+
+/* Scroll margin to prevent header overlap */
+.form-section.active {
+    scroll-margin-top: 20px;
+}
+
+.section-title {
+    scroll-margin-top: 80px;
+}
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        {% load static %}
+<div class="form-header">
+    <div class="logo-area">
+        <div class="logo-placeholder">
+            <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" style="width: 50px; height: 50px; border-radius: 12px; object-fit: cover;">
+        </div>
+        <div class="logo-text">
+            <h1>MAHIKENG INVESTMENTS</h1>
+            <p>Global Travel Services & Growth Opportunities</p>
+        </div>
+    </div>
+    <div class="header-title">
+        <h2><i class="fas fa-user-plus"></i> Register New Candidate</h2>
+        <p>Complete all sections to register a candidate for Middle East placement</p>
+    </div>
+</div>
+
+        <div class="progress-bar">
+            <div class="steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Personal Info</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Contact & Demographics</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Professional & Health</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Documents</div>
+                </div>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" id="candidateForm">
+            {% csrf_token %}
+            
+            <!-- Section 1: Personal Information -->
+            <div class="form-section active" data-section="1">
+                <h2 class="section-title"><i class="fas fa-id-card"></i> Personal Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-user"></i> Full Name</label>
+                        {{ form.full_name }}
+                    </div>
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-id-card"></i> National ID (NIN)</label>
+                        {{ form.nin }}
+                    </div>
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-passport"></i> Passport Number</label>
+                        {{ form.passport_number }}
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Passport Issue Date</label>
+                        {{ form.passport_issue_date }}
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Passport Expiry Date</label>
+                        {{ form.passport_expiry_date }}
+                    </div>
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-calendar-alt"></i> Date of Birth</label>
+                        {{ form.date_of_birth }}
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Place of Birth</label>
+                        {{ form.place_of_birth }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Contact & Demographics -->
+            <div class="form-section" data-section="2">
+                <h2 class="section-title"><i class="fas fa-address-book"></i> Contact & Demographics</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone Number</label>
+                        {{ form.phone_number }}
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone-alt"></i> Alternative Phone</label>
+                        {{ form.alternative_phone }}
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-envelope"></i> Email Address</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-home"></i> Home Address</label>
+                        {{ form.home_address }}
+                    </div>
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-pray"></i> Religion</label>
+                        {{ form.religion }}
+                    </div>
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-venus-mars"></i> Gender</label>
+                        {{ form.gender }}
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-ambulance"></i> Emergency Contact Name</label>
+                        {{ form.emergency_contact_name }}
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-phone"></i> Emergency Contact Phone</label>
+                        {{ form.emergency_contact_phone }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Professional & Health -->
+            <div class="form-section" data-section="3">
+                <h2 class="section-title"><i class="fas fa-briefcase"></i> Professional & Health</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-briefcase"></i> Job Category</label>
+                        {{ form.job_category }}
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-chart-line"></i> Years of Experience</label>
+                        {{ form.years_of_experience }}
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-code"></i> Skills</label>
+                        {{ form.skills }}
+                        <small style="color: #64748b; margin-top: 5px;">Separate skills with commas (e.g., Driving, Cleaning, Cooking)</small>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-language"></i> Languages Spoken</label>
+                        {{ form.languages_spoken }}
+                        <small style="color: #64748b; margin-top: 5px;">e.g., English, Arabic, Swahili</small>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        {{ form.health_clearance }}
+                        <label><i class="fas fa-stethoscope"></i> Health Clearance</label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        {{ form.yellow_fever_status }}
+                        <label><i class="fas fa-syringe"></i> Yellow Fever Vaccination</label>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-notes-medical"></i> Medical Conditions</label>
+                        {{ form.medical_conditions }}
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tint"></i> Blood Group</label>
+                        {{ form.blood_group }}
+                    </div>
+                    <div class="form-group">
+                        <label class="required"><i class="fas fa-chart-simple"></i> Application Status</label>
+                        {{ form.application_status }}
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-globe-asia"></i> Preferred Country</label>
+                        {{ form.preferred_country }}
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-dollar-sign"></i> Expected Salary (USD)</label>
+                        {{ form.expected_salary }}
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-sticky-note"></i> Internal Notes</label>
+                        {{ form.notes }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Documents -->
+<div class="form-section" data-section="4">
+    <h2 class="section-title"><i class="fas fa-file-upload"></i> Documents & Media</h2>
+    <div class="form-grid">
+        <div class="form-group full-width">
+            <label><i class="fas fa-camera"></i> Profile Photo</label>
+            {{ form.profile_photo }}
+            <div class="file-preview" id="photoPreview">
+                <i class="fas fa-image"></i> File selected
+            </div>
+        </div>
+        
+        <!-- New Video Upload Section -->
+        <div class="form-group full-width">
+            <label><i class="fas fa-video"></i> Candidate Video Introduction</label>
+            {{ form.candidate_video }}
+            <small style="color: #64748b; display: block; margin-top: 5px;">
+                <i class="fas fa-info-circle"></i> Upload a short video (MP4, MOV, WebM) - Max 50MB. This will be visible to clients.
+            </small>
+            <div class="file-preview" id="videoPreview">
+                <i class="fas fa-video"></i> Video selected
+            </div>
+        </div>
+        
+        <div class="form-group full-width">
+            <label><i class="fas fa-passport"></i> Passport Copy</label>
+            {{ form.passport_copy }}
+            <div class="file-preview" id="passportPreview">
+                <i class="fas fa-file-pdf"></i> File selected
+            </div>
+        </div>
+        
+        <div class="form-group full-width">
+            <label><i class="fas fa-file-alt"></i> CV/Resume (PDF)</label>
+            {{ form.cv_pdf }}
+            <div class="file-preview" id="cvPreview">
+                <i class="fas fa-file-pdf"></i> File selected
+            </div>
+        </div>
+        
+        <div class="form-group full-width">
+            <label><i class="fas fa-file-medical"></i> Medical Certificate</label>
+            {{ form.medical_certificate }}
+            <div class="file-preview" id="medicalPreview">
+                <i class="fas fa-file-pdf"></i> File selected
+            </div>
+        </div>
+        
+        <div class="form-group full-width">
+            <label><i class="fas fa-certificate"></i> Training Certificates</label>
+            {{ form.training_certificates }}
+            <div class="file-preview" id="trainingPreview">
+                <i class="fas fa-file"></i> File selected
+            </div>
+        </div>
+    </div>
+</div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-prev" id="prevBtn" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button type="button" class="btn btn-next" id="nextBtn">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="submit" class="btn btn-submit" id="submitBtn" style="display: none;">
+                    <i class="fas fa-save"></i> Register Candidate
+                </button>
+            </div>
+        </form>
+    </div>
+
+   <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    function updateSteps() {
+        for (let i = 1; i <= totalSteps; i++) {
+            const step = document.querySelector(`.step[data-step="${i}"]`);
+            const section = document.querySelector(`.form-section[data-section="${i}"]`);
+            
+            if (i < currentStep) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+                if (section) section.classList.remove('active');
+            } else if (i === currentStep) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+                if (section) section.classList.add('active');
+            } else {
+                step.classList.remove('active', 'completed');
+                if (section) section.classList.remove('active');
+            }
+        }
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (currentStep === 1) {
+            prevBtn.style.display = 'none';
+        } else {
+            prevBtn.style.display = 'inline-flex';
+        }
+
+        if (currentStep === totalSteps) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-flex';
+        } else {
+            nextBtn.style.display = 'inline-flex';
+            submitBtn.style.display = 'none';
+        }
+    }
+
+    function validateSection(section) {
+        const sectionElement = document.querySelector(`.form-section[data-section="${section}"]`);
+        if (!sectionElement) return true;
+        
+        const requiredFields = sectionElement.querySelectorAll('.required');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            const input = field.parentElement.querySelector('input, select, textarea');
+            if (input && !input.value.trim()) {
+                isValid = false;
+                input.style.borderColor = '#ef4444';
+                input.addEventListener('focus', () => {
+                    input.style.borderColor = '#e2e8f0';
+                }, { once: true });
+            }
+        });
+
+        if (!isValid) {
+            alert('Please fill in all required fields marked with *');
+        }
+
+        return isValid;
+    }
+
+    // Next button click handler with smooth scroll
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (validateSection(currentStep)) {
+            currentStep++;
+            updateSteps();
+            
+            // Smooth scroll to the next section
+            setTimeout(() => {
+                const activeSection = document.querySelector('.form-section.active');
+                if (activeSection) {
+                    // Try to scroll to section title first
+                    const sectionTitle = activeSection.querySelector('.section-title');
+                    const targetElement = sectionTitle || activeSection;
+                    targetElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start',
+                        inline: 'nearest'
+                    });
+                }
+            }, 100);
+        }
+    });
+
+    // Previous button click handler with smooth scroll
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        currentStep--;
+        updateSteps();
+        
+        // Smooth scroll to the previous section
+        setTimeout(() => {
+            const activeSection = document.querySelector('.form-section.active');
+            if (activeSection) {
+                const sectionTitle = activeSection.querySelector('.section-title');
+                const targetElement = sectionTitle || activeSection;
+                targetElement.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            }
+        }, 100);
+    });
+
+    // File preview functionality
+    function setupFilePreview(inputId, previewId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if (input && preview) {
+            input.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    preview.classList.add('show');
+                    preview.innerHTML = `<i class="fas fa-check-circle"></i> ${e.target.files[0].name}`;
+                } else {
+                    preview.classList.remove('show');
+                }
+            });
+        }
+    }
+
+    // Setup all file previews including video
+setupFilePreview('id_profile_photo', 'photoPreview');
+setupFilePreview('id_candidate_video', 'videoPreview');
+setupFilePreview('id_passport_copy', 'passportPreview');
+setupFilePreview('id_cv_pdf', 'cvPreview');
+setupFilePreview('id_medical_certificate', 'medicalPreview');
+setupFilePreview('id_training_certificates', 'trainingPreview');
+
+    // Form submission loading state
+    document.getElementById('candidateForm').addEventListener('submit', (e) => {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.classList.add('loading');
+        submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Registering...';
+        
+        // Optional: scroll to top to show messages
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 50);
+    });
+
+    // Initialize steps on page load
+    updateSteps();
+
+    // Add helpful placeholders
+    document.addEventListener('DOMContentLoaded', () => {
+        const fullNameInput = document.querySelector('#id_full_name');
+        if (fullNameInput) fullNameInput.placeholder = 'e.g., John Mukasa';
+        
+        const ninInput = document.querySelector('#id_nin');
+        if (ninInput) ninInput.placeholder = 'e.g., CM90010112345';
+        
+        const passportInput = document.querySelector('#id_passport_number');
+        if (passportInput) passportInput.placeholder = 'e.g., UA123456';
+    });
+</script>
+</body>
+</html>
