@@ -13,6 +13,34 @@ from .models import Candidate, JobCategory
 from .models import Candidate, JobCategory, ClientSelection
 from .forms import CandidateRegistrationForm, ClientUserCreationForm
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+def ensure_admin_user_exists():
+    """Create default admin user if no users exist"""
+    if not User.objects.exists():
+        # Create admin user
+        admin = User.objects.create_superuser(
+            username='admin',
+            email='admin@mahikeng.com',
+            password='admin123'
+        )
+        admin.is_staff = True
+        admin.is_superuser = True
+        admin.save()
+        print("✓ Default admin created - Username: admin, Password: admin123")
+        
+        # Also create a demo client user
+        client = User.objects.create_user(
+            username='demo_client',
+            email='client@demo.com',
+            password='client123'
+        )
+        client.is_staff = False
+        client.is_superuser = False
+        client.save()
+        print("✓ Demo client created - Username: demo_client, Password: client123")
+
 def home_redirect(request):
     """Redirect to admin dashboard if logged in, otherwise to login"""
     if request.user.is_authenticated:
@@ -1008,8 +1036,39 @@ def client_register(request):
     
     return render(request, 'recruitment/client_register.html', {'form': form})
 
+from django.contrib.auth import authenticate, login, get_user_model
+from django.shortcuts import redirect, render
+from django.contrib import messages
+
+User = get_user_model()
+
+def ensure_admin_user_exists():
+    """Create default admin user if no users exist"""
+    if not User.objects.exists():
+        # Create admin user
+        admin = User.objects.create_superuser(
+            username='admin',
+            email='admin@mahikeng.com',
+            password='admin123'
+        )
+        admin.is_staff = True
+        admin.is_superuser = True
+        admin.save()
+        
+        # Create demo client user
+        client = User.objects.create_user(
+            username='demo_client',
+            email='client@demo.com',
+            password='client123'
+        )
+        client.is_staff = False
+        client.is_superuser = False
+        client.save()
+
 def admin_login_view(request):
     """Custom admin login view"""
+    ensure_admin_user_exists()  # Ensure users exist
+    
     if request.user.is_authenticated:
         if request.user.is_staff:
             return redirect('admin_dashboard')
@@ -1033,6 +1092,30 @@ def admin_login_view(request):
     return render(request, 'recruitment/admin_login.html')
 
 def client_login_view(request):
+    """Custom client login view"""
+    ensure_admin_user_exists()  # Ensure users exist
+    
+    if request.user.is_authenticated:
+        if request.user.is_staff:
+            return redirect('admin_dashboard')
+        else:
+            return redirect('client_portal')
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            if user.is_staff:
+                return redirect('admin_dashboard')
+            else:
+                return redirect('client_portal')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    
+    return render(request, 'recruitment/client_login.html')
     """Custom client login view"""
     if request.user.is_authenticated:
         if request.user.is_staff:
