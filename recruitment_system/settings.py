@@ -10,7 +10,18 @@ SECRET_KEY = 'django-insecure-8&*v^&*qk9#xk@$xk@$xk@$xk@$xk@$xk@$xk@$xk@$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'recruitment-system-2.onrender.com',
+    'recruitment-system.onrender.com',
+    '.onrender.com',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://recruitment-system-2.onrender.com',
+    'https://recruitment-system.onrender.com',
+    'https://*.onrender.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
