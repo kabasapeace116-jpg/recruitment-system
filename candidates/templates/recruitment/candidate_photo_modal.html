@@ -1,0 +1,214 @@
+<!-- Photo Modal - WhatsApp style full-size image viewer -->
+<div id="photoModal" class="photo-modal" style="display: none;">
+    <div class="photo-modal-content">
+        <span class="photo-modal-close">&times;</span>
+        <img id="modalPhoto" class="photo-modal-img" src="" alt="Full size photo">
+        <div id="modalCaption" class="photo-modal-caption"></div>
+        <div class="photo-nav">
+            <button id="prevPhoto" class="photo-nav-btn"><i class="fas fa-chevron-left"></i></button>
+            <button id="nextPhoto" class="photo-nav-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* WhatsApp-style Photo Modal */
+    .photo-modal {
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.2s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .photo-modal-content {
+        position: relative;
+        margin: auto;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    
+    .photo-modal-img {
+        max-width: 90%;
+        max-height: 85vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        animation: zoomIn 0.2s ease;
+    }
+    
+    @keyframes zoomIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    
+    .photo-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 10001;
+    }
+    
+    .photo-modal-close:hover {
+        color: #FFD700;
+        transform: scale(1.1);
+    }
+    
+    .photo-modal-caption {
+        margin-top: 15px;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        background: rgba(0,0,0,0.6);
+        padding: 8px 16px;
+        border-radius: 20px;
+    }
+    
+    .photo-nav {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        z-index: 10001;
+    }
+    
+    .photo-nav-btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s;
+        backdrop-filter: blur(5px);
+    }
+    
+    .photo-nav-btn:hover {
+        background: rgba(255,215,0,0.8);
+        color: #0f0c29;
+        transform: scale(1.1);
+    }
+    
+    @media (max-width: 768px) {
+        .photo-modal-img {
+            max-width: 95%;
+            max-height: 70vh;
+        }
+        .photo-modal-close {
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+        }
+        .photo-nav-btn {
+            width: 35px;
+            height: 35px;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<script>
+    // Photo Modal JavaScript
+    let currentPhotoIndex = 0;
+    let currentPhotoList = [];
+    
+    function openPhotoModal(photoUrl, candidateName, photoIndex, allPhotos) {
+        currentPhotoIndex = photoIndex;
+        currentPhotoList = allPhotos;
+        
+        const modal = document.getElementById('photoModal');
+        const modalImg = document.getElementById('modalPhoto');
+        const caption = document.getElementById('modalCaption');
+        
+        modalImg.src = photoUrl;
+        caption.innerHTML = candidateName;
+        modal.style.display = 'flex';
+        
+        // Update navigation buttons visibility
+        updateNavButtons();
+    }
+    
+    function updateNavButtons() {
+        const prevBtn = document.getElementById('prevPhoto');
+        const nextBtn = document.getElementById('nextPhoto');
+        
+        if (prevBtn) prevBtn.style.display = currentPhotoList.length <= 1 ? 'none' : 'flex';
+        if (nextBtn) nextBtn.style.display = currentPhotoList.length <= 1 ? 'none' : 'flex';
+    }
+    
+    function navigatePhoto(direction) {
+        const newIndex = currentPhotoIndex + direction;
+        if (newIndex >= 0 && newIndex < currentPhotoList.length) {
+            currentPhotoIndex = newIndex;
+            const modalImg = document.getElementById('modalPhoto');
+            const caption = document.getElementById('modalCaption');
+            modalImg.style.opacity = '0';
+            setTimeout(() => {
+                modalImg.src = currentPhotoList[currentPhotoIndex].url;
+                caption.innerHTML = currentPhotoList[currentPhotoIndex].name;
+                modalImg.style.opacity = '1';
+            }, 150);
+        }
+    }
+    
+    function closePhotoModal() {
+        document.getElementById('photoModal').style.display = 'none';
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closePhotoModal();
+        }
+        if (e.key === 'ArrowLeft') {
+            navigatePhoto(-1);
+        }
+        if (e.key === 'ArrowRight') {
+            navigatePhoto(1);
+        }
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('photoModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closePhotoModal();
+                }
+            });
+        }
+        
+        const prevBtn = document.getElementById('prevPhoto');
+        const nextBtn = document.getElementById('nextPhoto');
+        const closeBtn = document.querySelector('.photo-modal-close');
+        
+        if (prevBtn) prevBtn.onclick = () => navigatePhoto(-1);
+        if (nextBtn) nextBtn.onclick = () => navigatePhoto(1);
+        if (closeBtn) closeBtn.onclick = closePhotoModal;
+    });
+</script>

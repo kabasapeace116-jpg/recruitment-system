@@ -1389,3 +1389,16 @@ def health_check(request):
         'status': 'ok',
         'database': 'connected' if db_connected else 'disconnected'
     })
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(is_admin_user)
+def candidates_table(request):
+    all_candidates = Candidate.objects.select_related('registered_by').all()
+    paginator = Paginator(all_candidates, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+    }
+    return render(request, 'recruitment/candidates_table.html', context)

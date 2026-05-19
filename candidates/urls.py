@@ -47,4 +47,5 @@ path('toggle-admin-status/<int:user_id>/', views.toggle_admin_status, name='togg
 path('reset-admin-password/<int:user_id>/', views.reset_admin_password, name='reset_admin_password'),
 path('delete-admin-user/<int:user_id>/', views.delete_admin_user, name='delete_admin_user'),
 path('health/', views.health_check, name='health_check'),
+path('candidates-table/', views.candidates_table, name='candidates_table'),
 ]

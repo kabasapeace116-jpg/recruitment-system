@@ -967,6 +967,9 @@
             <a href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         </div>
         <div class="menu-item">
+    <a href="{% url 'candidates_table' %}"><i class="fas fa-table"></i> View All Candidates</a>
+</div>
+        <div class="menu-item">
             <a href="{% url 'candidate_create' %}"><i class="fas fa-user-plus"></i> Register Candidate</a>
         </div>
         <div class="menu-item">
@@ -1124,114 +1127,7 @@
         </div>
     </div>
 </div>
-        <!-- All Candidates Table -->
-<div class="recent-section">
-    <div class="section-header">
-        <h3><i class="fas fa-list"></i> All Candidates</h3>
-        <button class="btn-add" onclick="location.href='{% url 'candidate_create' %}'">
-            <i class="fas fa-plus"></i> Register New Candidate
-        </button>
-    </div>
-    
-    <div style="overflow-x: auto;">
-    <table id="allCandidatesTable">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="selectAll" class="select-all-checkbox"></th>
-                <th>Photo</th>
-                <th>Full Name</th>
-                <th>Passport No.</th>
-                <th>Job Category</th>
-                <th>Status</th>
-                <th>Registered</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for candidate in page_obj %}
-            <tr class="candidate-row" data-candidate-id="{{ candidate.id }}">
-                <td>
-                    <input type="checkbox" class="candidate-checkbox" data-id="{{ candidate.id }}" data-name="{{ candidate.full_name }}">
-                </td>
-                <td>
-                    {% if candidate.profile_photo %}
-                        <img src="{{ candidate.profile_photo.url }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-                    {% else %}
-                        <div style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    {% endif %}
-                </td>
-                <td>
-                    <strong>{{ candidate.full_name }}</strong>
-                    <span class="nin-number" style="display: none;">{{ candidate.nin }}</span>
-                </td>
-                <td>{{ candidate.passport_number }}</td>
-                <td>{{ candidate.get_job_category_display }}</td>
-                <td>
-                    <span class="status-badge status-{{ candidate.application_status }}">
-                        {{ candidate.get_application_status_display }}
-                    </span>
-                </td>
-                <td>{{ candidate.registered_at|date:"M d, Y" }}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn-icon btn-view" onclick="location.href='{% url 'candidate_detail' candidate.pk %}'">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                        <button class="btn-icon btn-edit" onclick="location.href='{% url 'candidate_update' candidate.pk %}'">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn-icon btn-delete" onclick="deleteSingleCandidate({{ candidate.id }}, '{{ candidate.full_name }}')">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8" style="text-align: center; padding: 50px;">
-                    <i class="fas fa-users fa-3x" style="color: #cbd5e1;"></i>
-                    <p style="margin-top: 15px;">No candidates registered yet.</p>
-                    <button class="btn-add" onclick="location.href='{% url 'candidate_create' %}'" style="margin-top: 15px;">
-                        Register First Candidate
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-    
-
-
-    
-   <!-- Pagination -->
-{% if page_obj.has_other_pages %}
-<div class="pagination" id="paginationContainer">
-    {% if page_obj.has_previous %}
-        <button class="page-link" data-page="{{ page_obj.previous_page_number }}">
-            <i class="fas fa-chevron-left"></i> Previous
-        </button>
-    {% endif %}
-    
-    {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-            <span class="page-link active" data-page="{{ num }}">{{ num }}</span>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <button class="page-link" data-page="{{ num }}">{{ num }}</button>
-        {% endif %}
-    {% endfor %}
-    
-    {% if page_obj.has_next %}
-        <button class="page-link" data-page="{{ page_obj.next_page_number }}">
-            Next <i class="fas fa-chevron-right"></i>
-        </button>
-    {% endif %}
-</div>
-{% endif %}
-</div>
+        
 
         
     </div>

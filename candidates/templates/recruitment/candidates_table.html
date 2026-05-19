@@ -1,0 +1,294 @@
+{% extends 'recruitment/admin_base.html' %}
+{% load static %}
+
+{% block title %}All Candidates | MAHIKENG INVESTMENTS{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> All Candidates</h3>
+                    <a href="{% url 'candidate_create' %}" class="btn-add">
+                        <i class="fas fa-plus"></i> Register New Candidate
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Search and Filters -->
+                    <div class="filters-bar">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="searchInput" class="search-input" 
+                                   placeholder="Search by name, passport, or NIN...">
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" data-status="all">All</button>
+                            <button class="filter-btn" data-status="AVA">Available</button>
+                            <button class="filter-btn" data-status="SEL">Selected</button>
+                            <button class="filter-btn" data-status="VIS">Visa Issued</button>
+                        </div>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="candidates-table" id="candidatesTable">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll"></th>
+                                    <th>Photo</th>
+                                    <th>Full Name</th>
+                                    <th>Passport No.</th>
+                                    <th>Job Category</th>
+                                    <th>Status</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                {% include 'recruitment/_candidates_table_rows.html' %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        {% include 'recruitment/_pagination.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Photo Modal -->
+{% include 'recruitment/candidate_photo_modal.html' %}
+
+<style>
+    .container-fluid {
+        padding: 20px;
+        margin-left: 280px;
+    }
+    .card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        padding: 20px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .card-header h3 {
+        margin: 0;
+        color: #0f0c29;
+    }
+    .filters-bar {
+        padding: 20px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .search-wrapper {
+        position: relative;
+        flex: 1;
+        min-width: 250px;
+    }
+    .search-input {
+        width: 100%;
+        padding: 10px 15px 10px 40px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #FFD700;
+    }
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .filter-btn {
+        padding: 8px 16px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+        border-color: #FFD700;
+    }
+    .candidates-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .candidates-table th, .candidates-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .candidates-table th {
+        background: #f8fafc;
+        font-weight: 600;
+    }
+    .thumbnail-img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .thumbnail-img:hover {
+        transform: scale(1.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .thumbnail-placeholder {
+        width: 45px;
+        height: 45px;
+        background: #e2e8f0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #64748b;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .btn-icon {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.75rem;
+    }
+    .btn-view { background: #e0e7ff; color: #4338ca; }
+    .btn-edit { background: #fed7aa; color: #9a3412; }
+    .btn-delete { background: #fee2e2; color: #991b1b; }
+    .pagination-container {
+        padding: 20px;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+    @media (max-width: 768px) {
+        .container-fluid { margin-left: 0; }
+        .filters-bar { flex-direction: column; }
+        .candidates-table { font-size: 0.8rem; min-width: 600px; }
+    }
+</style>
+
+<script>
+    // Search and filter functionality
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    let currentFilter = 'all';
+    
+    function filterTable() {
+        const searchTerm = searchInput?.value.toLowerCase() || '';
+        const rows = document.querySelectorAll('#tableBody tr');
+        
+        rows.forEach(row => {
+            const name = row.querySelector('.candidate-name')?.innerText.toLowerCase() || '';
+            const passport = row.querySelector('.candidate-passport')?.innerText.toLowerCase() || '';
+            const status = row.querySelector('.status-badge')?.innerText.toLowerCase() || '';
+            
+            const matchesSearch = name.includes(searchTerm) || passport.includes(searchTerm);
+            const matchesFilter = currentFilter === 'all' || status.includes(currentFilter);
+            
+            row.style.display = matchesSearch && matchesFilter ? '' : 'none';
+        });
+    }
+    
+    searchInput?.addEventListener('input', filterTable);
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.status;
+            filterTable();
+        });
+    });
+    
+    // Select All checkbox
+    const selectAll = document.getElementById('selectAll');
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            document.querySelectorAll('.candidate-checkbox').forEach(cb => cb.checked = this.checked);
+        });
+    }
+    
+    // Collect all photos for navigation
+    function getAllPhotoData() {
+        const photos = [];
+        document.querySelectorAll('.candidate-row').forEach((row, index) => {
+            const img = row.querySelector('.thumbnail-img');
+            const placeholder = row.querySelector('.thumbnail-placeholder');
+            const name = row.querySelector('.candidate-name')?.innerText || 'Candidate';
+            photos.push({
+                url: img ? img.src : null,
+                name: name,
+                hasPhoto: !!img
+            });
+        });
+        return photos;
+    }
+    
+    let allPhotos = [];
+    
+    function refreshPhotoList() {
+        allPhotos = [];
+        document.querySelectorAll('.candidate-row').forEach(row => {
+            const img = row.querySelector('.thumbnail-img');
+            const name = row.querySelector('.candidate-name')?.innerText || 'Candidate';
+            allPhotos.push({
+                url: img ? img.src : null,
+                name: name,
+                element: row
+            });
+        });
+    }
+    
+    function openPhotoAt(index) {
+        if (allPhotos[index] && allPhotos[index].url) {
+            openPhotoModal(allPhotos[index].url, allPhotos[index].name, index, allPhotos);
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        refreshPhotoList();
+        
+        document.querySelectorAll('.thumbnail-img, .thumbnail-placeholder').forEach((el, idx) => {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const row = this.closest('.candidate-row');
+                const rowIndex = Array.from(document.querySelectorAll('.candidate-row')).indexOf(row);
+                refreshPhotoList();
+                if (allPhotos[rowIndex] && allPhotos[rowIndex].url) {
+                    openPhotoModal(allPhotos[rowIndex].url, allPhotos[rowIndex].name, rowIndex, allPhotos);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
