@@ -135,8 +135,8 @@ LOGOUT_REDIRECT_URL = '/admin-login/'
 # Cloudinary configuration
 if not DEBUG:
     CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+        'CLOUD_NAME': os.environ.get('dfserqaoz'),
+        'API_KEY': os.environ.get('555193856452657'),
+        'API_SECRET': os.environ.get('dkfFIFMGULcnkiil4BGx7GzN2l4'),
     }
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
