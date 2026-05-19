@@ -1369,3 +1369,23 @@ def delete_admin_user(request, user_id):
         admin_user.delete()
         messages.success(request, f'Admin user "{username}" has been deleted.')
     return redirect('manage_admin_users')
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db import connections
+from django.db.utils import OperationalError
+
+@csrf_exempt
+def health_check(request):
+    """Simple health check endpoint for cron jobs"""
+    # Check database connection
+    db_connected = False
+    try:
+        connections['default'].cursor()
+        db_connected = True
+    except OperationalError:
+        pass
+    
+    return JsonResponse({
+        'status': 'ok',
+        'database': 'connected' if db_connected else 'disconnected'
+    })
