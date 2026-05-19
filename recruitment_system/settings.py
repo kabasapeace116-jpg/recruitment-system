@@ -66,12 +66,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'recruitment_system.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import os
+import dj_database_url
+
+# Database configuration
+# Use PostgreSQL on production (Render), SQLite on local development
+if os.environ.get('DATABASE_URL'):
+    # Production - PostgreSQL on Neon.tech
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True
+        )
     }
-}
+else:
+    # Development - SQLite locally
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
