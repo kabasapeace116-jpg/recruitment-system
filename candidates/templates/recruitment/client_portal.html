@@ -107,7 +107,6 @@
             font-weight: bold;
         }
 
-        /* My Selections Button Style */
         .nav-link-selections {
             display: flex;
             align-items: center;
@@ -340,37 +339,6 @@
             box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
         }
 
-        .filter-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .btn-filter, .btn-reset {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-filter {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #0f0c29;
-        }
-
-        .btn-reset {
-            background: #f1f5f9;
-            color: #475569;
-        }
-
-        .btn-filter:hover, .btn-reset:hover {
-            transform: translateY(-2px);
-        }
-
         .results-header {
             display: flex;
             justify-content: space-between;
@@ -456,6 +424,9 @@
 
         .card-badge.status-AVA { background: #d1fae5; color: #065f46; }
         .card-badge.status-SEL { background: #fed7aa; color: #9a3412; }
+        .card-badge.status-CAN { background: #fee2e2; color: #991b1b; }
+        .card-badge.status-VIS { background: #dbeafe; color: #1e40af; }
+        .card-badge.status-RES { background: #e0e7ff; color: #4338ca; }
 
         .card-image {
             position: relative;
@@ -529,20 +500,6 @@
             color: #1e293b;
             font-size: 0.8rem;
         }
-
-        .health-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin: 10px 0;
-        }
-
-        .health-clear { background: #d1fae5; color: #065f46; }
-        .health-pending { background: #fed7aa; color: #9a3412; }
 
         .card-actions {
             display: flex;
@@ -639,34 +596,33 @@
 </head>
 <body>
     <nav class="navbar">
-    <div class="nav-container">
-        <div class="logo">
-            <div class="logo-icon">
-                <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" style="width: 40px; height: 40px; border-radius: 10px; object-fit: cover;">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" style="width: 40px; height: 40px; border-radius: 10px; object-fit: cover;">
+                </div>
+                <div class="logo-text">
+                    <h1>MAHIKENG INVESTMENTS</h1>
+                    <p>Global Travel Services & Growth Opportunities</p>
+                </div>
             </div>
-            <div class="logo-text">
-                <h1>MAHIKENG INVESTMENTS</h1>
-                <p>Global Travel Services & Growth Opportunities</p>
-            </div>
-        </div>
-        <div class="nav-links">
-            <div class="user-menu">
-                <div class="user-avatar">{{ user.username|first|upper }}</div>
-                <span>Welcome, {{ user.username }}</span>
-            </div>
-            <a href="{% url 'client_selections' %}" class="nav-link-selections">
-                <i class="fas fa-heart"></i> My Selections
-            </a>
-            <form action="{% url 'admin_logout' %}" method="post" style="display: inline; margin-left: 15px;">
+            <div class="nav-links">
+                <div class="user-menu">
+                    <div class="user-avatar">{{ user.username|first|upper }}</div>
+                    <span>Welcome, {{ user.username }}</span>
+                </div>
+                <a href="{% url 'client_selections' %}" class="nav-link-selections">
+                    <i class="fas fa-heart"></i> My Selections
+                </a>
+                <form action="{% url 'client_logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;">
+                    <button type="submit" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </form>
-            
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <div class="hero">
         <div class="hero-content">
@@ -681,20 +637,23 @@
             <p>Access our curated database of pre-screened, qualified candidates ready for placement in the Arab world</p>
             <div class="stats-banner">
                 <div class="stat-item"><div class="stat-number">{{ total_count }}</div><div>Available Candidates</div></div>
-                <div class="stat-item"><div class="stat-number">100%</div><div>Reliable</div></div>
+                <div class="stat-item"><div class="stat-number">6+</div><div>Countries</div></div>
                 <div class="stat-item"><div class="stat-number">100%</div><div>Verified Profiles</div></div>
             </div>
         </div>
     </div>
 
     <div class="main-container">
+        <!-- Filters Section -->
         <div class="filters-section">
             <div class="filters-header" onclick="toggleFilters()">
                 <h3><i class="fas fa-sliders-h"></i> Advanced Search Filters</h3>
-                <i class="fas fa-chevron-up" id="filterToggleIcon"></i>
+                <div class="toggle-filters">
+                    <i class="fas fa-chevron-down" id="filterToggleIcon"></i>
+                </div>
             </div>
-            <div class="filters-grid" id="filtersGrid">
-                <!-- Age Filter -->
+            <div class="filters-grid" id="filtersGrid" style="display: none;">
+                <!-- Age Range Filter -->
                 <div class="filter-group">
                     <label><i class="fas fa-calendar"></i> Age Range</label>
                     <div class="chip-group" id="ageFilter">
@@ -716,10 +675,10 @@
                     </div>
                 </div>
 
-                <!-- Job Filter -->
+                <!-- Job Category Filter -->
                 <div class="filter-group">
                     <label><i class="fas fa-briefcase"></i> Job Category</label>
-                    <div class="chip-group" id="jobFilter">
+                    <div class="chip-group scrollable" id="jobFilter">
                         <div class="chip" data-job="MAID">Maid</div>
                         <div class="chip" data-job="CLN">Cleaner</div>
                         <div class="chip" data-job="CAR">Caregiver</div>
@@ -760,8 +719,13 @@
             {% for candidate in candidates %}
             <div class="candidate-card">
                 <div class="card-badge status-{{ candidate.application_status }}">
-                    <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% else %}user-check{% endif %}"></i>
-                    {% if candidate.application_status == 'AVA' %}Available{% else %}Selected{% endif %}
+                    <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% elif candidate.application_status == 'SEL' %}user-check{% elif candidate.application_status == 'CAN' %}times-circle{% elif candidate.application_status == 'VIS' %}passport{% else %}clock{% endif %}"></i>
+                    {% if candidate.application_status == 'AVA' %}Available
+                    {% elif candidate.application_status == 'SEL' %}Selected
+                    {% elif candidate.application_status == 'CAN' %}Cancelled
+                    {% elif candidate.application_status == 'VIS' %}Visa Issued
+                    {% elif candidate.application_status == 'RES' %}Reserved
+                    {% else %}{{ candidate.get_application_status_display }}{% endif %}
                 </div>
                 <div class="card-image">
                     {% if candidate.profile_photo %}
@@ -781,10 +745,7 @@
                         <div class="info-item"><div class="info-icon"><i class="fas fa-pray"></i></div><div><div class="info-label">Religion</div><div class="info-value">{{ candidate.get_religion_display }}</div></div></div>
                         <div class="info-item"><div class="info-icon"><i class="fas fa-chart-line"></i></div><div><div class="info-label">Experience</div><div class="info-value">{{ candidate.years_of_experience }} yrs</div></div></div>
                     </div>
-                    <div class="health-status {% if candidate.health_clearance %}health-clear{% else %}health-pending{% endif %}">
-                        <i class="fas fa-{% if candidate.health_clearance %}check-circle{% else %}clock{% endif %}"></i>
-                        {% if candidate.health_clearance %}Health Cleared{% else %}Medical Pending{% endif %}
-                    </div>
+                    
                     <div class="card-actions">
                         <a href="{% url 'client_candidate_detail' candidate.pk %}" class="btn-view-profile"><i class="fas fa-eye"></i> View Profile</a>
                         {% if candidate.id in selected_candidates %}
@@ -796,7 +757,7 @@
                 </div>
             </div>
             {% empty %}
-            <div style="text-align:center; padding:60px; background:white; border-radius:20px;">
+            <div style="text-align:center; padding:60px; background:white; border-radius:20px; grid-column:1/-1;">
                 <i class="fas fa-users fa-4x" style="color:#cbd5e1;"></i>
                 <h3>No candidates found</h3>
                 <p>Try adjusting your filters</p>
@@ -805,305 +766,190 @@
         </div>
 
         <!-- Pagination -->
-{% if page_obj.has_other_pages %}
-<div class="pagination" id="paginationContainer">
-    {% if page_obj.has_previous %}
-        <button class="page-link" data-page="{{ page_obj.previous_page_number }}">
-            <i class="fas fa-chevron-left"></i> Previous
-        </button>
-    {% endif %}
-    
-    {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-            <span class="page-link active" data-page="{{ num }}">{{ num }}</span>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <button class="page-link" data-page="{{ num }}">{{ num }}</button>
+        {% if page_obj.has_other_pages %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
+            {% endif %}
+            <span class="page-link active">{{ page_obj.number }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+            {% endif %}
+        </div>
         {% endif %}
-    {% endfor %}
-    
-    {% if page_obj.has_next %}
-        <button class="page-link" data-page="{{ page_obj.next_page_number }}">
-            Next <i class="fas fa-chevron-right"></i>
-        </button>
-    {% endif %}
-</div>
-{% endif %}
     </div>
 
     <div class="toast" id="toast"><i class="fas fa-heart"></i> <span>Added to shortlist</span></div>
 
     <script>
-    // Store active filters
-    let activeFilters = {
-        age: null,
-        religion: null,
-        job: null,
-        experience: null
-    };
-
-    function initChips() {
-        // Age chips
-        document.querySelectorAll('#ageFilter .chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                toggleChip(this, 'age', this.dataset.age);
-                applyFiltersAndReload();
-            });
+        // SIMPLE WORKING FILTERS FOR CLIENT PORTAL
+        let filters = { age: '', religion: '', job: '', experience: '' };
+        
+        // Setup chip clicks
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.onclick = function() {
+                let group = this.parentElement.id;
+                let value = this.dataset.age || this.dataset.religion || this.dataset.job || this.dataset.exp;
+                
+                if (group === 'ageFilter') filters.age = filters.age === value ? '' : value;
+                if (group === 'religionFilter') filters.religion = filters.religion === value ? '' : value;
+                if (group === 'jobFilter') filters.job = filters.job === value ? '' : value;
+                if (group === 'experienceFilter') filters.experience = filters.experience === value ? '' : value;
+                
+                // Update UI
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll(`.chip[data-${this.dataset.hasOwnProperty('age') ? 'age' : this.dataset.hasOwnProperty('religion') ? 'religion' : this.dataset.hasOwnProperty('job') ? 'job' : 'exp'}="${value}"]`).forEach(c => {
+                    if ((group === 'ageFilter' && filters.age === value) ||
+                        (group === 'religionFilter' && filters.religion === value) ||
+                        (group === 'jobFilter' && filters.job === value) ||
+                        (group === 'experienceFilter' && filters.experience === value)) {
+                        c.classList.add('active');
+                    }
+                });
+                
+                filterCards();
+            };
         });
         
-        // Religion chips
-        document.querySelectorAll('#religionFilter .chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                toggleChip(this, 'religion', this.dataset.religion);
-                applyFiltersAndReload();
+        function filterCards() {
+            let cards = document.querySelectorAll('.candidate-card');
+            let visible = 0;
+            
+            cards.forEach(card => {
+                let show = true;
+                
+                // Get values from card
+                let job = card.querySelector('.info-value')?.innerText.toLowerCase() || '';
+                let age = parseInt(card.querySelectorAll('.info-value')[1]?.innerText) || 0;
+                let religion = card.querySelectorAll('.info-value')[2]?.innerText.toLowerCase() || '';
+                let exp = parseInt(card.querySelectorAll('.info-value')[3]?.innerText) || 0;
+                
+                // Apply filters
+                if (show && filters.age) {
+                    if (filters.age === '18-25') show = age >= 18 && age <= 25;
+                    else if (filters.age === '26-35') show = age >= 26 && age <= 35;
+                    else if (filters.age === '36-45') show = age >= 36 && age <= 45;
+                    else if (filters.age === '46-55') show = age >= 46 && age <= 55;
+                    else if (filters.age === '55+') show = age >= 55;
+                }
+                if (show && filters.religion && !religion.includes(filters.religion.toLowerCase())) show = false;
+                if (show && filters.job && !job.includes(filters.job.toLowerCase())) show = false;
+                if (show && filters.experience) {
+                    if (filters.experience === '0-2') show = exp >= 0 && exp <= 2;
+                    else if (filters.experience === '3-5') show = exp >= 3 && exp <= 5;
+                    else if (filters.experience === '6-10') show = exp >= 6 && exp <= 10;
+                    else if (filters.experience === '10+') show = exp >= 10;
+                }
+                
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
             });
-        });
-        
-        // Job chips
-        document.querySelectorAll('#jobFilter .chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                toggleChip(this, 'job', this.dataset.job);
-                applyFiltersAndReload();
-            });
-        });
-        
-        // Experience chips
-        document.querySelectorAll('#experienceFilter .chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                toggleChip(this, 'experience', this.dataset.exp);
-                applyFiltersAndReload();
-            });
-        });
-    }
-
-    function toggleChip(chip, filterType, value) {
-        const parent = chip.parentElement;
-        parent.querySelectorAll('.chip').forEach(c => {
-            if (c !== chip) c.classList.remove('active');
-        });
-        
-        if (activeFilters[filterType] === value) {
-            chip.classList.remove('active');
-            activeFilters[filterType] = null;
-        } else {
-            chip.classList.add('active');
-            activeFilters[filterType] = value;
+            
+            // Update count
+            let countSpan = document.getElementById('resultCount');
+            if (countSpan) countSpan.innerText = visible;
+            
+            // Show/hide no results
+            let noResults = document.querySelector('.no-results-message');
+            if (visible === 0 && cards.length > 0) {
+                if (!noResults) {
+                    let grid = document.querySelector('.candidates-grid');
+                    let msg = document.createElement('div');
+                    msg.className = 'no-results-message';
+                    msg.style.cssText = 'text-align:center;padding:60px;grid-column:1/-1;background:white;border-radius:20px';
+                    msg.innerHTML = '<i class="fas fa-users fa-4x" style="color:#cbd5e1;"></i><h3>No candidates found</h3><p>Try adjusting your filters</p>';
+                    grid.appendChild(msg);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
         }
-    }
-
-    function applyFiltersAndReload() {
-        let url = new URL(window.location.href);
         
-        url.searchParams.delete('age_min');
-        url.searchParams.delete('age_max');
-        url.searchParams.delete('religion');
-        url.searchParams.delete('job_category');
-        url.searchParams.delete('exp_min');
-        url.searchParams.delete('exp_max');
-        url.searchParams.delete('page');
+        // Reset filters
+        window.resetFilters = function() {
+            filters = { age: '', religion: '', job: '', experience: '' };
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            filterCards();
+        };
         
-        if (activeFilters.age) {
-            const ageRange = activeFilters.age.split('-');
-            if (ageRange[0] === '55') {
-                url.searchParams.set('age_min', '55');
+        // Apply filters
+        window.applyFilters = function() {
+            filterCards();
+        };
+        
+        // Toggle filters panel
+        window.toggleFilters = function() {
+            let grid = document.getElementById('filtersGrid');
+            let icon = document.getElementById('filterToggleIcon');
+            if (grid.style.display === 'none') {
+                grid.style.display = 'grid';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
             } else {
-                url.searchParams.set('age_min', ageRange[0]);
-                url.searchParams.set('age_max', ageRange[1]);
+                grid.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
             }
-        }
+        };
         
-        if (activeFilters.religion) {
-            url.searchParams.set('religion', activeFilters.religion);
-        }
-        
-        if (activeFilters.job) {
-            url.searchParams.set('job_category', activeFilters.job);
-        }
-        
-        if (activeFilters.experience) {
-            const expRange = activeFilters.experience.split('-');
-            if (expRange[0] === '10') {
-                url.searchParams.set('exp_min', '10');
+        // Set view
+        window.setView = function(view) {
+            let grid = document.getElementById('candidatesGrid');
+            let btns = document.querySelectorAll('.view-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            if (view === 'grid') {
+                grid.classList.remove('list-view');
+                btns[0].classList.add('active');
+                localStorage.setItem('clientView', 'grid');
             } else {
-                url.searchParams.set('exp_min', expRange[0]);
-                url.searchParams.set('exp_max', expRange[1]);
+                grid.classList.add('list-view');
+                btns[1].classList.add('active');
+                localStorage.setItem('clientView', 'list');
             }
-        }
+        };
         
-        window.location.href = url.toString();
-    }
-
-    function resetFilters() {
-        window.location.href = window.location.pathname;
-    }
-
-    function toggleFilters() {
-        const grid = document.getElementById('filtersGrid');
-        const icon = document.getElementById('filterToggleIcon');
-        grid.classList.toggle('collapsed');
-        icon.classList.toggle('fa-chevron-up');
-        icon.classList.toggle('fa-chevron-down');
-    }
-
-    function setView(view) {
-        const grid = document.getElementById('candidatesGrid');
-        const btns = document.querySelectorAll('.view-btn');
-        btns.forEach(btn => btn.classList.remove('active'));
-        if (view === 'grid') {
-            grid.classList.remove('list-view');
-            btns[0].classList.add('active');
-            localStorage.setItem('clientView', 'grid');
-        } else {
-            grid.classList.add('list-view');
-            btns[1].classList.add('active');
-            localStorage.setItem('clientView', 'list');
-        }
-    }
-
-    function toggleSelect(candidateId, action) {
-        fetch('/toggle-select-candidate/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ candidate_id: candidateId, action: action })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            }
-        });
-    }
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+        // Load saved view
+        let savedView = localStorage.getItem('clientView');
+        if (savedView === 'list') setView('list');
+        
+        // Select function
+        window.toggleSelect = function(candidateId, action) {
+            fetch('/toggle-select-candidate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ candidate_id: candidateId, action: action })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        };
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                let cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
             }
-        }
-        return cookieValue;
-    }
-
-    function loadFiltersFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        
-        if (params.get('age_min')) {
-            const ageMin = params.get('age_min');
-            let chip = null;
-            if (ageMin === '18') chip = document.querySelector('[data-age="18-25"]');
-            else if (ageMin === '26') chip = document.querySelector('[data-age="26-35"]');
-            else if (ageMin === '36') chip = document.querySelector('[data-age="36-45"]');
-            else if (ageMin === '46') chip = document.querySelector('[data-age="46-55"]');
-            else if (ageMin === '55') chip = document.querySelector('[data-age="55+"]');
-            if (chip) { chip.classList.add('active'); activeFilters.age = chip.dataset.age; }
+            return cookieValue;
         }
         
-        if (params.get('religion')) {
-            const chip = document.querySelector(`[data-religion="${params.get('religion')}"]`);
-            if (chip) { chip.classList.add('active'); activeFilters.religion = chip.dataset.religion; }
-        }
+        // Initialize filters as hidden
+        document.getElementById('filtersGrid').style.display = 'none';
         
-        if (params.get('job_category')) {
-            const chip = document.querySelector(`[data-job="${params.get('job_category')}"]`);
-            if (chip) { chip.classList.add('active'); activeFilters.job = chip.dataset.job; }
-        }
-        
-        if (params.get('exp_min')) {
-            const expMin = params.get('exp_min');
-            let chip = null;
-            if (expMin === '0') chip = document.querySelector('[data-exp="0-2"]');
-            else if (expMin === '3') chip = document.querySelector('[data-exp="3-5"]');
-            else if (expMin === '6') chip = document.querySelector('[data-exp="6-10"]');
-            else if (expMin === '10') chip = document.querySelector('[data-exp="10+"]');
-            if (chip) { chip.classList.add('active'); activeFilters.experience = chip.dataset.exp; }
-        }
-    }
-
-    // ========== PAGINATION WITH SMOOTH SCROLL ==========
-    function goToPage(page) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('page', page);
-        
-        // Preserve filters
-        if (activeFilters.age) {
-            const ageRange = activeFilters.age.split('-');
-            if (ageRange[0] === '55') {
-                url.searchParams.set('age_min', '55');
-            } else {
-                url.searchParams.set('age_min', ageRange[0]);
-                url.searchParams.set('age_max', ageRange[1]);
-            }
-        }
-        if (activeFilters.religion) url.searchParams.set('religion', activeFilters.religion);
-        if (activeFilters.job) url.searchParams.set('job_category', activeFilters.job);
-        if (activeFilters.experience) {
-            const expRange = activeFilters.experience.split('-');
-            if (expRange[0] === '10') {
-                url.searchParams.set('exp_min', '10');
-            } else {
-                url.searchParams.set('exp_min', expRange[0]);
-                url.searchParams.set('exp_max', expRange[1]);
-            }
-        }
-        
-        window.location.href = url.toString();
-    }
-
-    // Attach pagination click events with smooth scroll
-    function attachPaginationEvents() {
-        const paginationLinks = document.querySelectorAll('.page-link');
-        paginationLinks.forEach(link => {
-            // Remove any existing listeners to avoid duplicates
-            link.removeEventListener('click', handlePaginationClick);
-            link.addEventListener('click', handlePaginationClick);
-        });
-    }
-
-    function handlePaginationClick(e) {
-        e.preventDefault();
-        const page = this.dataset.page;
-        if (page && !isNaN(parseInt(page))) {
-            // Store scroll position of the candidates grid
-            const candidatesGrid = document.querySelector('.candidates-grid');
-            if (candidatesGrid) {
-                const scrollPosition = candidatesGrid.getBoundingClientRect().top + window.pageYOffset;
-                sessionStorage.setItem('scrollToCandidates', scrollPosition.toString());
-            }
-            goToPage(page);
-        }
-    }
-
-    // Scroll to candidates after page load
-    function scrollToCandidates() {
-        const scrollPosition = sessionStorage.getItem('scrollToCandidates');
-        if (scrollPosition) {
-            setTimeout(() => {
-                window.scrollTo({
-                    top: parseInt(scrollPosition) - 80,
-                    behavior: 'smooth'
-                });
-                sessionStorage.removeItem('scrollToCandidates');
-            }, 200);
-        }
-    }
-
-    // Initialize everything
-    const savedView = localStorage.getItem('clientView');
-    if (savedView === 'list') setView('list');
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initChips();
-        loadFiltersFromURL();
-        attachPaginationEvents();
-        scrollToCandidates();
-    });
-</script>
+        // Initial filter
+        filterCards();
+    </script>
 </body>
 </html>

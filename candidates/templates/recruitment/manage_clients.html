@@ -1,229 +1,236 @@
+{% extends 'recruitment/admin_base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Clients | MAHIKENG INVESTMENTS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
-            min-height: 100vh;
+
+{% block title %}Manage Clients{% endblock %}
+
+{% block extra_css %}
+<style>
+    .clients-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        padding: 20px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .card-header h3 {
+        margin: 0;
+        color: #0f0c29;
+    }
+    
+    .btn-add {
+        background: #0f0c29;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-top: 4px solid #FFD700;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+    }
+    
+    .stat-label {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+    
+    .clients-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .clients-table th, .clients-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .clients-table th {
+        background: #f8fafc;
+        font-weight: 600;
+    }
+    
+    .status-active {
+        background: #d1fae5;
+        color: #065f46;
+        padding: 4px 12px;
+        border-radius: 20px;
+        display: inline-block;
+        font-size: 0.75rem;
+    }
+    
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 4px 12px;
+        border-radius: 20px;
+        display: inline-block;
+        font-size: 0.75rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-icon {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.75rem;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .btn-icon:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-toggle {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .btn-reset {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+    
+    .btn-delete {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    @media (max-width: 768px) {
+        .clients-table {
+            font-size: 0.8rem;
+            min-width: 600px;
         }
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 280px;
-            background: linear-gradient(180deg, #0a0a2a 0%, #1a1a4a 100%);
-            color: white;
-            transition: all 0.3s;
-            z-index: 1000;
-            box-shadow: 2px 0 20px rgba(0,0,0,0.3);
-        }
-        .sidebar-header {
-            padding: 25px 20px;
-            border-bottom: 1px solid rgba(255,215,0,0.2);
+        .card-header {
+            flex-direction: column;
             text-align: center;
         }
-        .sidebar-logo-img {
-            width: 70px;
-            height: 70px;
-            border-radius: 15px;
-            object-fit: cover;
-            margin-bottom: 10px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-        }
-        .sidebar-company-name {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #FFD700;
-        }
-        .sidebar-tagline {
-            font-size: 0.65rem;
-            opacity: 0.7;
-        }
-        .sidebar-menu {
-            padding: 20px 0;
-        }
-        .menu-item {
-            padding: 12px 25px;
-            margin: 5px 15px;
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-        .menu-item:hover, .menu-item.active {
-            background: rgba(255, 215, 0, 0.15);
-            transform: translateX(5px);
-        }
-        .menu-item i {
-            width: 25px;
-            margin-right: 10px;
-            color: #FFD700;
-        }
-        .menu-item a {
-            color: white;
-            text-decoration: none;
-            display: block;
-        }
-        /* Main Content */
-        .main-content {
-            margin-left: 280px;
-            padding: 20px;
-        }
-        .top-bar {
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 20px 30px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .page-title h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-top: 4px solid #FFD700;
-        }
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #1e293b;
-        }
-        .clients-table-container {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background: #f8fafc;
-            font-weight: 600;
-        }
-        .status-active { background: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 20px; display: inline-block; }
-        .status-inactive { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 20px; display: inline-block; }
-        .btn-add {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #0f0c29;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-        }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-content { margin-left: 0; }
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" class="sidebar-logo-img" 
-                     onerror="this.src='https://via.placeholder.com/70x70/FFD700/0f0c29?text=MI'">
-                <h3 class="sidebar-company-name">MAHIKENG INVESTMENTS</h3>
-                <p class="sidebar-tagline">Global Travel Services & Growth Opportunities</p>
-            </div>
-        </div>
-        <div class="sidebar-menu">
-            <div class="menu-item">
-                <a href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            </div>
-            <div class="menu-item">
-                <a href="{% url 'candidate_create' %}"><i class="fas fa-user-plus"></i> Register Candidate</a>
-            </div>
-            <div class="menu-item active">
-                <a href="{% url 'manage_clients' %}"><i class="fas fa-users"></i> Manage Clients</a>
-            </div>
-            <div class="menu-item">
-                <a href="{% url 'admin_selections' %}"><i class="fas fa-heart"></i> Client Selections</a>
-            </div>
-            
-        </div>
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ total_clients }}</div>
+        <div class="stat-label">Total Clients</div>
     </div>
-
-    <div class="main-content">
-        <div class="top-bar">
-            <div class="page-title">
-                <h2><i class="fas fa-users"></i> Client Management</h2>
-                <p>Create and manage client user accounts</p>
-            </div>
-            <a href="{% url 'create_client' %}" class="btn-add">
-                <i class="fas fa-plus"></i> Add New Client
-            </a>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-value">{{ total_clients }}</div><div>Total Clients</div></div>
-            <div class="stat-card"><div class="stat-value">{{ active_clients }}</div><div>Active Clients</div></div>
-            <div class="stat-card"><div class="stat-value">{{ new_this_month }}</div><div>New This Month</div></div>
-        </div>
-
-        <!-- Clients Table -->
-        <div class="clients-table-container">
-            <table>
-                <thead>
-                    <tr><th>Username</th><th>Full Name</th><th>Email</th><th>Joined</th><th>Status</th><th>Actions</th></tr>
-                </thead>
-                <tbody>
-                    {% for client in clients %}
-                    <tr>
-                        <td><strong>{{ client.username }}</strong></td>
-                        <td>{{ client.get_full_name|default:"Not specified" }}</td>
-                        <td>{{ client.email|default:"No email" }}</td>
-                        <td>{{ client.date_joined|date:"M d, Y" }}</td>
-                        <td><span class="{% if client.is_active %}status-active{% else %}status-inactive{% endif %}">{% if client.is_active %}Active{% else %}Inactive{% endif %}</span></td>
-                        <td>
-                            <div class="action-buttons" style="display: flex; gap: 8px;">
-                                <a href="{% url 'toggle_client_status' client.id %}" class="btn-icon" style="background: #fef3c7; color: #92400e; padding: 6px 12px; border-radius: 8px; text-decoration: none;" onclick="return confirm('Toggle status?')">{% if client.is_active %}Disable{% else %}Enable{% endif %}</a>
-                                <a href="{% url 'reset_client_password' client.id %}" class="btn-icon" style="background: #dbeafe; color: #1e40af; padding: 6px 12px; border-radius: 8px; text-decoration: none;" onclick="return confirm('Reset password?')">Reset PW</a>
-                                <a href="{% url 'delete_client' client.id %}" class="btn-icon" style="background: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 8px; text-decoration: none;" onclick="return confirm('Delete this client?')">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="6" style="text-align: center; padding: 50px;">No client users created yet.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ active_clients }}</div>
+        <div class="stat-label">Active Clients</div>
     </div>
-</body>
-</html>
+    <div class="stat-card">
+        <div class="stat-value">{{ new_this_month }}</div>
+        <div class="stat-label">New This Month</div>
+    </div>
+</div>
+
+<div class="clients-card">
+    <div class="card-header">
+        <h3><i class="fas fa-users"></i> All Clients</h3>
+        <a href="{% url 'create_client' %}" class="btn-add">
+            <i class="fas fa-plus"></i> Add New Client
+        </a>
+    </div>
+    
+    <div style="overflow-x: auto;">
+        <table class="clients-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Joined</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td><strong>{{ client.username }}</strong></td>
+                    <td>{{ client.get_full_name|default:"Not specified" }}</td>
+                    <td>{{ client.email|default:"No email" }}</td>
+                    <td>{{ client.date_joined|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="{% if client.is_active %}status-active{% else %}status-inactive{% endif %}">
+                            {% if client.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'toggle_client_status' client.id %}" class="btn-icon btn-toggle" onclick="return confirm('Toggle status?')">
+                                <i class="fas fa-{% if client.is_active %}ban{% else %}check-circle{% endif %}"></i>
+                                {% if client.is_active %}Disable{% else %}Enable{% endif %}
+                            </a>
+                            <a href="{% url 'reset_client_password' client.id %}" class="btn-icon btn-reset" onclick="return confirm('Reset password?')">
+                                <i class="fas fa-key"></i> Reset PW
+                            </a>
+                            <a href="{% url 'delete_client' client.id %}" class="btn-icon btn-delete" onclick="return confirm('Delete this client?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 50px;">
+                        <i class="fas fa-users fa-3x" style="color: #cbd5e1;"></i>
+                        <p style="margin-top: 15px;">No clients registered yet.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

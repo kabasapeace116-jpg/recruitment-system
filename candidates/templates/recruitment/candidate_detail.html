@@ -1,331 +1,410 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ candidate.full_name }} | Candidate Details</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            animation: slideUp 0.5s ease;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .header {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            padding: 30px;
-            color: #0f0c29;
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-        .profile-photo {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            background: white;
-        }
-        .profile-photo-placeholder {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #0f0c29;
-            border: 4px solid white;
-        }
-        .header-info {
-            flex: 1;
-        }
-        .header-info h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        .header-info p {
-            opacity: 0.8;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        .status-AVA { background: #10b981; color: white; }
-        .status-SEL { background: #f59e0b; color: white; }
-        .status-CAN { background: #ef4444; color: white; }
-        .status-VIS { background: #3b82f6; color: white; }
-        .content { padding: 30px; }
-        .info-section {
-            background: #f8fafc;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .info-section h3 {
-            color: #1e293b;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #FFD700;
-            display: inline-block;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
+{% extends 'recruitment/admin_base.html' %}
+{% load static %}
+
+{% block title %}{{ candidate.full_name }} | Candidate Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .detail-header {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        flex-wrap: wrap;
+    }
+    
+    .profile-photo-container {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .profile-photo-container:hover {
+        transform: scale(1.05);
+    }
+    
+    .profile-photo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .profile-photo-placeholder {
+        width: 120px;
+        height: 120px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #0f0c29;
+        border: 4px solid white;
+    }
+    
+    .detail-header-info {
+        flex: 1;
+    }
+    
+    .detail-header-info h1 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+        color: #0f0c29;
+    }
+    
+    .detail-section {
+        padding: 25px 30px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .detail-section:last-child {
+        border-bottom: none;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #FFD700;
+        display: inline-block;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+    }
+    
+    .info-item {
+        display: flex;
+        padding: 10px;
+        background: #f8fafc;
+        border-radius: 10px;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #64748b;
+        width: 140px;
+    }
+    
+    .info-value {
+        color: #1e293b;
+        flex: 1;
+    }
+    
+    /* Status Badge */
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-AVA { background: #d1fae5; color: #065f46; }
+    .status-SEL { background: #fed7aa; color: #9a3412; }
+    .status-CAN { background: #fee2e2; color: #991b1b; }
+    .status-VIS { background: #dbeafe; color: #1e40af; }
+    .status-RES { background: #e0e7ff; color: #4338ca; }
+    
+    /* Health Badge */
+    .health-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .health-FIT { background: #d1fae5; color: #065f46; }
+    .health-UNFIT { background: #fee2e2; color: #991b1b; }
+    .health-PENDING { background: #fef3c7; color: #d97706; }
+    
+    /* Documents Grid */
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .doc-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: block;
+    }
+    
+    .doc-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .doc-icon {
+        font-size: 2rem;
+        color: #FFD700;
+        margin-bottom: 8px;
+    }
+    
+    .doc-title {
+        font-weight: 500;
+        color: #1e293b;
+        margin-top: 8px;
+    }
+    
+    video {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 15px;
+        padding: 25px 30px;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-back {
+        background: #f1f5f9;
+        color: #475569;
+    }
+    
+    .btn-edit {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+    }
+    
+    .btn-back:hover, .btn-edit:hover {
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .detail-header {
+            flex-direction: column;
+            text-align: center;
         }
         .info-item {
-            display: flex;
-            padding: 10px;
-            background: white;
-            border-radius: 10px;
+            flex-direction: column;
         }
         .info-label {
-            font-weight: 600;
-            color: #64748b;
-            width: 140px;
-        }
-        .info-value {
-            color: #1e293b;
-            flex: 1;
+            width: 100%;
+            margin-bottom: 5px;
         }
         .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
+            flex-direction: column;
         }
         .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
+            text-align: center;
+            justify-content: center;
         }
-        .btn-back {
-            background: #f1f5f9;
-            color: #475569;
-        }
-        .btn-back:hover {
-            background: #e2e8f0;
-            transform: translateX(-5px);
-        }
-        .btn-edit {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #0f0c29;
-        }
-        .btn-edit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-        @media (max-width: 768px) {
-            .header { flex-direction: column; text-align: center; }
-            .info-item { flex-direction: column; }
-            .info-label { width: 100%; margin-bottom: 5px; }
-            .button-group { flex-direction: column; }
-            .btn { width: 100%; justify-content: center; }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <!-- Profile Photo -->
-            {% if candidate.profile_photo %}
-                <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="profile-photo">
-            {% else %}
-                <div class="profile-photo-placeholder">
-                    <i class="fas fa-user"></i>
-                </div>
-            {% endif %}
-            <div class="header-info">
-                <h1><i class="fas fa-user-circle"></i> {{ candidate.full_name }}</h1>
-                <p>Passport Number: {{ candidate.passport_number }} | Registered: {{ candidate.registered_at|date:"F d, Y" }}</p>
-                <span class="status-badge status-{{ candidate.application_status }}">
-                    <i class="fas 
-                        {% if candidate.application_status == 'AVA' %}fa-check-circle
-                        {% elif candidate.application_status == 'SEL' %}fa-user-check
-                        {% elif candidate.application_status == 'CAN' %}fa-times-circle
-                        {% elif candidate.application_status == 'VIS' %}fa-passport
-                        {% else %}fa-info-circle{% endif %}
-                    "></i>
-                    {{ candidate.get_application_status_display }}
-                </span>
-            </div>
-        </div>
-        <div class="content">
-            <!-- Personal Information -->
-            <div class="info-section">
-                <h3><i class="fas fa-id-card"></i> Personal Information</h3>
-                <div class="info-grid">
-                    <div class="info-item"><div class="info-label">Full Name:</div><div class="info-value">{{ candidate.full_name }}</div></div>
-                    <div class="info-item"><div class="info-label">National ID (NIN):</div><div class="info-value">{{ candidate.nin }}</div></div>
-                    <div class="info-item"><div class="info-label">Passport Number:</div><div class="info-value">{{ candidate.passport_number }}</div></div>
-                    <div class="info-item"><div class="info-label">Passport Issue Date:</div><div class="info-value">{{ candidate.passport_issue_date|date:"F d, Y"|default:"Not specified" }}</div></div>
-                    <div class="info-item"><div class="info-label">Passport Expiry Date:</div><div class="info-value">{{ candidate.passport_expiry_date|date:"F d, Y"|default:"Not specified" }}</div></div>
-                    <div class="info-item"><div class="info-label">Date of Birth:</div><div class="info-value">{{ candidate.date_of_birth|date:"F d, Y" }} (Age: {{ candidate.age }})</div></div>
-                    <div class="info-item"><div class="info-label">Place of Birth:</div><div class="info-value">{{ candidate.place_of_birth|default:"Not specified" }}</div></div>
-                    <div class="info-item"><div class="info-label">Gender:</div><div class="info-value">{{ candidate.get_gender_display }}</div></div>
-                    <div class="info-item"><div class="info-label">Religion:</div><div class="info-value">{{ candidate.get_religion_display }}</div></div>
-                </div>
-            </div>
+    }
+</style>
+{% endblock %}
 
-            <!-- Contact Information -->
-            <div class="info-section">
-                <h3><i class="fas fa-address-book"></i> Contact Information</h3>
-                <div class="info-grid">
-                    <div class="info-item"><div class="info-label">Phone:</div><div class="info-value">{{ candidate.phone_number|default:"Not provided" }}</div></div>
-                    <div class="info-item"><div class="info-label">Alternative Phone:</div><div class="info-value">{{ candidate.alternative_phone|default:"Not provided" }}</div></div>
-                    <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ candidate.email|default:"Not provided" }}</div></div>
-                    <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ candidate.home_address|default:"Not provided" }}</div></div>
-                    <div class="info-item"><div class="info-label">Emergency Contact:</div><div class="info-value">{{ candidate.emergency_contact_name|default:"Not provided" }}</div></div>
-                    <div class="info-item"><div class="info-label">Emergency Phone:</div><div class="info-value">{{ candidate.emergency_contact_phone|default:"Not provided" }}</div></div>
-                </div>
+{% block content %}
+<div class="detail-card">
+    <div class="detail-header">
+    <!-- Profile Photo - Clickable -->
+    <div class="profile-photo-container" 
+         onclick="openPhotoModal('{% if candidate.profile_photo %}{{ candidate.profile_photo.url }}{% endif %}', 
+                  '{{ candidate.full_name }}', 0, 
+                  [{url: '{% if candidate.profile_photo %}{{ candidate.profile_photo.url }}{% endif %}', 
+                    name: '{{ candidate.full_name }}'}])">
+        {% if candidate.profile_photo %}
+            <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="profile-photo">
+        {% else %}
+            <div class="profile-photo-placeholder">
+                <i class="fas fa-user"></i>
             </div>
-
-            <!-- Professional Information -->
-            <div class="info-section">
-                <h3><i class="fas fa-briefcase"></i> Professional Information</h3>
-                <div class="info-grid">
-                    <div class="info-item"><div class="info-label">Job Category:</div><div class="info-value">{{ candidate.get_job_category_display }}</div></div>
-                    <div class="info-item"><div class="info-label">Experience:</div><div class="info-value">{{ candidate.years_of_experience }} years</div></div>
-                    <div class="info-item"><div class="info-label">Skills:</div><div class="info-value">{{ candidate.skills|default:"Not specified" }}</div></div>
-                    <div class="info-item"><div class="info-label">Languages:</div><div class="info-value">{{ candidate.languages_spoken|default:"English" }}</div></div>
-                    <div class="info-item"><div class="info-label">Preferred Country:</div><div class="info-value">{{ candidate.preferred_country|default:"Not specified" }}</div></div>
-                    <div class="info-item"><div class="info-label">Expected Salary:</div><div class="info-value">${{ candidate.expected_salary|default:"Negotiable" }}</div></div>
-                </div>
-            </div>
-
-            <!-- Health Information -->
-            <div class="info-section">
-                <h3><i class="fas fa-stethoscope"></i> Health Information</h3>
-                <div class="info-grid">
-                    <div class="info-item"><div class="info-label">Health Clearance:</div><div class="info-value">{% if candidate.health_clearance %}✓ Cleared{% else %}⏳ Pending{% endif %}</div></div>
-                    <div class="info-item"><div class="info-label">Yellow Fever:</div><div class="info-value">{% if candidate.yellow_fever_status %}✓ Vaccinated{% else %}✗ Not Vaccinated{% endif %}</div></div>
-                    <div class="info-item"><div class="info-label">Blood Group:</div><div class="info-value">{{ candidate.blood_group|default:"Not specified" }}</div></div>
-                    <div class="info-item"><div class="info-label">Medical Conditions:</div><div class="info-value">{{ candidate.medical_conditions|default:"None" }}</div></div>
-                </div>
-            </div>
-
-            <!-- Documents Section -->
-<div class="info-section">
-    <h3><i class="fas fa-file-alt"></i> Documents & Media</h3>
+        {% endif %}
+    </div>
+    <div class="detail-header-info">
+        <h1><i class="fas fa-user-circle"></i> {{ candidate.full_name }}</h1>
+        <p>Passport Number: {{ candidate.passport_number }} | Registered: {{ candidate.registered_at|date:"F d, Y" }}</p>
+        <span class="status-badge status-{{ candidate.application_status }}">
+            <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% elif candidate.application_status == 'SEL' %}user-check{% elif candidate.application_status == 'VIS' %}passport{% elif candidate.application_status == 'RES' %}clock{% else %}info-circle{% endif %}"></i>
+            {% if candidate.application_status == 'AVA' %}Available
+            {% elif candidate.application_status == 'SEL' %}Selected
+            {% elif candidate.application_status == 'CAN' %}Cancelled
+            {% elif candidate.application_status == 'VIS' %}Visa Issued
+            {% elif candidate.application_status == 'RES' %}Reserved
+            {% else %}{{ candidate.get_application_status_display }}{% endif %}
+        </span>
+    </div>
+</div>
     
-    <!-- Video Section -->
-    {% if candidate.candidate_video %}
-    <div style="margin-bottom: 20px;">
-        <div class="info-label" style="margin-bottom: 10px;">
-            <i class="fas fa-video"></i> Candidate Video Introduction
+    <!-- Personal Information -->
+    <div class="detail-section">
+        <h3 class="section-title"><i class="fas fa-id-card"></i> Personal Information</h3>
+        <div class="info-grid">
+            <div class="info-item"><div class="info-label">Full Name:</div><div class="info-value">{{ candidate.full_name }}</div></div>
+            <div class="info-item"><div class="info-label">National ID:</div><div class="info-value">{{ candidate.nin }}</div></div>
+            <div class="info-item"><div class="info-label">Passport Number:</div><div class="info-value">{{ candidate.passport_number }}</div></div>
+            <div class="info-item"><div class="info-label">Passport Issue:</div><div class="info-value">{{ candidate.passport_issue_date|date:"F d, Y"|default:"Not specified" }}</div></div>
+            <div class="info-item"><div class="info-label">Passport Expiry:</div><div class="info-value">{{ candidate.passport_expiry_date|date:"F d, Y"|default:"Not specified" }}</div></div>
+            <div class="info-item"><div class="info-label">Age:</div><div class="info-value">{{ candidate.age }} years</div></div>
+            <div class="info-item"><div class="info-label">Place of Birth:</div><div class="info-value">{{ candidate.place_of_birth|default:"Not specified" }}</div></div>
+            <div class="info-item"><div class="info-label">Gender:</div><div class="info-value">{{ candidate.get_gender_display }}</div></div>
+            <div class="info-item"><div class="info-label">Religion:</div><div class="info-value">{{ candidate.get_religion_display }}</div></div>
         </div>
-        <video width="100%" controls style="max-width: 500px; border-radius: 15px;">
-            <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+    </div>
+    
+    <!-- Contact Information -->
+    <div class="detail-section">
+        <h3 class="section-title"><i class="fas fa-address-book"></i> Contact Information</h3>
+        <div class="info-grid">
+            <div class="info-item"><div class="info-label">Phone:</div><div class="info-value">{{ candidate.phone_number|default:"Not provided" }}</div></div>
+            <div class="info-item"><div class="info-label">Alternative Phone:</div><div class="info-value">{{ candidate.alternative_phone|default:"Not provided" }}</div></div>
+            <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ candidate.home_address|default:"Not provided" }}</div></div>
+            <div class="info-item"><div class="info-label">Next of Kin:</div><div class="info-value">{{ candidate.emergency_contact_name|default:"Not provided" }}</div></div>
+            <div class="info-item"><div class="info-label">Next of Kin Phone:</div><div class="info-value">{{ candidate.emergency_contact_phone|default:"Not provided" }}</div></div>
+        </div>
+    </div>
+    
+    <!-- Professional Information -->
+    <div class="detail-section">
+        <h3 class="section-title"><i class="fas fa-briefcase"></i> Professional Information</h3>
+        <div class="info-grid">
+            <div class="info-item"><div class="info-label">Job Category:</div><div class="info-value">{{ candidate.get_job_category_display }}</div></div>
+            <div class="info-item"><div class="info-label">Experience:</div><div class="info-value">{{ candidate.years_of_experience }} years</div></div>
+            <div class="info-item"><div class="info-label">Skills:</div><div class="info-value">{{ candidate.skills|default:"Not specified" }}</div></div>
+            <div class="info-item"><div class="info-label">Country of Experience:</div><div class="info-value">{{ candidate.preferred_country|default:"Not specified" }}</div></div>
+        </div>
+    </div>
+    
+    <!-- Status & Health Information -->
+    <div class="detail-section">
+        <h3 class="section-title"><i class="fas fa-chart-simple"></i> Status & Health</h3>
+        <div class="info-grid">
+            <div class="info-item"><div class="info-label">Application Status:</div><div class="info-value">
+                <span class="status-badge status-{{ candidate.application_status }}">
+                    {% if candidate.application_status == 'AVA' %}Available
+                    {% elif candidate.application_status == 'SEL' %}Selected
+                    {% elif candidate.application_status == 'CAN' %}Cancelled
+                    {% elif candidate.application_status == 'VIS' %}Visa Issued
+                    {% elif candidate.application_status == 'RES' %}Reserved
+                    {% else %}{{ candidate.get_application_status_display }}{% endif %}
+                </span>
+            </div></div>
+            <div class="info-item"><div class="info-label">Health Status:</div><div class="info-value">
+                <span class="health-badge health-{{ candidate.health_status }}">
+                    {% if candidate.health_status == 'FIT' %}Fit
+                    {% elif candidate.health_status == 'UNFIT' %}Unfit
+                    {% elif candidate.health_status == 'PENDING' %}Pending
+                    {% else %}{{ candidate.get_health_status_display }}{% endif %}
+                </span>
+            </div></div>
+            <div class="info-item"><div class="info-label">Registered By:</div><div class="info-value">{{ candidate.registered_by.username|default:"System" }}</div></div>
+            <div class="info-item"><div class="info-label">Registered At:</div><div class="info-value">{{ candidate.registered_at|date:"F d, Y H:i" }}</div></div>
+        </div>
+    </div>
+    
+    <!-- Media & Documents Section -->
+    <div class="detail-section">
+        <h3 class="section-title"><i class="fas fa-file-alt"></i> Media & Documents</h3>
+        
+        <!-- Video Section -->
+        {% if candidate.candidate_video %}
+        <div style="margin-bottom: 25px;">
+            <div class="info-label" style="margin-bottom: 10px; font-weight: 600;">
+                <i class="fas fa-video"></i> Video Introduction
+            </div>
+            <video width="100%" controls style="max-width: 500px; border-radius: 15px; border: 1px solid #e2e8f0;">
+                <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        {% endif %}
+        
+
+        <!-- Documents Grid -->
+<div class="documents-grid">
+    {% if candidate.profile_photo %}
+    <a href="{{ candidate.profile_photo.url }}" target="_blank" class="doc-card">
+        <div class="doc-icon"><i class="fas fa-camera"></i></div>
+        <div class="doc-title">Profile Photo</div>
+    </a>
+    {% endif %}
+    
+    
+    {% if candidate.cv_pdf %}
+    <a href="{{ candidate.cv_pdf.url }}" target="_blank" class="doc-card">
+        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+        <div class="doc-title">CV / Resume</div>
+    </a>
+    {% endif %}
+    
+    {% if candidate.passport_copy %}
+    <a href="{{ candidate.passport_copy.url }}" target="_blank" class="doc-card">
+        <div class="doc-icon"><i class="fas fa-passport"></i></div>
+        <div class="doc-title">Passport Copy</div>
+    </a>
+    {% endif %}
+</div>
+        
+        
+        {% if not candidate.profile_photo and not candidate.cv_pdf and not candidate.passport_copy and not candidate.candidate_video %}
+        <div style="text-align: center; padding: 30px; color: #64748b;">
+            <i class="fas fa-cloud-upload-alt fa-2x"></i>
+            <p style="margin-top: 10px;">No documents or media uploaded yet.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Notes -->
+    {% if candidate.notes %}
+    <div class="detail-section">
+        <h3 class="section-title"><i class="fas fa-sticky-note"></i> Notes</h3>
+        <div class="info-item"><div class="info-value">{{ candidate.notes|linebreaks }}</div></div>
     </div>
     {% endif %}
     
-    <!-- Documents Grid -->
-    <div class="documents-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-        {% if candidate.profile_photo %}
-        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
-            <i class="fas fa-camera" style="font-size: 2rem; color: #FFD700;"></i>
-            <div style="margin-top: 10px;">Profile Photo</div>
-            <a href="{{ candidate.profile_photo.url }}" target="_blank" style="color: #FFD700;">View Photo</a>
-        </div>
-        {% endif %}
-        
-        {% if candidate.passport_copy %}
-        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
-            <i class="fas fa-passport" style="font-size: 2rem; color: #FFD700;"></i>
-            <div style="margin-top: 10px;">Passport Copy</div>
-            <a href="{{ candidate.passport_copy.url }}" target="_blank" style="color: #FFD700;">View Document</a>
-        </div>
-        {% endif %}
-        
-        {% if candidate.cv_pdf %}
-        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
-            <i class="fas fa-file-pdf" style="font-size: 2rem; color: #FFD700;"></i>
-            <div style="margin-top: 10px;">CV/Resume</div>
-            <a href="{{ candidate.cv_pdf.url }}" target="_blank" style="color: #FFD700;">View Document</a>
-        </div>
-        {% endif %}
-        
-        {% if candidate.medical_certificate %}
-        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
-            <i class="fas fa-file-medical" style="font-size: 2rem; color: #FFD700;"></i>
-            <div style="margin-top: 10px;">Medical Certificate</div>
-            <a href="{{ candidate.medical_certificate.url }}" target="_blank" style="color: #FFD700;">View Document</a>
-        </div>
-        {% endif %}
-        
-        {% if candidate.training_certificates %}
-        <div class="doc-card" style="background: #f8fafc; border-radius: 10px; padding: 15px; text-align: center;">
-            <i class="fas fa-certificate" style="font-size: 2rem; color: #FFD700;"></i>
-            <div style="margin-top: 10px;">Training Certificates</div>
-            <a href="{{ candidate.training_certificates.url }}" target="_blank" style="color: #FFD700;">View Document</a>
-        </div>
-        {% endif %}
+    <!-- Action Buttons -->
+    <div class="button-group">
+        <a href="{% url 'candidates_table' %}" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Candidates
+        </a>
+        <a href="{% url 'candidate_update' candidate.pk %}" class="btn btn-edit">
+            <i class="fas fa-edit"></i> Edit Candidate
+        </a>
     </div>
 </div>
 
-            <!-- Placement Information -->
-            <div class="info-section">
-                <h3><i class="fas fa-chart-simple"></i> Placement Information</h3>
-                <div class="info-grid">
-                    <div class="info-item"><div class="info-label">Application Status:</div><div class="info-value">{{ candidate.get_application_status_display }}</div></div>
-                    <div class="info-item"><div class="info-label">Registered By:</div><div class="info-value">{{ candidate.registered_by.username|default:"System" }}</div></div>
-                    <div class="info-item"><div class="info-label">Registered At:</div><div class="info-value">{{ candidate.registered_at|date:"F d, Y H:i" }}</div></div>
-                    <div class="info-item"><div class="info-label">Last Updated:</div><div class="info-value">{{ candidate.updated_at|date:"F d, Y H:i" }}</div></div>
-                </div>
-            </div>
+<!-- Include Photo Modal -->
+{% include 'recruitment/candidate_photo_modal.html' %}
 
-            <!-- Notes -->
-            {% if candidate.notes %}
-            <div class="info-section">
-                <h3><i class="fas fa-sticky-note"></i> Notes</h3>
-                <div class="info-item"><div class="info-value">{{ candidate.notes|linebreaks }}</div></div>
-            </div>
-            {% endif %}
-
-            <!-- Action Buttons -->
-            <div class="button-group">
-                <a href="{% url 'admin_dashboard' %}" class="btn btn-back">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
-                </a>
-                <a href="{% url 'candidate_update' candidate.pk %}" class="btn btn-edit">
-                    <i class="fas fa-edit"></i> Edit Candidate
-                </a>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+<script>
+    function deleteCandidate(id, name) {
+        if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone!`)) {
+            window.location.href = `/candidate/${id}/delete/`;
+        }
+    }
+</script>
+{% endblock %}

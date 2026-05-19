@@ -1,37 +1,54 @@
 {% for candidate in page_obj %}
-<tr class="candidate-row">
-    <td><input type="checkbox" class="candidate-checkbox" data-id="{{ candidate.id }}"></td>
+<tr class="candidate-row" data-candidate-id="{{ candidate.id }}">
+    <!-- Column 1: Checkbox -->
+    <td>
+        <input type="checkbox" class="candidate-checkbox" data-id="{{ candidate.id }}">
+    </td>
+    
+    <!-- Column 2: Photo -->
     <td>
         {% if candidate.profile_photo %}
             <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" 
-                 class="thumbnail-img" title="Click to view full size">
+                 class="thumbnail-img" 
+                 style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; cursor: pointer;"
+                 onclick="openPhotoFromRow(this, '{{ candidate.full_name }}', {{ forloop.counter0 }})">
         {% else %}
-            <div class="thumbnail-placeholder" title="No photo available">
+            <div class="thumbnail-placeholder" style="width: 45px; height: 45px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
                 <i class="fas fa-user"></i>
             </div>
         {% endif %}
     </td>
+    
+    <!-- Column 3: Full Name -->
     <td>
         <span class="candidate-name">{{ candidate.full_name }}</span>
         <span class="nin-number" style="display: none;">{{ candidate.nin }}</span>
     </td>
+    
+    <!-- Column 4: Passport No -->
     <td><span class="candidate-passport">{{ candidate.passport_number }}</span></td>
+    
+    <!-- Column 5: Job Category -->
     <td>{{ candidate.get_job_category_display }}</td>
+    
+    <!-- Column 6: Status -->
     <td>
         <span class="status-badge status-{{ candidate.application_status }}">
             {{ candidate.get_application_status_display }}
         </span>
     </td>
+    
+    <!-- Column 7: Registered Date -->
     <td>{{ candidate.registered_at|date:"M d, Y" }}</td>
+    
+    <!-- Column 8: Actions -->
     <td>
         <div class="action-buttons">
             <button class="btn-icon btn-view" onclick="location.href='{% url 'candidate_detail' candidate.pk %}'">
                 <i class="fas fa-eye"></i> View
             </button>
-            <button class="btn-icon btn-edit" onclick="location.href='{% url 'candidate_update' candidate.pk %}'">
-                <i class="fas fa-edit"></i> Edit
-            </button>
-            <button class="btn-icon btn-delete" onclick="deleteCandidate({{ candidate.id }})">
+          
+            <button class="btn-icon btn-delete" onclick="deleteCandidate({{ candidate.id }}, '{{ candidate.full_name }}')">
                 <i class="fas fa-trash"></i> Delete
             </button>
         </div>
@@ -42,9 +59,6 @@
     <td colspan="8" style="text-align: center; padding: 50px;">
         <i class="fas fa-users fa-3x" style="color: #cbd5e1;"></i>
         <p style="margin-top: 15px;">No candidates registered yet.</p>
-        <button class="btn-add" onclick="location.href='{% url 'candidate_create' %}'">
-            Register First Candidate
-        </button>
     </td>
 </tr>
 {% endfor %}

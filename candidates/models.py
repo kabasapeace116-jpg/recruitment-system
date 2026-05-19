@@ -37,15 +37,15 @@ class ApplicationStatus(models.TextChoices):
     SELECTED = 'SEL', 'Selected'
     CANCELLED = 'CAN', 'Cancelled'
     VISA_ISSUED = 'VIS', 'Visa Issued'
-    REGISTERED = 'REG', 'Registered'
-    INTERVIEWED = 'INT', 'Interviewed'
-    MEDICAL_PENDING = 'MED', 'Medical Pending'
-    MEDICAL_CLEARED = 'MCL', 'Medical Cleared'
-    DOCUMENTS_SENT = 'DOC', 'Documents Sent'
-    VISA_PROCESSING = 'VPR', 'Visa Processing'
-    PLACED = 'PLC', 'Placed'
-    DEPARTED = 'DEP', 'Departed'
-    CONTRACT_COMPLETED = 'CMP', 'Contract Completed'
+    RESERVED = 'RES', 'Reserved'
+    
+
+class HealthStatus(models.TextChoices):
+    FIT = 'FIT', 'Fit'
+    UNFIT = 'UNFIT', 'Unfit'
+    PENDING = 'PENDING', 'Pending'
+
+
 
 class Candidate(models.Model):
     # Personal Information
@@ -75,6 +75,7 @@ class Candidate(models.Model):
     skills = models.TextField(help_text="List key skills separated by commas", blank=True)
     languages_spoken = models.CharField(max_length=200, help_text="e.g., English, Arabic, Swahili", blank=True)
     
+    
     # Health & Medical
     health_clearance = models.BooleanField(default=False, verbose_name="Health Clearance")
     yellow_fever_status = models.BooleanField(default=False, verbose_name="Yellow Fever Vaccination")
@@ -83,6 +84,13 @@ class Candidate(models.Model):
         ('A+', 'A+'), ('A-', 'A-'), ('B+', 'B+'), ('B-', 'B-'), 
         ('O+', 'O+'), ('O-', 'O-'), ('AB+', 'AB+'), ('AB-', 'AB-')
     ])
+    # NEW 
+    health_status = models.CharField(
+        max_length=7,
+        choices=HealthStatus.choices,
+        default=HealthStatus.PENDING,
+        verbose_name="Health Status"
+    )
     
     # Placement Information
     application_status = models.CharField(
@@ -135,6 +143,8 @@ class Candidate(models.Model):
         related_name='registered_candidates'
     )
     notes = models.TextField(blank=True, help_text="Internal notes about the candidate")
+    
+
     
     class Meta:
         indexes = [
@@ -197,3 +207,4 @@ class ClientSelection(models.Model):
     
     def __str__(self):
         return f"{self.client.username} selected {self.candidate.full_name}"
+    

@@ -24,6 +24,7 @@ class CandidateRegistrationForm(forms.ModelForm):
             'home_address': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
             'preferred_country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., UAE, Saudi Arabia, Qatar'}),
             'expected_salary': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Amount in USD'}),
+            'health_status': forms.Select(attrs={'class': 'form-control'}),
         }
 
 class ClientUserCreationForm(forms.ModelForm):

@@ -944,6 +944,72 @@
     color: #FFD700;
     flex-shrink: 0;
 }
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #0f0c29;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+    cursor: pointer;
+}
+
+.sidebar-overlay.show {
+    display: block;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding-top: 70px;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-menu-btn {
+        display: none;
+    }
+    
+    .sidebar-overlay {
+        display: none !important;
+    }
+}
 
     </style>
 </head>
@@ -1098,35 +1164,7 @@
             </div>
         </div>
         <!-- Search Bar Section -->
-<!-- Search Bar Section -->
-<div class="search-section">
-    <div class="search-container">
-        <form method="get" action="{% url 'admin_dashboard' %}" id="searchForm">
-            <div class="search-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" class="search-input" 
-                       placeholder="🔍 Search by candidate name, passport number, or NIN..." 
-                       value="{{ search_query }}">
-                {% if search_query or status_filter != 'all' %}
-                    <a href="{% url 'admin_dashboard' %}" class="search-clear">
-                        <i class="fas fa-times-circle"></i>
-                    </a>
-                {% endif %}
-            </div>
-            
-            <input type="hidden" name="page" value="1">
-        </form>
-        <div class="search-results-info" id="searchResultsInfo">
-            <i class="fas fa-info-circle"></i> Showing <strong>{{ page_obj.paginator.count }}</strong> candidates
-            {% if search_query %}
-                | Search: "{{ search_query }}"
-            {% endif %}
-            {% if status_filter != 'all' %}
-                | Filter: {{ status_filter }}
-            {% endif %}
-        </div>
-    </div>
-</div>
+
         
 
         
@@ -1524,5 +1562,85 @@ document.addEventListener('DOMContentLoaded', function() {
     scrollToTable();
 });
 </script>
+
+<script>
+    // Wait for DOM to fully load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get elements
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.querySelector('.sidebar');
+        
+        // Create overlay if it doesn't exist
+        let overlay = document.querySelector('.sidebar-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'sidebar-overlay';
+            overlay.id = 'sidebarOverlay';
+            document.body.appendChild(overlay);
+        }
+        
+        // Function to open sidebar
+        function openSidebar() {
+            if (sidebar) {
+                sidebar.classList.add('open');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                console.log('Sidebar opened'); // Debug
+            }
+        }
+        
+        // Function to close sidebar
+        function closeSidebar() {
+            if (sidebar) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                console.log('Sidebar closed'); // Debug
+            }
+        }
+        
+        // Toggle function
+        function toggleSidebar() {
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+        
+        // Add click event to menu button
+        if (menuBtn) {
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+        } else {
+            console.log('Menu button not found!');
+        }
+        
+        // Close when clicking overlay
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
+        
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
+                closeSidebar();
+            }
+        });
+        
+        // Close on window resize (desktop)
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeSidebar();
+            }
+        });
+    });
+</script>
+
+<button class="mobile-menu-btn" id="mobileMenuBtn">
+    <i class="fas fa-bars"></i>
+</button>
 </body>
 </html>

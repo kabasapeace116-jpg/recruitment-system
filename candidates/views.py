@@ -12,6 +12,7 @@ import json
 from .models import Candidate, JobCategory
 from .models import Candidate, JobCategory, ClientSelection
 from .forms import CandidateRegistrationForm, ClientUserCreationForm
+from .models import Candidate, JobCategory, Religion, ApplicationStatus, HealthStatus, ClientSelection
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -1172,6 +1173,42 @@ def toggle_select_candidate(request):
         try:
             data = json.loads(request.body)
             candidate_id = data.get('candidate_id')
+            action = data.get('action')
+            
+            candidate = get_object_or_404(Candidate, id=candidate_id)
+            
+            if action == 'select':
+                # Create selection
+                selection, created = ClientSelection.objects.get_or_create(
+                    client=request.user,
+                    candidate=candidate
+                )
+                if created:
+                    # Update candidate status to SELECTED
+                    candidate.application_status = 'SEL'
+                    candidate.save()
+                    return JsonResponse({'success': True, 'message': 'Candidate selected successfully'})
+                else:
+                    return JsonResponse({'success': False, 'message': 'Already selected'})
+            
+            elif action == 'unselect':
+                # Remove selection
+                ClientSelection.objects.filter(client=request.user, candidate=candidate).delete()
+                # Check if other clients have selected this candidate
+                if not ClientSelection.objects.filter(candidate=candidate).exists():
+                    candidate.application_status = 'AVA'
+                    candidate.save()
+                return JsonResponse({'success': True, 'message': 'Candidate removed from selection'})
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
+    """Client can select or unselect a candidate"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            candidate_id = data.get('candidate_id')
             action = data.get('action')  # 'select' or 'unselect'
             
             candidate = get_object_or_404(Candidate, id=candidate_id)
@@ -1390,9 +1427,91 @@ def health_check(request):
         'database': 'connected' if db_connected else 'disconnected'
     })
 
+from django.db.models import Q
+
 @login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def candidates_table(request):
+    all_candidates = Candidate.objects.select_related('registered_by').all()
+    
+    # Get filter parameters
+    search_query = request.GET.get('search', '')
+    job_filter = request.GET.get('job', '')
+    experience_filter = request.GET.get('experience', '')
+    age_filter = request.GET.get('age', '')
+    religion_filter = request.GET.get('religion', '')
+    status_filter = request.GET.get('status', '')
+    health_filter = request.GET.get('health', '')
+    
+    # Apply search
+    if search_query:
+        all_candidates = all_candidates.filter(
+            Q(full_name__icontains=search_query) |
+            Q(passport_number__icontains=search_query) |
+            Q(nin__icontains=search_query)
+        )
+    
+    # Apply job filter
+    if job_filter:
+        all_candidates = all_candidates.filter(job_category=job_filter)
+    
+    # Apply experience filter
+    if experience_filter:
+        if experience_filter == '0-2':
+            all_candidates = all_candidates.filter(years_of_experience__gte=0, years_of_experience__lte=2)
+        elif experience_filter == '3-5':
+            all_candidates = all_candidates.filter(years_of_experience__gte=3, years_of_experience__lte=5)
+        elif experience_filter == '6-10':
+            all_candidates = all_candidates.filter(years_of_experience__gte=6, years_of_experience__lte=10)
+        elif experience_filter == '10+':
+            all_candidates = all_candidates.filter(years_of_experience__gte=10)
+    
+    # Apply age filter
+    if age_filter:
+        today = date.today()
+        if age_filter == '18-25':
+            min_birth = today - timedelta(days=25*365.25)
+            max_birth = today - timedelta(days=18*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '26-35':
+            min_birth = today - timedelta(days=35*365.25)
+            max_birth = today - timedelta(days=26*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '36-45':
+            min_birth = today - timedelta(days=45*365.25)
+            max_birth = today - timedelta(days=36*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '46-55':
+            min_birth = today - timedelta(days=55*365.25)
+            max_birth = today - timedelta(days=46*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '55+':
+            max_birth = today - timedelta(days=55*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__lte=max_birth)
+    
+    # Apply religion filter
+    if religion_filter:
+        all_candidates = all_candidates.filter(religion=religion_filter)
+    
+    # Apply status filter
+    if status_filter:
+        all_candidates = all_candidates.filter(application_status=status_filter)
+    
+    # Apply health filter
+    if health_filter:
+        all_candidates = all_candidates.filter(health_status=health_filter)
+    
+    paginator = Paginator(all_candidates, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'job_categories': JobCategory.choices,
+        'religions': Religion.choices,
+        'status_choices': ApplicationStatus.choices,
+    }
+    return render(request, 'recruitment/candidates_table.html', context)
     all_candidates = Candidate.objects.select_related('registered_by').all()
     paginator = Paginator(all_candidates, 20)
     page_number = request.GET.get('page')
@@ -1402,3 +1521,69 @@ def candidates_table(request):
         'page_obj': page_obj,
     }
     return render(request, 'recruitment/candidates_table.html', context)
+from django.contrib.auth.models import User
+
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(is_admin_user)
+def manage_admin_users(request):
+    """View to manage admin users (staff and superusers)"""
+    # Exclude current user from the list
+    admins = User.objects.filter(is_staff=True).exclude(id=request.user.id)
+    return render(request, 'recruitment/manage_admin_users.html', {'admins': admins})
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(is_admin_user)
+def create_admin_user(request):
+    """Create a new admin user"""
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        is_superuser = request.POST.get('is_superuser') == 'on'
+        
+        # Validation
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'recruitment/create_admin_user.html')
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists.')
+            return render(request, 'recruitment/create_admin_user.html')
+        
+        # Create user
+        user = User.objects.create_user(
+            username=username, 
+            email=email, 
+            password=password
+        )
+        user.is_staff = True
+        user.is_superuser = is_superuser
+        user.save()
+        
+        messages.success(request, f'Admin user "{username}" created successfully!')
+        return redirect('manage_admin_users')
+    
+    return render(request, 'recruitment/create_admin_user.html')
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(is_admin_user)
+def delete_admin_user(request, user_id):
+    """Delete an admin user"""
+    if request.method == 'POST':
+        user = get_object_or_404(User, id=user_id, is_staff=True)
+        
+        # Prevent deleting yourself
+        if user == request.user:
+            messages.error(request, 'You cannot delete your own account.')
+            return redirect('manage_admin_users')
+        
+        username = user.username
+        user.delete()
+        messages.success(request, f'Admin user "{username}" has been deleted.')
+        return redirect('manage_admin_users')
+    
+    return redirect('manage_admin_users')

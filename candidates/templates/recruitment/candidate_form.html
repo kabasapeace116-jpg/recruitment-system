@@ -410,43 +410,43 @@
         }
 
         /* Smooth scrolling for the whole page */
-html {
-    scroll-behavior: smooth;
-}
+        html {
+            scroll-behavior: smooth;
+        }
 
-/* Form section transition */
-.form-section {
-    transition: all 0.3s ease;
-}
+        /* Form section transition */
+        .form-section {
+            transition: all 0.3s ease;
+        }
 
-/* Scroll margin to prevent header overlap */
-.form-section.active {
-    scroll-margin-top: 20px;
-}
+        /* Scroll margin to prevent header overlap */
+        .form-section.active {
+            scroll-margin-top: 20px;
+        }
 
-.section-title {
-    scroll-margin-top: 80px;
-}
+        .section-title {
+            scroll-margin-top: 80px;
+        }
     </style>
 </head>
 <body>
     <div class="form-container">
         {% load static %}
-<div class="form-header">
-    <div class="logo-area">
-        <div class="logo-placeholder">
-            <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" style="width: 50px; height: 50px; border-radius: 12px; object-fit: cover;">
+        <div class="form-header">
+            <div class="logo-area">
+                <div class="logo-placeholder">
+                    <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" style="width: 50px; height: 50px; border-radius: 12px; object-fit: cover;">
+                </div>
+                <div class="logo-text">
+                    <h1>MAHIKENG INVESTMENTS</h1>
+                    <p>Global Travel Services & Growth Opportunities</p>
+                </div>
+            </div>
+            <div class="header-title">
+                <h2><i class="fas fa-user-plus"></i> Register New Candidate</h2>
+                <p>Complete all sections to register a candidate for Middle East placement</p>
+            </div>
         </div>
-        <div class="logo-text">
-            <h1>MAHIKENG INVESTMENTS</h1>
-            <p>Global Travel Services & Growth Opportunities</p>
-        </div>
-    </div>
-    <div class="header-title">
-        <h2><i class="fas fa-user-plus"></i> Register New Candidate</h2>
-        <p>Complete all sections to register a candidate for Middle East placement</p>
-    </div>
-</div>
 
         <div class="progress-bar">
             <div class="steps">
@@ -530,10 +530,7 @@ html {
                         <label><i class="fas fa-phone-alt"></i> Alternative Phone</label>
                         {{ form.alternative_phone }}
                     </div>
-                    <div class="form-group full-width">
-                        <label><i class="fas fa-envelope"></i> Email Address</label>
-                        {{ form.email }}
-                    </div>
+                    
                     <div class="form-group full-width">
                         <label><i class="fas fa-home"></i> Home Address</label>
                         {{ form.home_address }}
@@ -547,11 +544,11 @@ html {
                         {{ form.gender }}
                     </div>
                     <div class="form-group full-width">
-                        <label><i class="fas fa-ambulance"></i> Emergency Contact Name</label>
+                        <label><i class="fas fa-ambulance"></i> Next Of Kin Name</label>
                         {{ form.emergency_contact_name }}
                     </div>
                     <div class="form-group full-width">
-                        <label><i class="fas fa-phone"></i> Emergency Contact Phone</label>
+                        <label><i class="fas fa-phone"></i> Next Of Kin Contact</label>
                         {{ form.emergency_contact_phone }}
                     </div>
                 </div>
@@ -569,55 +566,29 @@ html {
                         <label><i class="fas fa-chart-line"></i> Years of Experience</label>
                         {{ form.years_of_experience }}
                     </div>
-                    <div class="form-group full-width">
-                        <label><i class="fas fa-code"></i> Skills</label>
-                        {{ form.skills }}
-                        <small style="color: #64748b; margin-top: 5px;">Separate skills with commas (e.g., Driving, Cleaning, Cooking)</small>
-                    </div>
-                    <div class="form-group full-width">
-                        <label><i class="fas fa-language"></i> Languages Spoken</label>
-                        {{ form.languages_spoken }}
-                        <small style="color: #64748b; margin-top: 5px;">e.g., English, Arabic, Swahili</small>
-                    </div>
-                    <div class="form-group checkbox-group">
-                        {{ form.health_clearance }}
-                        <label><i class="fas fa-stethoscope"></i> Health Clearance</label>
-                    </div>
-                    <div class="form-group checkbox-group">
-                        {{ form.yellow_fever_status }}
-                        <label><i class="fas fa-syringe"></i> Yellow Fever Vaccination</label>
-                    </div>
-                    <div class="form-group full-width">
-                        <label><i class="fas fa-notes-medical"></i> Medical Conditions</label>
-                        {{ form.medical_conditions }}
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fas fa-tint"></i> Blood Group</label>
-                        {{ form.blood_group }}
-                    </div>
+
                     <div class="form-group">
                         <label class="required"><i class="fas fa-chart-simple"></i> Application Status</label>
                         {{ form.application_status }}
                     </div>
                     <div class="form-group full-width">
-                        <label><i class="fas fa-globe-asia"></i> Preferred Country</label>
+                        <label><i class="fas fa-globe-asia"></i> Country of Experience</label>
                         {{ form.preferred_country }}
                     </div>
+
                     <div class="form-group">
-                        <label><i class="fas fa-dollar-sign"></i> Expected Salary (USD)</label>
-                        {{ form.expected_salary }}
-                    </div>
-                    <div class="form-group full-width">
-                        <label><i class="fas fa-sticky-note"></i> Internal Notes</label>
-                        {{ form.notes }}
+                        <label><i class="fas fa-stethoscope"></i> Health Status</label>
+                        {{ form.health_status }}
+                        <small style="color: #64748b;">Select Fit, Unfit, or Pending</small>
                     </div>
                 </div>
             </div>
 
-            <!-- Section 4: Documents -->
+           <!-- Section 4: Documents & Media -->
 <div class="form-section" data-section="4">
     <h2 class="section-title"><i class="fas fa-file-upload"></i> Documents & Media</h2>
     <div class="form-grid">
+        <!-- Profile Photo -->
         <div class="form-group full-width">
             <label><i class="fas fa-camera"></i> Profile Photo</label>
             {{ form.profile_photo }}
@@ -626,18 +597,19 @@ html {
             </div>
         </div>
         
-        <!-- New Video Upload Section -->
+        <!-- Video Introduction -->
         <div class="form-group full-width">
             <label><i class="fas fa-video"></i> Candidate Video Introduction</label>
             {{ form.candidate_video }}
             <small style="color: #64748b; display: block; margin-top: 5px;">
-                <i class="fas fa-info-circle"></i> Upload a short video (MP4, MOV, WebM) - Max 50MB. This will be visible to clients.
+                <i class="fas fa-info-circle"></i> Upload a short video (MP4, MOV, WebM) - Max 50MB.
             </small>
             <div class="file-preview" id="videoPreview">
                 <i class="fas fa-video"></i> Video selected
             </div>
         </div>
         
+        <!-- Passport Copy -->
         <div class="form-group full-width">
             <label><i class="fas fa-passport"></i> Passport Copy</label>
             {{ form.passport_copy }}
@@ -646,27 +618,12 @@ html {
             </div>
         </div>
         
+        <!-- CV / Resume -->
         <div class="form-group full-width">
-            <label><i class="fas fa-file-alt"></i> CV/Resume (PDF)</label>
+            <label><i class="fas fa-file-alt"></i> CV / Resume (PDF)</label>
             {{ form.cv_pdf }}
             <div class="file-preview" id="cvPreview">
                 <i class="fas fa-file-pdf"></i> File selected
-            </div>
-        </div>
-        
-        <div class="form-group full-width">
-            <label><i class="fas fa-file-medical"></i> Medical Certificate</label>
-            {{ form.medical_certificate }}
-            <div class="file-preview" id="medicalPreview">
-                <i class="fas fa-file-pdf"></i> File selected
-            </div>
-        </div>
-        
-        <div class="form-group full-width">
-            <label><i class="fas fa-certificate"></i> Training Certificates</label>
-            {{ form.training_certificates }}
-            <div class="file-preview" id="trainingPreview">
-                <i class="fas fa-file"></i> File selected
             </div>
         </div>
     </div>
@@ -686,166 +643,160 @@ html {
         </form>
     </div>
 
-   <script>
-    let currentStep = 1;
-    const totalSteps = 4;
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
 
-    function updateSteps() {
-        for (let i = 1; i <= totalSteps; i++) {
-            const step = document.querySelector(`.step[data-step="${i}"]`);
-            const section = document.querySelector(`.form-section[data-section="${i}"]`);
-            
-            if (i < currentStep) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-                if (section) section.classList.remove('active');
-            } else if (i === currentStep) {
-                step.classList.add('active');
-                step.classList.remove('completed');
-                if (section) section.classList.add('active');
+        function updateSteps() {
+            for (let i = 1; i <= totalSteps; i++) {
+                const step = document.querySelector(`.step[data-step="${i}"]`);
+                const section = document.querySelector(`.form-section[data-section="${i}"]`);
+                
+                if (i < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                    if (section) section.classList.remove('active');
+                } else if (i === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                    if (section) section.classList.add('active');
+                } else {
+                    step.classList.remove('active', 'completed');
+                    if (section) section.classList.remove('active');
+                }
+            }
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (currentStep === 1) {
+                prevBtn.style.display = 'none';
             } else {
-                step.classList.remove('active', 'completed');
-                if (section) section.classList.remove('active');
+                prevBtn.style.display = 'inline-flex';
+            }
+
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-flex';
+            } else {
+                nextBtn.style.display = 'inline-flex';
+                submitBtn.style.display = 'none';
             }
         }
 
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const submitBtn = document.getElementById('submitBtn');
+        function validateSection(section) {
+            const sectionElement = document.querySelector(`.form-section[data-section="${section}"]`);
+            if (!sectionElement) return true;
+            
+            const requiredFields = sectionElement.querySelectorAll('.required');
+            let isValid = true;
 
-        if (currentStep === 1) {
-            prevBtn.style.display = 'none';
-        } else {
-            prevBtn.style.display = 'inline-flex';
+            requiredFields.forEach(field => {
+                const input = field.parentElement.querySelector('input, select, textarea');
+                if (input && !input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = '#ef4444';
+                    input.addEventListener('focus', () => {
+                        input.style.borderColor = '#e2e8f0';
+                    }, { once: true });
+                }
+            });
+
+            if (!isValid) {
+                alert('Please fill in all required fields marked with *');
+            }
+
+            return isValid;
         }
 
-        if (currentStep === totalSteps) {
-            nextBtn.style.display = 'none';
-            submitBtn.style.display = 'inline-flex';
-        } else {
-            nextBtn.style.display = 'inline-flex';
-            submitBtn.style.display = 'none';
-        }
-    }
-
-    function validateSection(section) {
-        const sectionElement = document.querySelector(`.form-section[data-section="${section}"]`);
-        if (!sectionElement) return true;
-        
-        const requiredFields = sectionElement.querySelectorAll('.required');
-        let isValid = true;
-
-        requiredFields.forEach(field => {
-            const input = field.parentElement.querySelector('input, select, textarea');
-            if (input && !input.value.trim()) {
-                isValid = false;
-                input.style.borderColor = '#ef4444';
-                input.addEventListener('focus', () => {
-                    input.style.borderColor = '#e2e8f0';
-                }, { once: true });
+        // Next button click handler with smooth scroll - FIXED
+        document.getElementById('nextBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (validateSection(currentStep)) {
+                currentStep++;
+                updateSteps();
+                
+                // Scroll to the NEW active section, not the top
+                setTimeout(() => {
+                    const newActiveSection = document.querySelector('.form-section.active');
+                    if (newActiveSection) {
+                        const sectionTitle = newActiveSection.querySelector('.section-title');
+                        const targetElement = sectionTitle || newActiveSection;
+                        targetElement.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start',
+                            inline: 'nearest'
+                        });
+                    }
+                }, 150);
             }
         });
 
-        if (!isValid) {
-            alert('Please fill in all required fields marked with *');
-        }
+        // Previous button click handler with smooth scroll - FIXED
+        document.getElementById('prevBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentStep > 1) {
+                currentStep--;
+                updateSteps();
+                
+                // Scroll to the NEW active section
+                setTimeout(() => {
+                    const newActiveSection = document.querySelector('.form-section.active');
+                    if (newActiveSection) {
+                        const sectionTitle = newActiveSection.querySelector('.section-title');
+                        const targetElement = sectionTitle || newActiveSection;
+                        targetElement.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start',
+                            inline: 'nearest'
+                        });
+                    }
+                }, 150);
+            }
+        });
 
-        return isValid;
-    }
-
-    // Next button click handler with smooth scroll
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        if (validateSection(currentStep)) {
-            currentStep++;
-            updateSteps();
-            
-            // Smooth scroll to the next section
-            setTimeout(() => {
-                const activeSection = document.querySelector('.form-section.active');
-                if (activeSection) {
-                    // Try to scroll to section title first
-                    const sectionTitle = activeSection.querySelector('.section-title');
-                    const targetElement = sectionTitle || activeSection;
-                    targetElement.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start',
-                        inline: 'nearest'
-                    });
-                }
-            }, 100);
-        }
-    });
-
-    // Previous button click handler with smooth scroll
-    document.getElementById('prevBtn').addEventListener('click', () => {
-        currentStep--;
-        updateSteps();
-        
-        // Smooth scroll to the previous section
-        setTimeout(() => {
-            const activeSection = document.querySelector('.form-section.active');
-            if (activeSection) {
-                const sectionTitle = activeSection.querySelector('.section-title');
-                const targetElement = sectionTitle || activeSection;
-                targetElement.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start',
-                    inline: 'nearest'
+        // File preview functionality
+        function setupFilePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            if (input && preview) {
+                input.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        preview.classList.add('show');
+                        preview.innerHTML = `<i class="fas fa-check-circle"></i> ${e.target.files[0].name}`;
+                    } else {
+                        preview.classList.remove('show');
+                    }
                 });
             }
-        }, 100);
-    });
-
-    // File preview functionality
-    function setupFilePreview(inputId, previewId) {
-        const input = document.getElementById(inputId);
-        const preview = document.getElementById(previewId);
-        if (input && preview) {
-            input.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    preview.classList.add('show');
-                    preview.innerHTML = `<i class="fas fa-check-circle"></i> ${e.target.files[0].name}`;
-                } else {
-                    preview.classList.remove('show');
-                }
-            });
         }
-    }
 
-    // Setup all file previews including video
-setupFilePreview('id_profile_photo', 'photoPreview');
-setupFilePreview('id_candidate_video', 'videoPreview');
-setupFilePreview('id_passport_copy', 'passportPreview');
-setupFilePreview('id_cv_pdf', 'cvPreview');
-setupFilePreview('id_medical_certificate', 'medicalPreview');
-setupFilePreview('id_training_certificates', 'trainingPreview');
+        // Setup file previews
+        setupFilePreview('id_profile_photo', 'photoPreview');
+        setupFilePreview('id_candidate_video', 'videoPreview');
 
-    // Form submission loading state
-    document.getElementById('candidateForm').addEventListener('submit', (e) => {
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.classList.add('loading');
-        submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Registering...';
-        
-        // Optional: scroll to top to show messages
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 50);
-    });
+        // Form submission - keep user on same page
+        document.getElementById('candidateForm').addEventListener('submit', (e) => {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Registering...';
+        });
 
-    // Initialize steps on page load
-    updateSteps();
+        // Initialize steps on page load
+        updateSteps();
 
-    // Add helpful placeholders
-    document.addEventListener('DOMContentLoaded', () => {
-        const fullNameInput = document.querySelector('#id_full_name');
-        if (fullNameInput) fullNameInput.placeholder = 'e.g., John Mukasa';
-        
-        const ninInput = document.querySelector('#id_nin');
-        if (ninInput) ninInput.placeholder = 'e.g., CM90010112345';
-        
-        const passportInput = document.querySelector('#id_passport_number');
-        if (passportInput) passportInput.placeholder = 'e.g., UA123456';
-    });
-</script>
+        // Add helpful placeholders
+        document.addEventListener('DOMContentLoaded', () => {
+            const fullNameInput = document.querySelector('#id_full_name');
+            if (fullNameInput) fullNameInput.placeholder = 'e.g., John Mukasa';
+            
+            const ninInput = document.querySelector('#id_nin');
+            if (ninInput) ninInput.placeholder = 'e.g., CM90010112345';
+            
+            const passportInput = document.querySelector('#id_passport_number');
+            if (passportInput) passportInput.placeholder = 'e.g., UA123456';
+        });
+    </script>
 </body>
 </html>

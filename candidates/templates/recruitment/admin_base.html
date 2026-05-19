@@ -1,28 +1,619 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAHIKENG INVESTMENTS | Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MAHIKENG INVESTMENTS | {% block title %}Admin Portal{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your existing admin dashboard styles here */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
             min-height: 100vh;
         }
-        /* Add your sidebar and other common styles */
+
+        /* Sidebar - Exact styling from admin dashboard */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 280px;
+            background: linear-gradient(180deg, #0a0a2a 0%, #1a1a4a 100%);
+            color: white;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+            text-align: center;
+        }
+
+        .sidebar-logo-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-logo-img:hover {
+            transform: scale(1.05);
+            border-color: #FFD700;
+        }
+
+        .sidebar-company-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin: 5px 0;
+        }
+
+        .sidebar-tagline {
+            font-size: 0.65rem;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 25px;
+            margin: 5px 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255, 215, 0, 0.15);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            width: 25px;
+            margin-right: 10px;
+            color: #FFD700;
+        }
+
+        .menu-item a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .menu-item form button {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0f0c29;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .page-title h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-title p {
+            color: #64748b;
+            margin-top: 5px;
+            font-size: 0.85rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f0c29;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 70px 15px 20px;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+            
+            .user-info {
+                justify-content: center;
+            }
+            
+            .page-title h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Tablet Styles */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: #1a1a4a;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 5px;
+        }
+        
+        /* Alert/Messages Styling */
+        .messages {
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Your sidebar HTML here -->
-    
-    <div class="main-content">
-        {% block content %}
-        {% endblock %}
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" class="sidebar-logo-img" 
+                     onerror="this.src='https://via.placeholder.com/70x70/FFD700/0f0c29?text=MI'">
+                <h3 class="sidebar-company-name">MAHIKENG INVESTMENTS</h3>
+                <p class="sidebar-tagline">Global Travel Services & Growth Opportunities</p>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                <a href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </div>
+            <div class="menu-item {% if request.resolver_match.url_name == 'candidates_table' %}active{% endif %}">
+                <a href="{% url 'candidates_table' %}"><i class="fas fa-table"></i> View All Candidates</a>
+            </div>
+            <div class="menu-item {% if request.resolver_match.url_name == 'candidate_create' %}active{% endif %}">
+                <a href="{% url 'candidate_create' %}"><i class="fas fa-user-plus"></i> Register Candidate</a>
+            </div>
+            <div class="menu-item {% if request.resolver_match.url_name == 'admin_selections' %}active{% endif %}">
+                <a href="{% url 'admin_selections' %}"><i class="fas fa-heart"></i> Client Selections</a>
+            </div>
+            <div class="menu-item {% if request.resolver_match.url_name == 'manage_clients' %}active{% endif %}">
+                <a href="{% url 'manage_clients' %}"><i class="fas fa-users"></i> Manage Clients</a>
+            </div>
+            <div class="menu-item {% if request.resolver_match.url_name == 'manage_admin_users' %}active{% endif %}">
+                <a href="{% url 'manage_admin_users' %}"><i class="fas fa-user-shield"></i> Admin Users</a>
+            </div>
+            <div class="menu-item" style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <form action="{% url 'admin_logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <div class="main-content">
+        <!-- Top Bar with User Info -->
+        <div class="top-bar">
+            <div class="page-title">
+                <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+                <p>{% block page_description %}Welcome back! Here's an overview of your system.{% endblock %}</p>
+            </div>
+            <div class="user-info">
+                <div class="avatar">
+                    {{ user.username|first|upper }}
+                </div>
+                <div>
+                    <strong>{{ user.username }}</strong>
+                    <div style="font-size: 0.8rem; color: #64748b;">
+                        {% if user.is_superuser %}Super Admin{% else %}Administrator{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Display -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+            // Prevent body scroll when sidebar is open
+            if (sidebar.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        
+        // Close sidebar on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeSidebar();
+            }
+        });
+        
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.messages .alert');
+            messages.forEach(function(message) {
+                message.style.opacity = '0';
+                message.style.transition = 'opacity 0.5s ease';
+                setTimeout(function() {
+                    message.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+    <!-- Photo Modal - WhatsApp Style -->
+<div id="photoModal" class="photo-modal" style="display: none;">
+    <div class="photo-modal-content">
+        <span class="photo-modal-close">&times;</span>
+        <img id="modalPhoto" class="photo-modal-img" src="" alt="Full size photo">
+        <div id="modalCaption" class="photo-modal-caption"></div>
+        <div class="photo-nav">
+            <button id="prevPhoto" class="photo-nav-btn"><i class="fas fa-chevron-left"></i></button>
+            <button id="nextPhoto" class="photo-nav-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* WhatsApp-style Photo Modal */
+    .photo-modal {
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(5px);
+    }
+    
+    .photo-modal-content {
+        position: relative;
+        margin: auto;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    
+    .photo-modal-img {
+        max-width: 90%;
+        max-height: 85vh;
+        object-fit: contain;
+        border-radius: 8px;
+        animation: zoomIn 0.2s ease;
+    }
+    
+    @keyframes zoomIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    
+    .photo-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 10001;
+    }
+    
+    .photo-modal-close:hover {
+        color: #FFD700;
+        transform: scale(1.1);
+    }
+    
+    .photo-modal-caption {
+        margin-top: 15px;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        background: rgba(0,0,0,0.6);
+        padding: 8px 16px;
+        border-radius: 20px;
+    }
+    
+    .photo-nav {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        z-index: 10001;
+    }
+    
+    .photo-nav-btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .photo-nav-btn:hover {
+        background: rgba(255,215,0,0.8);
+        color: #0f0c29;
+        transform: scale(1.1);
+    }
+    
+    @media (max-width: 768px) {
+        .photo-modal-img { max-width: 95%; max-height: 70vh; }
+        .photo-modal-close { top: 15px; right: 20px; font-size: 30px; }
+        .photo-nav-btn { width: 35px; height: 35px; font-size: 0.9rem; }
+    }
+</style>
+
+<script>
+    let currentPhotoIndex = 0;
+    let currentPhotoList = [];
+    
+    function openPhotoModal(photoUrl, candidateName, photoIndex, allPhotos) {
+        currentPhotoIndex = photoIndex;
+        currentPhotoList = allPhotos || [];
+        
+        const modal = document.getElementById('photoModal');
+        const modalImg = document.getElementById('modalPhoto');
+        const caption = document.getElementById('modalCaption');
+        
+        modalImg.src = photoUrl;
+        caption.innerHTML = candidateName;
+        modal.style.display = 'flex';
+        
+        // Update navigation visibility
+        const prevBtn = document.getElementById('prevPhoto');
+        const nextBtn = document.getElementById('nextPhoto');
+        if (prevBtn && nextBtn) {
+            prevBtn.style.display = currentPhotoList.length <= 1 ? 'none' : 'flex';
+            nextBtn.style.display = currentPhotoList.length <= 1 ? 'none' : 'flex';
+        }
+    }
+    
+    function closePhotoModal() {
+        document.getElementById('photoModal').style.display = 'none';
+    }
+    
+    function navigatePhoto(direction) {
+        const newIndex = currentPhotoIndex + direction;
+        if (newIndex >= 0 && newIndex < currentPhotoList.length) {
+            currentPhotoIndex = newIndex;
+            const modalImg = document.getElementById('modalPhoto');
+            const caption = document.getElementById('modalCaption');
+            modalImg.style.opacity = '0';
+            setTimeout(() => {
+                modalImg.src = currentPhotoList[currentPhotoIndex].url;
+                caption.innerHTML = currentPhotoList[currentPhotoIndex].name;
+                modalImg.style.opacity = '1';
+            }, 150);
+        }
+    }
+    
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('photoModal');
+        const closeBtn = document.querySelector('.photo-modal-close');
+        const prevBtn = document.getElementById('prevPhoto');
+        const nextBtn = document.getElementById('nextPhoto');
+        
+        if (closeBtn) closeBtn.onclick = closePhotoModal;
+        if (prevBtn) prevBtn.onclick = () => navigatePhoto(-1);
+        if (nextBtn) nextBtn.onclick = () => navigatePhoto(1);
+        
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closePhotoModal();
+            });
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (modal && modal.style.display === 'flex') {
+                if (e.key === 'Escape') closePhotoModal();
+                if (e.key === 'ArrowLeft') navigatePhoto(-1);
+                if (e.key === 'ArrowRight') navigatePhoto(1);
+            }
+        });
+    });
+</script>
 </body>
 </html>
