@@ -1,0 +1,262 @@
+{% extends 'recruitment/admin_base.html' %}
+{% load static %}
+
+{% block title %}Visa Issued Candidates | MAHIKENG INVESTMENTS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-top: 4px solid #3b82f6;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+    }
+    
+    .stat-label {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+    
+    .visa-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+        gap: 25px;
+    }
+    
+    .visa-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    
+    .visa-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        padding: 20px;
+        color: white;
+    }
+    
+    .card-header h3 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .info-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .info-section h4 {
+        color: #1e293b;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        border-bottom: 2px solid #3b82f6;
+        padding-bottom: 5px;
+        display: inline-block;
+    }
+    
+    .info-row {
+        display: flex;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #64748b;
+        width: 120px;
+    }
+    
+    .info-value {
+        color: #1e293b;
+        flex: 1;
+    }
+    
+    .status-visa {
+        display: inline-block;
+        background: #3b82f6;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    .btn-view {
+        display: inline-block;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 10px;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .btn-view:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-edit {
+        display: inline-block;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 10px;
+        transition: all 0.3s;
+    }
+    
+    .btn-edit:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .visa-grid {
+            grid-template-columns: 1fr;
+        }
+        .info-row {
+            flex-direction: column;
+        }
+        .info-label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ total_count }}</div>
+        <div class="stat-label">Total Visa Issued Candidates</div>
+    </div>
+</div>
+
+<div class="visa-grid">
+    {% for item in candidate_data %}
+    <div class="visa-card">
+        <div class="card-header">
+            <h3><i class="fas fa-user"></i> {{ item.candidate.full_name }}</h3>
+            <p style="font-size: 0.8rem; opacity: 0.9;">Passport: {{ item.candidate.passport_number }}</p>
+        </div>
+        <div class="card-body">
+            <div class="info-section">
+                <h4><i class="fas fa-info-circle"></i> Candidate Details</h4>
+                <div class="info-row">
+                    <span class="info-label">Job Category:</span>
+                    <span class="info-value">{{ item.candidate.get_job_category_display }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Age:</span>
+                    <span class="info-value">{{ item.candidate.age }} years</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Experience:</span>
+                    <span class="info-value">{{ item.candidate.years_of_experience }} years</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Religion:</span>
+                    <span class="info-value">{{ item.candidate.get_religion_display }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Health Status:</span>
+                    <span class="info-value">{{ item.candidate.get_health_status_display }}</span>
+                </div>
+            </div>
+            
+            {% if item.booking %}
+            <div class="info-section">
+                <h4><i class="fas fa-building"></i> Sponsor Details</h4>
+                <div class="info-row">
+                    <span class="info-label">Client:</span>
+                    <span class="info-value">{{ item.booking.client.get_full_name|default:item.booking.client.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Sponsor Name:</span>
+                    <span class="info-value">{{ item.booking.sponsor_name|default:"Not provided" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Address:</span>
+                    <span class="info-value">{{ item.booking.sponsor_address|default:"Not provided" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Contact:</span>
+                    <span class="info-value">{{ item.booking.sponsor_contact|default:"Not provided" }}</span>
+                </div>
+                {% if item.booking.sponsor_email %}
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ item.booking.sponsor_email }}</span>
+                </div>
+                {% endif %}
+                <div class="info-row">
+                    <span class="info-label">Booked On:</span>
+                    <span class="info-value">{{ item.booking.selected_at|date:"F d, Y" }}</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="info-section">
+                <h4><i class="fas fa-building"></i> Sponsor Details</h4>
+                <div class="info-row">
+                    <span class="info-label" style="color: #94a3b8;">No booking information available</span>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div>
+                <span class="status-visa"><i class="fas fa-passport"></i> Visa Issued</span>
+                <a href="{% url 'candidate_detail' item.candidate.pk %}" class="btn-view">
+                    <i class="fas fa-eye"></i> View Full Profile
+                </a>
+                <a href="{% url 'candidate_update' item.candidate.pk %}" class="btn-edit">
+                    <i class="fas fa-edit"></i> Edit Status
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align: center; padding: 60px; background: white; border-radius: 20px; grid-column: 1/-1;">
+        <i class="fas fa-passport fa-4x" style="color: #cbd5e1; margin-bottom: 20px;"></i>
+        <h3>No visa issued candidates</h3>
+        <p>Candidates with visa issued status will appear here</p>
+        <a href="{% url 'candidates_table' %}" class="btn-view" style="display: inline-block; margin-top: 20px;">
+            View All Candidates
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

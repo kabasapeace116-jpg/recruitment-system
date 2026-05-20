@@ -1,0 +1,241 @@
+{% extends 'recruitment/admin_base.html' %}
+{% load static %}
+
+{% block title %}Reserved Candidates | MAHIKENG INVESTMENTS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-top: 4px solid #8b5cf6;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+    }
+    
+    .stat-label {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+    
+    .reserved-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+        gap: 25px;
+    }
+    
+    .reserved-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    
+    .reserved-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        padding: 20px;
+        color: white;
+    }
+    
+    .card-header h3 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .info-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .info-section h4 {
+        color: #1e293b;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        border-bottom: 2px solid #8b5cf6;
+        padding-bottom: 5px;
+        display: inline-block;
+    }
+    
+    .info-row {
+        display: flex;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #64748b;
+        width: 120px;
+    }
+    
+    .info-value {
+        color: #1e293b;
+        flex: 1;
+    }
+    
+    .status-reserved {
+        display: inline-block;
+        background: #8b5cf6;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    .btn-view {
+        display: inline-block;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 10px;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .btn-view:hover {
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .reserved-grid {
+            grid-template-columns: 1fr;
+        }
+        .info-row {
+            flex-direction: column;
+        }
+        .info-label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ total_count }}</div>
+        <div class="stat-label">Total Reserved Candidates</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ bookings.count }}</div>
+        <div class="stat-label">Bookings with Sponsor Details</div>
+    </div>
+</div>
+
+<div class="reserved-grid">
+    {% for booking in bookings %}
+    <div class="reserved-card">
+        <div class="card-header">
+            <h3><i class="fas fa-user"></i> {{ booking.candidate.full_name }}</h3>
+            <p style="font-size: 0.8rem; opacity: 0.9;">Passport: {{ booking.candidate.passport_number }}</p>
+        </div>
+        <div class="card-body">
+
+            <div class="info-section">
+                <h4><i class="fas fa-building"></i> Sponsor Details</h4>
+                <div class="info-row">
+                    <span class="info-label">Client/Sponsor:</span>
+                    <span class="info-value">{{ booking.client.get_full_name|default:booking.client.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Sponsor Name:</span>
+                    <span class="info-value">{{ booking.sponsor_name|default:"Not provided" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Address:</span>
+                    <span class="info-value">{{ booking.sponsor_address|default:"Not provided" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Contact:</span>
+                    <span class="info-value">{{ booking.sponsor_contact|default:"Not provided" }}</span>
+                </div>
+                {% if booking.sponsor_email %}
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ booking.sponsor_email }}</span>
+                </div>
+                {% endif %}
+                <div class="info-row">
+                    <span class="info-label">Booked On:</span>
+                    <span class="info-value">{{ booking.selected_at|date:"F d, Y H:i" }}</span>
+                </div>
+                {% if booking.booking_notes %}
+                <div class="info-row">
+                    <span class="info-label">Notes:</span>
+                    <span class="info-value">{{ booking.booking_notes }}</span>
+                </div>
+                {% endif %}
+            </div>
+            <div class="info-section">
+                <h4><i class="fas fa-info-circle"></i> Candidate Details</h4>
+                <div class="info-row">
+                    <span class="info-label">Job Category:</span>
+                    <span class="info-value">{{ booking.candidate.get_job_category_display }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Age:</span>
+                    <span class="info-value">{{ booking.candidate.age }} years</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Experience:</span>
+                    <span class="info-value">{{ booking.candidate.years_of_experience }} years</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Religion:</span>
+                    <span class="info-value">{{ booking.candidate.get_religion_display }}</span>
+                </div>
+            </div>
+            
+            
+            
+            <div>
+                <span class="status-reserved"><i class="fas fa-calendar-check"></i> Reserved</span>
+                <a href="{% url 'candidate_detail' booking.candidate.pk %}" class="btn-view">
+                    <i class="fas fa-eye"></i> View Full Profile
+                </a>
+                <a href="{% url 'candidate_update' booking.candidate.pk %}" class="btn-view" style="background: #f1f5f9; color: #475569;">
+                    <i class="fas fa-edit"></i> Edit Status
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align: center; padding: 60px; background: white; border-radius: 20px; grid-column: 1/-1;">
+        <i class="fas fa-calendar-check fa-4x" style="color: #cbd5e1; margin-bottom: 20px;"></i>
+        <h3>No reserved candidates</h3>
+        <p>Candidates booked by clients will appear here</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

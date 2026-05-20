@@ -298,6 +298,20 @@
             color: #1e40af;
             border-left: 4px solid #3b82f6;
         }
+        /* Sidebar menu item text wrapping */
+.menu-item a {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.menu-item {
+    padding: 10px 15px;
+}
+
+.menu-item i {
+    min-width: 25px;
+}
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -317,33 +331,49 @@
             </div>
         </div>
         <div class="sidebar-menu">
-            <div class="menu-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-                <a href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            </div>
-            <div class="menu-item {% if request.resolver_match.url_name == 'candidates_table' %}active{% endif %}">
-                <a href="{% url 'candidates_table' %}"><i class="fas fa-table"></i> View All Candidates</a>
-            </div>
-            <div class="menu-item {% if request.resolver_match.url_name == 'candidate_create' %}active{% endif %}">
-                <a href="{% url 'candidate_create' %}"><i class="fas fa-user-plus"></i> Register Candidate</a>
-            </div>
-            <div class="menu-item {% if request.resolver_match.url_name == 'admin_selections' %}active{% endif %}">
-                <a href="{% url 'admin_selections' %}"><i class="fas fa-heart"></i> Client Selections</a>
-            </div>
-            <div class="menu-item {% if request.resolver_match.url_name == 'manage_clients' %}active{% endif %}">
-                <a href="{% url 'manage_clients' %}"><i class="fas fa-users"></i> Manage Clients</a>
-            </div>
-            <div class="menu-item {% if request.resolver_match.url_name == 'manage_admin_users' %}active{% endif %}">
-                <a href="{% url 'manage_admin_users' %}"><i class="fas fa-user-shield"></i> Admin Users</a>
-            </div>
-            <div class="menu-item" style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <form action="{% url 'admin_logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </form>
-            </div>
-        </div>
+    <div class="menu-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+        <a href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    </div>
+    
+    <div class="menu-item {% if request.resolver_match.url_name == 'candidates_table' %}active{% endif %}">
+        <a href="{% url 'candidates_table' %}"><i class="fas fa-table"></i> All Candidates</a>
+    </div>
+    
+    <div class="menu-item {% if request.resolver_match.url_name == 'candidate_create' %}active{% endif %}">
+        <a href="{% url 'candidate_create' %}"><i class="fas fa-user-plus"></i> Register Candidate</a>
+    </div>
+    
+    <!-- NEW: Reserved Candidates Link -->
+    <div class="menu-item {% if request.resolver_match.url_name == 'admin_reserved' %}active{% endif %}">
+        <a href="{% url 'admin_reserved' %}"><i class="fas fa-calendar-check"></i> Reserved Candidates</a>
+    </div>
+    
+    <!-- NEW: Visa Issued Candidates Link -->
+    <div class="menu-item {% if request.resolver_match.url_name == 'admin_visa_issued' %}active{% endif %}">
+        <a href="{% url 'admin_visa_issued' %}"><i class="fas fa-passport"></i> Visa Issued</a>
+    </div>
+    
+    <div class="menu-item {% if request.resolver_match.url_name == 'admin_selections' %}active{% endif %}">
+        <a href="{% url 'admin_selections' %}"><i class="fas fa-heart"></i> Client Selections</a>
+    </div>
+    
+    <div class="menu-item {% if request.resolver_match.url_name == 'manage_clients' %}active{% endif %}">
+        <a href="{% url 'manage_clients' %}"><i class="fas fa-users"></i> Manage Clients</a>
+    </div>
+    
+    <div class="menu-item {% if request.resolver_match.url_name == 'manage_admin_users' %}active{% endif %}">
+        <a href="{% url 'manage_admin_users' %}"><i class="fas fa-user-shield"></i> Admin Users</a>
+    </div>
+    
+    <div class="menu-item" style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <form action="{% url 'admin_logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
+    </div>
+</div>
     </div>
 
     <div class="main-content">

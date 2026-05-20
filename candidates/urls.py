@@ -49,6 +49,11 @@ path('delete-admin-user/<int:user_id>/', views.delete_admin_user, name='delete_a
 path('health/', views.health_check, name='health_check'),
 path('candidates-table/', views.candidates_table, name='candidates_table'),
 
+path('book-candidate/', views.book_candidate, name='book_candidate'),
+path('client-reservations/', views.client_reservations, name='client_reservations'),
+path('cancel-booking/', views.cancel_booking, name='cancel_booking'),
 
+path('admin-reserved/', views.admin_reserved, name='admin_reserved'),
+path('admin-visa-issued/', views.admin_visa_issued, name='admin_visa_issued'),
 
 ]

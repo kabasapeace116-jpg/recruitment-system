@@ -199,6 +199,81 @@
                 padding: 0 15px;
             }
         }
+        .nav-link-reservations {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.nav-link-reservations:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+/* Navigation Links Styles */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.nav-link i {
+    font-size: 1rem;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+    background: #e2e8f0;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #0f0c29;
+}
+
+/* Specific nav link variations */
+.nav-link-selections {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #0f0c29;
+}
+
+.nav-link-selections i {
+    color: #0f0c29;
+}
+
+.nav-link-reservations {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+}
+
+.nav-link-reservations i {
+    color: white;
+}
+
+.nav-link-reservations:hover {
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -220,6 +295,9 @@
                 <a href="{% url 'client_selections' %}" class="nav-link-selections">
                     <i class="fas fa-heart"></i> My Selections
                 </a>
+                 <a href="{% url 'client_reservations' %}" class="nav-link">
+        <i class="fas fa-calendar-check"></i> My Bookings
+    </a>
                 <form action="{% url 'client_logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>

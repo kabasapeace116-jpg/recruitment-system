@@ -1,0 +1,328 @@
+{% extends 'recruitment/client_base.html' %}
+{% load static %}
+
+{% block title %}My Bookings | MAHIKENG INVESTMENTS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bookings-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+    }
+    
+    .back-button:hover {
+        background: #e2e8f0;
+        transform: translateX(-5px);
+    }
+    
+    .bookings-header {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .bookings-header h1 {
+        font-size: 2rem;
+        color: #1e293b;
+    }
+    
+    .stats-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        margin-top: 15px;
+        font-weight: 600;
+    }
+    
+    .bookings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 25px;
+    }
+    
+    .booking-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .booking-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .cancel-booking {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #fee2e2;
+        color: #991b1b;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        z-index: 10;
+    }
+    
+    .cancel-booking:hover {
+        background: #ef4444;
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .booking-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        padding: 20px;
+        color: white;
+        padding-right: 50px;
+    }
+    
+    .booking-header h3 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+    
+    .booking-body {
+        padding: 20px;
+    }
+    
+    .info-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .info-section h4 {
+        color: #1e293b;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 5px;
+    }
+    
+    .info-row {
+        display: flex;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #64748b;
+        width: 100px;
+    }
+    
+    .info-value {
+        color: #1e293b;
+        flex: 1;
+    }
+    
+    .status-booked {
+        display: inline-block;
+        background: #8b5cf6;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+    
+    .btn-view {
+        display: block;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+        text-align: center;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 15px;
+        transition: all 0.3s;
+    }
+    
+    .btn-view:hover {
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .bookings-grid {
+            grid-template-columns: 1fr;
+        }
+        .info-row {
+            flex-direction: column;
+        }
+        .info-label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bookings-container">
+    <!-- Back to Candidates Button -->
+    <a href="{% url 'client_portal' %}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Candidates
+    </a>
+    
+    <div class="bookings-header">
+        <h1><i class="fas fa-calendar-check"></i> My Bookings</h1>
+        <p>Candidates you have successfully booked</p>
+        <div class="stats-badge">
+            <i class="fas fa-briefcase"></i> Total Bookings: {{ total_count }}
+        </div>
+    </div>
+    
+    <div class="bookings-grid">
+        {% for booking in bookings %}
+        <div class="booking-card">
+            <button class="cancel-booking" onclick="cancelBooking({{ booking.candidate.id }}, '{{ booking.candidate.full_name }}')" title="Cancel Booking">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="booking-header">
+                <h3><i class="fas fa-user"></i> {{ booking.candidate.full_name }}</h3>
+                <p style="font-size: 0.8rem; opacity: 0.9;">Booked on: {{ booking.selected_at|date:"F d, Y" }}</p>
+            </div>
+            <div class="booking-body">
+                <div class="info-section">
+                    <h4><i class="fas fa-building"></i> Sponsor Details</h4>
+                    <div class="info-row">
+                        <span class="info-label">Sponsor Name:</span>
+                        <span class="info-value">{{ booking.sponsor_name|default:"Not provided" }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Address:</span>
+                        <span class="info-value">{{ booking.sponsor_address|default:"Not provided" }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Contact:</span>
+                        <span class="info-value">{{ booking.sponsor_contact|default:"Not provided" }}</span>
+                    </div>
+                    {% if booking.sponsor_email %}
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">{{ booking.sponsor_email }}</span>
+                    </div>
+                    {% endif %}
+                    {% if booking.booking_notes %}
+                    <div class="info-row">
+                        <span class="info-label">Notes:</span>
+                        <span class="info-value">{{ booking.booking_notes }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="info-section">
+                    <h4><i class="fas fa-info-circle"></i> Candidate Details</h4>
+                    <div class="info-row">
+                        <span class="info-label">Job Category:</span>
+                        <span class="info-value">{{ booking.candidate.get_job_category_display }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Passport:</span>
+                        <span class="info-value">{{ booking.candidate.passport_number }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Age:</span>
+                        <span class="info-value">{{ booking.candidate.age }} years</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Experience:</span>
+                        <span class="info-value">{{ booking.candidate.years_of_experience }} years</span>
+                    </div>
+                </div>
+                
+                
+                
+                <span class="status-booked"><i class="fas fa-check-circle"></i> Reserved</span>
+                <a href="{% url 'client_candidate_detail' booking.candidate.pk %}" class="btn-view">
+                    <i class="fas fa-eye"></i> View Full Profile
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; padding: 60px; background: white; border-radius: 20px; grid-column: 1/-1;">
+            <i class="fas fa-calendar-check fa-4x" style="color: #cbd5e1; margin-bottom: 20px;"></i>
+            <h3>No bookings yet</h3>
+            <p>Select and book candidates to see them here</p>
+            <a href="{% url 'client_portal' %}" class="btn-view" style="display: inline-block; margin-top: 20px;">
+                Browse Candidates
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function cancelBooking(candidateId, candidateName) {
+        if (confirm(`Are you sure you want to cancel the booking for "${candidateName}"?\n\nThe candidate will become available again.`)) {
+            fetch('/cancel-booking/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    candidate_id: candidateId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✓ Booking cancelled successfully!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error cancelling booking: ' + error);
+            });
+        }
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

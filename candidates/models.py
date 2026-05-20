@@ -199,6 +199,26 @@ class ClientSelection(models.Model):
     client = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='selections')
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='selected_by_clients')
     selected_at = models.DateTimeField(auto_now_add=True)
+    
+    # NEW: Sponsor/Client Details for Booking
+    sponsor_name = models.CharField(max_length=200, blank=True, null=True)
+    sponsor_address = models.TextField(blank=True, null=True)
+    sponsor_contact = models.CharField(max_length=50, blank=True, null=True)
+    sponsor_email = models.EmailField(blank=True, null=True)
+    booking_notes = models.TextField(blank=True, null=True)
+    is_booked = models.BooleanField(default=False)  # True = Booked/Reserved, False = Just Selected
+    
+    class Meta:
+        unique_together = ('client', 'candidate')
+        ordering = ['-selected_at']
+    
+    def __str__(self):
+        status = "Booked" if self.is_booked else "Selected"
+        return f"{self.client.username} {status} {self.candidate.full_name}"
+    """Model to track which clients selected which candidates"""
+    client = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='selections')
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='selected_by_clients')
+    selected_at = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(blank=True, help_text="Client notes about this candidate")
     
     class Meta:

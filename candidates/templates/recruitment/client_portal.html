@@ -592,6 +592,52 @@
             .candidates-grid { grid-template-columns: 1fr; }
             .filters-grid { grid-template-columns: 1fr; }
         }
+        .btn-book {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-book:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+.nav-link-reservations {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.nav-link-reservations:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+.btn-booked {
+    background: #8b5cf6;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-booked i {
+    margin-right: 5px;
+}
     </style>
 </head>
 <body>
@@ -614,6 +660,10 @@
                 <a href="{% url 'client_selections' %}" class="nav-link-selections">
                     <i class="fas fa-heart"></i> My Selections
                 </a>
+
+                <a href="{% url 'client_reservations' %}" class="nav-link-reservations">
+    <i class="fas fa-calendar-check"></i> My Bookings
+</a>
                 <form action="{% url 'client_logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn">
@@ -746,14 +796,31 @@
                         <div class="info-item"><div class="info-icon"><i class="fas fa-chart-line"></i></div><div><div class="info-label">Experience</div><div class="info-value">{{ candidate.years_of_experience }} yrs</div></div></div>
                     </div>
                     
-                    <div class="card-actions">
-                        <a href="{% url 'client_candidate_detail' candidate.pk %}" class="btn-view-profile"><i class="fas fa-eye"></i> View Profile</a>
-                        {% if candidate.id in selected_candidates %}
-                            <button class="btn-selected" onclick="toggleSelect({{ candidate.id }}, 'unselect')"><i class="fas fa-check-circle"></i> Selected</button>
-                        {% else %}
-                            <button class="btn-select" onclick="toggleSelect({{ candidate.id }}, 'select')"><i class="fas fa-plus-circle"></i> Select</button>
-                        {% endif %}
-                    </div>
+                   <div class="card-actions">
+    <a href="{% url 'client_candidate_detail' candidate.pk %}" class="btn-view-profile">
+        <i class="fas fa-eye"></i> View Profile
+    </a>
+    
+    <!-- Book Button - ALWAYS VISIBLE -->
+    <button class="btn-book" onclick="openBookingModal({{ candidate.id }}, '{{ candidate.full_name }}')">
+        <i class="fas fa-calendar-check"></i> Book
+    </button>
+    
+    <!-- Select/Selected Button -->
+    {% if candidate.id in booked_candidates %}
+        <button class="btn-booked" disabled>
+            <i class="fas fa-calendar-check"></i> Booked
+        </button>
+    {% elif candidate.id in selected_candidates %}
+        <button class="btn-selected" onclick="toggleSelect({{ candidate.id }}, 'unselect')">
+            <i class="fas fa-check-circle"></i> Selected
+        </button>
+    {% else %}
+        <button class="btn-select" onclick="toggleSelect({{ candidate.id }}, 'select')">
+            <i class="fas fa-plus-circle"></i> Select
+        </button>
+    {% endif %}
+</div>
                 </div>
             </div>
             {% empty %}
@@ -951,5 +1018,286 @@
         // Initial filter
         filterCards();
     </script>
+    <!-- Booking Modal -->
+<div id="bookingModal" class="booking-modal" style="display: none;">
+    <div class="booking-modal-content">
+        <div class="booking-modal-header">
+            <h2><i class="fas fa-calendar-check"></i> Book Candidate</h2>
+            <span class="booking-modal-close" onclick="closeBookingModal()">&times;</span>
+        </div>
+        <div class="booking-modal-body">
+            <p>Please provide sponsor details to book <strong id="bookingCandidateName"></strong></p>
+            <input type="hidden" id="bookingCandidateId">
+            
+            <div class="booking-form-group">
+                <label><i class="fas fa-user"></i> Sponsor Name *</label>
+                <input type="text" id="sponsorName" class="booking-form-control" required placeholder="Full name of sponsor">
+            </div>
+            
+            <div class="booking-form-group">
+                <label><i class="fas fa-address-book"></i> Sponsor Address *</label>
+                <textarea id="sponsorAddress" class="booking-form-control" rows="2" placeholder="Physical address"></textarea>
+            </div>
+            
+            <div class="booking-form-group">
+                <label><i class="fas fa-phone"></i> Sponsor Contact *</label>
+                <input type="tel" id="sponsorContact" class="booking-form-control" required placeholder="Phone number">
+            </div>
+            
+            <div class="booking-form-group">
+                <label><i class="fas fa-envelope"></i> Sponsor Email</label>
+                <input type="email" id="sponsorEmail" class="booking-form-control" placeholder="Email address">
+            </div>
+            
+            <div class="booking-form-group">
+                <label><i class="fas fa-sticky-note"></i> Additional Notes</label>
+                <textarea id="bookingNotes" class="booking-form-control" rows="2" placeholder="Any special requirements or notes"></textarea>
+            </div>
+        </div>
+        <div class="booking-modal-footer">
+            <button type="button" class="booking-btn-secondary" onclick="closeBookingModal()">Cancel</button>
+            <button type="button" class="booking-btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Booking Modal Styles */
+    .booking-modal {
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.6);
+        backdrop-filter: blur(5px);
+    }
+    
+    .booking-modal-content {
+        background: white;
+        margin: 5% auto;
+        width: 90%;
+        max-width: 550px;
+        border-radius: 20px;
+        animation: slideDown 0.3s ease;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .booking-modal-header {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        padding: 20px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 20px 20px 0 0;
+    }
+    
+    .booking-modal-header h2 {
+        margin: 0;
+        color: #0f0c29;
+        font-size: 1.3rem;
+    }
+    
+    .booking-modal-close {
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #0f0c29;
+        transition: all 0.2s;
+    }
+    
+    .booking-modal-close:hover {
+        transform: scale(1.2);
+    }
+    
+    .booking-modal-body {
+        padding: 25px;
+    }
+    
+    .booking-modal-body p {
+        margin-bottom: 20px;
+        color: #475569;
+    }
+    
+    .booking-form-group {
+        margin-bottom: 18px;
+    }
+    
+    .booking-form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.85rem;
+    }
+    
+    .booking-form-group label i {
+        color: #FFD700;
+        margin-right: 8px;
+    }
+    
+    .booking-form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+    
+    .booking-form-control:focus {
+        outline: none;
+        border-color: #FFD700;
+        box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
+    }
+    
+    .booking-modal-footer {
+        padding: 20px 25px;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+    }
+    
+    .booking-btn-primary, .booking-btn-secondary {
+        padding: 10px 25px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .booking-btn-primary {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+    
+    .booking-btn-secondary {
+        background: #f1f5f9;
+        color: #475569;
+    }
+    
+    .booking-btn-primary:hover, .booking-btn-secondary:hover {
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .booking-modal-content {
+            margin: 20% auto;
+            width: 95%;
+        }
+        .booking-modal-footer {
+            flex-direction: column;
+        }
+        .booking-btn-primary, .booking-btn-secondary {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<script>
+    let currentBookingCandidateId = null;
+    
+    function openBookingModal(candidateId, candidateName) {
+        currentBookingCandidateId = candidateId;
+        document.getElementById('bookingCandidateName').innerText = candidateName;
+        document.getElementById('bookingCandidateId').value = candidateId;
+        
+        // Clear form
+        document.getElementById('sponsorName').value = '';
+        document.getElementById('sponsorAddress').value = '';
+        document.getElementById('sponsorContact').value = '';
+        document.getElementById('sponsorEmail').value = '';
+        document.getElementById('bookingNotes').value = '';
+        
+        document.getElementById('bookingModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeBookingModal() {
+        document.getElementById('bookingModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    
+    function confirmBooking() {
+        const sponsorName = document.getElementById('sponsorName').value.trim();
+        const sponsorAddress = document.getElementById('sponsorAddress').value.trim();
+        const sponsorContact = document.getElementById('sponsorContact').value.trim();
+        const sponsorEmail = document.getElementById('sponsorEmail').value.trim();
+        const bookingNotes = document.getElementById('bookingNotes').value.trim();
+        
+        if (!sponsorName || !sponsorAddress || !sponsorContact) {
+            alert('Please fill in Sponsor Name, Address, and Contact fields');
+            return;
+        }
+        
+        fetch('/book-candidate/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                candidate_id: currentBookingCandidateId,
+                sponsor_name: sponsorName,
+                sponsor_address: sponsorAddress,
+                sponsor_contact: sponsorContact,
+                sponsor_email: sponsorEmail,
+                booking_notes: bookingNotes
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✓ Candidate booked successfully!\n\nSponsor details have been recorded.');
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Error booking candidate: ' + error);
+        });
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('bookingModal');
+        if (event.target === modal) {
+            closeBookingModal();
+        }
+    }
+</script>
 </body>
 </html>

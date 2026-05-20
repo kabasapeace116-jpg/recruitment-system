@@ -433,8 +433,17 @@ def client_portal(request):
         except (ValueError, TypeError):
             pass
     
-    # Get client's selected candidates
-    selected_candidates = ClientSelection.objects.filter(client=request.user).values_list('candidate_id', flat=True)
+    # Get IDs of candidates SELECTED by this client (is_booked=False)
+    selected_candidates = ClientSelection.objects.filter(
+        client=request.user,
+        is_booked=False
+    ).values_list('candidate_id', flat=True)
+    
+    # Get IDs of candidates BOOKED by this client (is_booked=True)
+    booked_candidates = ClientSelection.objects.filter(
+        client=request.user,
+        is_booked=True
+    ).values_list('candidate_id', flat=True)
     
     # Pagination
     paginator = Paginator(candidates, 12)
@@ -446,120 +455,8 @@ def client_portal(request):
         'page_obj': page_obj,
         'total_count': candidates.count(),
         'selected_candidates': list(selected_candidates),
+        'booked_candidates': list(booked_candidates),
     })
-    """Show ALL candidates to clients - no filtering by status"""
-    
-    # Get ALL candidates - no status filtering
-    candidates = Candidate.objects.all().order_by('-registered_at')
-    
-    # Apply filters from GET parameters (if any)
-    age_min = request.GET.get('age_min')
-    age_max = request.GET.get('age_max')
-    religion = request.GET.get('religion')
-    job_category = request.GET.get('job_category')
-    health_clearance = request.GET.get('health_clearance')
-    yellow_fever = request.GET.get('yellow_fever')
-    status = request.GET.get('status')
-    
-    # Age filtering
-    if age_min:
-        try:
-            max_birth_date = date.today() - timedelta(days=int(age_min)*365.25)
-            candidates = candidates.filter(date_of_birth__lte=max_birth_date)
-        except (ValueError, TypeError):
-            pass
-    
-    if age_max:
-        try:
-            min_birth_date = date.today() - timedelta(days=int(age_max)*365.25)
-            candidates = candidates.filter(date_of_birth__gte=min_birth_date)
-        except (ValueError, TypeError):
-            pass
-    
-    # Other filters
-    if religion:
-        candidates = candidates.filter(religion=religion)
-    
-    if job_category:
-        candidates = candidates.filter(job_category=job_category)
-    
-    if health_clearance:
-        candidates = candidates.filter(health_clearance=(health_clearance == 'true'))
-    
-    if yellow_fever:
-        candidates = candidates.filter(yellow_fever_status=(yellow_fever == 'true'))
-
-    if status:
-        candidates = candidates.filter(application_status=status)
-    
-    # Pagination
-    paginator = Paginator(candidates, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    return render(request, 'recruitment/client_portal.html', {
-        'candidates': page_obj,
-        'page_obj': page_obj,
-        'total_count': candidates.count()
-    })
-
-    # Start with base queryset - only show eligible candidates
-    candidates = Candidate.objects.filter(
-        application_status__in=['REG', 'INT', 'MCL']
-    )
-    
-    # Exclude candidates with missing photos (optional)
-    candidates = candidates.exclude(
-        Q(profile_photo='') | Q(profile_photo__isnull=True)
-    ).order_by('-registered_at')
-    
-    # Apply filters from GET parameters
-    age_min = request.GET.get('age_min')
-    age_max = request.GET.get('age_max')
-    religion = request.GET.get('religion')
-    job_category = request.GET.get('job_category')
-    health_clearance = request.GET.get('health_clearance')
-    yellow_fever = request.GET.get('yellow_fever')
-    
-    # Age filtering
-    if age_min:
-        try:
-            max_birth_date = date.today() - timedelta(days=int(age_min)*365.25)
-            candidates = candidates.filter(date_of_birth__lte=max_birth_date)
-        except (ValueError, TypeError):
-            pass
-    
-    if age_max:
-        try:
-            min_birth_date = date.today() - timedelta(days=int(age_max)*365.25)
-            candidates = candidates.filter(date_of_birth__gte=min_birth_date)
-        except (ValueError, TypeError):
-            pass
-    
-    # Other filters
-    if religion:
-        candidates = candidates.filter(religion=religion)
-    
-    if job_category:
-        candidates = candidates.filter(job_category=job_category)
-    
-    if health_clearance:
-        candidates = candidates.filter(health_clearance=(health_clearance == 'true'))
-    
-    if yellow_fever:
-        candidates = candidates.filter(yellow_fever_status=(yellow_fever == 'true'))
-    
-    # Pagination
-    paginator = Paginator(candidates, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    return render(request, 'recruitment/client_portal.html', {
-        'candidates': page_obj,
-        'page_obj': page_obj,
-        'total_count': candidates.count()
-    })
-
 @login_required(login_url='/client-login/')
 def client_candidate_detail(request, pk):
     candidate = get_object_or_404(
@@ -1165,6 +1062,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+
+from django.views.decorators.csrf import csrf_exempt
+import json
+
 @login_required(login_url='/client-login/')
 @csrf_exempt
 def toggle_select_candidate(request):
@@ -1178,10 +1079,65 @@ def toggle_select_candidate(request):
             candidate = get_object_or_404(Candidate, id=candidate_id)
             
             if action == 'select':
+                # Check if candidate is already booked by this client
+                existing_booking = ClientSelection.objects.filter(
+                    client=request.user,
+                    candidate=candidate,
+                    is_booked=True
+                ).first()
+                
+                if existing_booking:
+                    return JsonResponse({'success': False, 'message': 'Candidate is already booked. Cannot select.'})
+                
+                # Create selection (not booked)
+                selection, created = ClientSelection.objects.get_or_create(
+                    client=request.user,
+                    candidate=candidate,
+                    defaults={'is_booked': False}
+                )
+                
+                if created:
+                    # Update candidate status to SELECTED only if not already RESERVED
+                    if candidate.application_status != 'RES':
+                        candidate.application_status = 'SEL'
+                        candidate.save()
+                    return JsonResponse({'success': True, 'message': 'Candidate selected successfully'})
+                else:
+                    return JsonResponse({'success': False, 'message': 'Already selected'})
+            
+            elif action == 'unselect':
+                # Delete only selections that are NOT booked
+                ClientSelection.objects.filter(
+                    client=request.user,
+                    candidate=candidate,
+                    is_booked=False
+                ).delete()
+                
+                # Check if candidate has any other selections or bookings
+                if not ClientSelection.objects.filter(candidate=candidate).exists():
+                    candidate.application_status = 'AVA'
+                    candidate.save()
+                return JsonResponse({'success': True, 'message': 'Candidate removed from selection'})
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
+    """Client can select or unselect a candidate"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            candidate_id = data.get('candidate_id')
+            action = data.get('action')
+            
+            candidate = get_object_or_404(Candidate, id=candidate_id)
+            
+            if action == 'select':
                 # Create selection
                 selection, created = ClientSelection.objects.get_or_create(
                     client=request.user,
-                    candidate=candidate
+                    candidate=candidate,
+                    defaults={'is_booked': False}
                 )
                 if created:
                     # Update candidate status to SELECTED
@@ -1204,69 +1160,88 @@ def toggle_select_candidate(request):
             return JsonResponse({'success': False, 'message': str(e)})
     
     return JsonResponse({'success': False, 'message': 'Invalid request'})
-    """Client can select or unselect a candidate"""
+
+@login_required(login_url='/client-login/')
+@csrf_exempt
+def book_candidate(request):
+    """Client books a candidate with sponsor details"""
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             candidate_id = data.get('candidate_id')
-            action = data.get('action')  # 'select' or 'unselect'
+            sponsor_name = data.get('sponsor_name')
+            sponsor_address = data.get('sponsor_address')
+            sponsor_contact = data.get('sponsor_contact')
+            sponsor_email = data.get('sponsor_email')
+            booking_notes = data.get('booking_notes', '')
             
             candidate = get_object_or_404(Candidate, id=candidate_id)
             
-            if action == 'select':
-                # Create selection
-                selection, created = ClientSelection.objects.get_or_create(
-                    client=request.user,
-                    candidate=candidate
-                )
-                if created:
-                    return JsonResponse({'success': True, 'message': 'Candidate selected successfully'})
-                else:
-                    return JsonResponse({'success': False, 'message': 'Already selected'})
+            # FIRST: Delete any existing selection (non-booked) for this candidate
+            ClientSelection.objects.filter(
+                client=request.user,
+                candidate=candidate,
+                is_booked=False
+            ).delete()
             
-            elif action == 'unselect':
-                # Remove selection
-                ClientSelection.objects.filter(client=request.user, candidate=candidate).delete()
-                return JsonResponse({'success': True, 'message': 'Candidate removed from selection'})
+            # THEN: Create or update the booking
+            selection, created = ClientSelection.objects.update_or_create(
+                client=request.user,
+                candidate=candidate,
+                defaults={
+                    'sponsor_name': sponsor_name,
+                    'sponsor_address': sponsor_address,
+                    'sponsor_contact': sponsor_contact,
+                    'sponsor_email': sponsor_email,
+                    'booking_notes': booking_notes,
+                    'is_booked': True
+                }
+            )
+            
+            # Update candidate status to RESERVED
+            candidate.application_status = 'RES'
+            candidate.save()
+            
+            return JsonResponse({'success': True, 'message': 'Candidate booked successfully!'})
             
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)})
     
-    return JsonResponse({'success': False, 'message': 'Invalid request'})
-    """Client can select or unselect a candidate"""
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            candidate_id = data.get('candidate_id')
-            action = data.get('action')  # 'select' or 'unselect'
-            
-            candidate = get_object_or_404(Candidate, id=candidate_id)
-            
-            if action == 'select':
-                # Create selection
-                selection, created = ClientSelection.objects.get_or_create(
-                    client=request.user,
-                    candidate=candidate
-                )
-                if created:
-                    return JsonResponse({'success': True, 'message': 'Candidate selected successfully'})
-                else:
-                    return JsonResponse({'success': False, 'message': 'Already selected'})
-            
-            elif action == 'unselect':
-                # Remove selection
-                ClientSelection.objects.filter(client=request.user, candidate=candidate).delete()
-                return JsonResponse({'success': True, 'message': 'Candidate removed from selection'})
-            
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': str(e)})
     
-    return JsonResponse({'success': False, 'message': 'Invalid request'})
+
+@login_required(login_url='/client-login/')
+def client_reservations(request):
+    """Show all booked/reserved candidates by the client"""
+    # Only get selections where is_booked = True
+    bookings = ClientSelection.objects.filter(
+        client=request.user,
+        is_booked=True  # This ensures only booked candidates appear here
+    ).select_related('candidate')
+    
+    return render(request, 'recruitment/client_reservations.html', {
+        'bookings': bookings,
+        'total_count': bookings.count()
+    })
+    """Show all booked/reserved candidates by the client"""
+    bookings = ClientSelection.objects.filter(
+        client=request.user,
+        is_booked=True
+    ).select_related('candidate')
+    
+    return render(request, 'recruitment/client_reservations.html', {
+        'bookings': bookings,
+        'total_count': bookings.count()
+    })
+
 
 @login_required(login_url='/client-login/')
 def client_selections(request):
-    """Show all candidates selected by the client"""
-    selections = ClientSelection.objects.filter(client=request.user).select_related('candidate')
+    """Show all candidates selected by the client (NOT booked)"""
+    # Only get selections where is_booked = False
+    selections = ClientSelection.objects.filter(
+        client=request.user,
+        is_booked=False  # This ensures booked candidates don't appear here
+    ).select_related('candidate')
     
     return render(request, 'recruitment/client_selections.html', {
         'selections': selections,
@@ -1276,17 +1251,24 @@ def client_selections(request):
 @login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def admin_selections(request):
-    """View all client selections"""
-    selections = ClientSelection.objects.select_related('client', 'candidate').all()
+    """View all client selections (ONLY selections, NOT bookings)"""
+    # Only get selections where is_booked = False
+    selections = ClientSelection.objects.filter(is_booked=False).select_related('client', 'candidate')
+    
+    # Get bookings separately for stats
+    bookings = ClientSelection.objects.filter(is_booked=True).select_related('client', 'candidate')
     
     # Stats
     total_selections = selections.count()
+    total_bookings = bookings.count()
     unique_candidates = selections.values('candidate').distinct().count()
     unique_clients = selections.values('client').distinct().count()
     
     context = {
         'selections': selections,
+        'bookings': bookings,
         'total_selections': total_selections,
+        'total_bookings': total_bookings,
         'unique_candidates': unique_candidates,
         'unique_clients': unique_clients,
     }
@@ -1432,6 +1414,97 @@ from django.db.models import Q
 @login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def candidates_table(request):
+    # Get all candidates
+    all_candidates = Candidate.objects.select_related('registered_by').all()
+    
+    # Get filter parameters from request
+    search_query = request.GET.get('search', '')
+    job_filter = request.GET.get('job', '')
+    exp_filter = request.GET.get('exp', '')
+    age_filter = request.GET.get('age', '')
+    religion_filter = request.GET.get('religion', '')
+    status_filter = request.GET.get('status', '')
+    health_filter = request.GET.get('health', '')
+    
+    # Apply search filter
+    if search_query:
+        all_candidates = all_candidates.filter(
+            Q(full_name__icontains=search_query) |
+            Q(passport_number__icontains=search_query) |
+            Q(nin__icontains=search_query)
+        )
+    
+    # Apply job filter
+    if job_filter:
+        all_candidates = all_candidates.filter(job_category=job_filter)
+    
+    # Apply experience filter
+    if exp_filter:
+        if exp_filter == '0-2':
+            all_candidates = all_candidates.filter(years_of_experience__gte=0, years_of_experience__lte=2)
+        elif exp_filter == '3-5':
+            all_candidates = all_candidates.filter(years_of_experience__gte=3, years_of_experience__lte=5)
+        elif exp_filter == '6-10':
+            all_candidates = all_candidates.filter(years_of_experience__gte=6, years_of_experience__lte=10)
+        elif exp_filter == '10+':
+            all_candidates = all_candidates.filter(years_of_experience__gte=10)
+    
+    # Apply age filter
+    if age_filter:
+        today = date.today()
+        if age_filter == '18-25':
+            min_birth = today - timedelta(days=25*365.25)
+            max_birth = today - timedelta(days=18*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '26-35':
+            min_birth = today - timedelta(days=35*365.25)
+            max_birth = today - timedelta(days=26*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '36-45':
+            min_birth = today - timedelta(days=45*365.25)
+            max_birth = today - timedelta(days=36*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '46-55':
+            min_birth = today - timedelta(days=55*365.25)
+            max_birth = today - timedelta(days=46*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__gte=min_birth, date_of_birth__lte=max_birth)
+        elif age_filter == '55+':
+            max_birth = today - timedelta(days=55*365.25)
+            all_candidates = all_candidates.filter(date_of_birth__lte=max_birth)
+    
+    # Apply religion filter
+    if religion_filter:
+        all_candidates = all_candidates.filter(religion=religion_filter)
+    
+    # Apply status filter
+    if status_filter:
+        all_candidates = all_candidates.filter(application_status=status_filter)
+    
+    # Apply health filter
+    if health_filter:
+        all_candidates = all_candidates.filter(health_status=health_filter)
+    
+    # STATS COUNTS (for the stats cards - unfiltered totals)
+    total_candidates = Candidate.objects.count()
+    available_count = Candidate.objects.filter(application_status='AVA').count()
+    selected_count = Candidate.objects.filter(application_status='SEL').count()
+    reserved_count = Candidate.objects.filter(application_status='RES').count()
+    visa_count = Candidate.objects.filter(application_status='VIS').count()
+    
+    # Pagination
+    paginator = Paginator(all_candidates, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'total_candidates': total_candidates,
+        'available_count': available_count,
+        'selected_count': selected_count,
+        'reserved_count': reserved_count,
+        'visa_count': visa_count,
+    }
+    return render(request, 'recruitment/candidates_table.html', context)
     all_candidates = Candidate.objects.select_related('registered_by').all()
     
     # Get filter parameters
@@ -1587,3 +1660,76 @@ def delete_admin_user(request, user_id):
         return redirect('manage_admin_users')
     
     return redirect('manage_admin_users')
+@login_required(login_url='/client-login/')
+@csrf_exempt
+def cancel_booking(request):
+    """Client cancels a booking - returns candidate to available status"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            candidate_id = data.get('candidate_id')
+            
+            candidate = get_object_or_404(Candidate, id=candidate_id)
+            
+            # Delete the booking
+            ClientSelection.objects.filter(
+                client=request.user,
+                candidate=candidate,
+                is_booked=True
+            ).delete()
+            
+            # Check if candidate has any other selections/bookings
+            if not ClientSelection.objects.filter(candidate=candidate).exists():
+                candidate.application_status = 'AVA'
+                candidate.save()
+            
+            return JsonResponse({'success': True, 'message': 'Booking cancelled successfully'})
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
+@login_required(login_url='/admin/login/')
+@user_passes_test(is_admin_user)
+def admin_reserved(request):
+    """View all reserved/booked candidates with sponsor details"""
+    # Get all candidates with status RESERVED (RES)
+    reserved_candidates = Candidate.objects.filter(application_status='RES').order_by('-updated_at')
+    
+    # Get booking details for each reserved candidate
+    bookings = ClientSelection.objects.filter(
+        candidate__application_status='RES',
+        is_booked=True
+    ).select_related('client', 'candidate')
+    
+    context = {
+        'reserved_candidates': reserved_candidates,
+        'bookings': bookings,
+        'total_count': reserved_candidates.count(),
+    }
+    return render(request, 'recruitment/admin_reserved.html', context)
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(is_admin_user)
+def admin_visa_issued(request):
+    """View all visa issued candidates (status = VIS)"""
+    # Get all candidates with application_status = 'VIS' (Visa Issued)
+    visa_candidates = Candidate.objects.filter(application_status='VIS').order_by('-updated_at')
+    
+    # Create a list with combined candidate and booking data
+    candidate_data = []
+    for candidate in visa_candidates:
+        booking = ClientSelection.objects.filter(
+            candidate=candidate,
+            is_booked=True
+        ).first()
+        candidate_data.append({
+            'candidate': candidate,
+            'booking': booking
+        })
+    
+    context = {
+        'candidate_data': candidate_data,
+        'total_count': visa_candidates.count(),
+    }
+    return render(request, 'recruitment/admin_visa_issued.html', context)
