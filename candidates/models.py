@@ -104,7 +104,6 @@ class Candidate(models.Model):
     # Documents
     profile_photo = models.ImageField(
         upload_to=profile_photo_path,
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png'])],
         null=True, blank=True
     )
     candidate_video = models.FileField(
@@ -115,7 +114,6 @@ class Candidate(models.Model):
     )
     passport_copy = models.FileField(
         upload_to=document_path,
-        validators=[FileExtensionValidator(['pdf', 'jpg', 'jpeg'])],
         null=True, blank=True
     )
     cv_pdf = models.FileField(
