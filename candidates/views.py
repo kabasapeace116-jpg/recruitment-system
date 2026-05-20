@@ -367,7 +367,7 @@ def candidate_detail(request, pk):
     candidate = get_object_or_404(Candidate, pk=pk)
     return render(request, 'recruitment/candidate_detail.html', {'candidate': candidate})
 
-@@login_required(login_url='/admin/login/')
+@login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def candidate_update(request, pk):
     candidate = get_object_or_404(Candidate, pk=pk)
