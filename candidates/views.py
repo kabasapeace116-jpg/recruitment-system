@@ -341,7 +341,7 @@ def admin_dashboard(request):
     return render(request, 'recruitment/admin_dashboard.html', context)
 
 
-@@login_required(login_url='/admin/login/')
+@login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def candidate_create(request):
     if request.method == 'POST':
