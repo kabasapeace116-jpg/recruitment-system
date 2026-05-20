@@ -341,7 +341,7 @@ def admin_dashboard(request):
     return render(request, 'recruitment/admin_dashboard.html', context)
 
 
-@login_required(login_url='/admin/login/')
+@@login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def candidate_create(request):
     if request.method == 'POST':
@@ -350,32 +350,46 @@ def candidate_create(request):
             candidate = form.save(commit=False)
             candidate.registered_by = request.user
             candidate.save()
-            messages.success(request, f'Candidate {candidate.full_name} registered successfully!')
+            messages.success(request, f'Candidate "{candidate.full_name}" registered successfully!')
             return redirect('candidate_detail', pk=candidate.pk)
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+            return render(request, 'recruitment/candidate_form.html', {'form': form})
     else:
         form = CandidateRegistrationForm()
+    
     return render(request, 'recruitment/candidate_form.html', {'form': form})
-
 @login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def candidate_detail(request, pk):
     candidate = get_object_or_404(Candidate, pk=pk)
     return render(request, 'recruitment/candidate_detail.html', {'candidate': candidate})
 
-@login_required(login_url='/admin/login/')
+@@login_required(login_url='/admin/login/')
 @user_passes_test(is_admin_user)
 def candidate_update(request, pk):
     candidate = get_object_or_404(Candidate, pk=pk)
+    
     if request.method == 'POST':
         form = CandidateRegistrationForm(request.POST, request.FILES, instance=candidate)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Candidate updated successfully!')
+            messages.success(request, f'Candidate "{candidate.full_name}" updated successfully!')
+            # IMPORTANT: Redirect to detail page, NOT back to form
             return redirect('candidate_detail', pk=candidate.pk)
+        else:
+            # Form has errors - show messages and stay on form
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+            # Stay on the edit page with errors
+            return render(request, 'recruitment/candidate_form.html', {'form': form, 'candidate': candidate})
     else:
         form = CandidateRegistrationForm(instance=candidate)
+    
     return render(request, 'recruitment/candidate_form.html', {'form': form, 'candidate': candidate})
-
 @login_required(login_url='/client-login/')
 def client_portal(request):
     """Show ONLY available candidates to clients"""
