@@ -24,7 +24,6 @@
         gap: 15px;
         transition: all 0.3s;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        cursor: pointer;
     }
     
     .stat-card:hover {
@@ -105,13 +104,11 @@
         border: 2px solid #e2e8f0;
         border-radius: 12px;
         font-size: 0.9rem;
-        transition: all 0.3s;
     }
     
     .search-input:focus {
         outline: none;
         border-color: #FFD700;
-        box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
     }
     
     .search-icon {
@@ -189,7 +186,6 @@
         cursor: pointer;
         font-weight: 600;
         font-size: 0.8rem;
-        transition: all 0.3s;
     }
     
     .btn-filter {
@@ -200,10 +196,6 @@
     .btn-reset {
         background: #f1f5f9;
         color: #475569;
-    }
-    
-    .btn-filter:hover, .btn-reset:hover {
-        transform: translateY(-2px);
     }
     
     /* Active Filters Bar */
@@ -262,12 +254,7 @@
         position: relative;
     }
     
-    .candidate-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-    
-    /* Status Badge - Far Right Upper Corner */
+    /* Status Badge - Top Right Corner */
     .card-badge {
         position: absolute;
         top: 15px;
@@ -279,7 +266,6 @@
         z-index: 20;
         background: white;
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        pointer-events: none;
     }
     
     .card-badge.AVA { background: #d1fae5; color: #065f46; }
@@ -288,7 +274,28 @@
     .card-badge.VIS { background: #dbeafe; color: #1e40af; }
     .card-badge.CAN { background: #fee2e2; color: #991b1b; }
     
-    /* Card Horizontal Layout */
+    /* Checkbox for bulk actions */
+    .checkbox-container {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 20;
+        background: rgba(255,255,255,0.9);
+        padding: 5px 8px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.7rem;
+    }
+    
+    .candidate-checkbox {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+    
+    /* Horizontal Layout */
     .card-horizontal {
         display: flex;
         gap: 0;
@@ -296,22 +303,21 @@
     
     /* Left Column - Image */
     .card-image-horizontal {
-        position: relative;
         width: 220px;
         min-height: 260px;
         flex-shrink: 0;
         background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
-        overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
     }
     
     .card-image-horizontal img {
         width: 100%;
-        height: auto;
-        object-fit: contain;
-        max-height: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
     
     .image-placeholder-horizontal {
@@ -423,7 +429,6 @@
         border-radius: 10px;
         font-weight: 600;
         font-size: 0.8rem;
-        transition: all 0.3s;
         text-align: center;
         text-decoration: none;
         display: flex;
@@ -455,25 +460,32 @@
         transform: translateY(-2px);
     }
     
-    /* Checkbox for bulk actions */
-    .checkbox-container {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        z-index: 20;
-        background: rgba(255,255,255,0.9);
-        padding: 5px 8px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.7rem;
+    /* Pagination */
+    .pagination-container {
+        padding: 20px;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
     }
     
-    .candidate-checkbox {
-        width: 16px;
-        height: 16px;
+    .pagination {
+        display: inline-flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .page-link {
+        padding: 6px 12px;
+        background: #f1f5f9;
+        color: #475569;
+        text-decoration: none;
+        border-radius: 6px;
         cursor: pointer;
+    }
+    
+    .page-link:hover, .page-link.active {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
     }
     
     /* Mass Actions Bar */
@@ -500,66 +512,190 @@
         cursor: pointer;
     }
     
-    /* Pagination */
-    .pagination-container {
-        padding: 20px;
-        text-align: center;
-        border-top: 1px solid #e2e8f0;
-    }
-    
-    .pagination {
-        display: inline-flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .page-link {
-        padding: 6px 12px;
-        background: #f1f5f9;
-        color: #475569;
-        text-decoration: none;
-        border-radius: 6px;
-        transition: all 0.3s;
-        cursor: pointer;
-    }
-    
-    .page-link:hover, .page-link.active {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        color: #0f0c29;
-    }
-    
-    /* Responsive */
+    /* ========== MOBILE RESPONSIVE ========== */
     @media (max-width: 768px) {
         .stats-container {
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             padding: 15px;
         }
+        
+        .stat-card {
+            padding: 12px 15px;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .stat-number {
+            font-size: 1.3rem;
+        }
+        
+        .filters-section {
+            margin: 15px;
+            padding: 15px;
+        }
+        
+        .filters-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .candidates-grid {
+            padding: 0 15px 15px 15px;
+            gap: 15px;
+        }
+        
+        /* Card becomes vertical on mobile */
         .card-horizontal {
             flex-direction: column;
         }
+        
+        /* Image takes full width on mobile */
         .card-image-horizontal {
             width: 100%;
             height: 220px;
             min-height: auto;
         }
+        
+        .card-image-horizontal img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-placeholder-horizontal {
+            min-height: 220px;
+            font-size: 3rem;
+        }
+        
+        /* Content padding adjustment */
+        .card-content-horizontal {
+            padding: 15px;
+        }
+        
+        .candidate-name-horizontal {
+            font-size: 1.1rem;
+        }
+        
         .info-grid-horizontal {
             grid-template-columns: 1fr;
             gap: 10px;
         }
+        
+        .info-item-horizontal {
+            padding: 3px 0;
+        }
+        
+        .info-icon-horizontal {
+            width: 28px;
+            height: 28px;
+            font-size: 0.75rem;
+        }
+        
+        .info-value-horizontal {
+            font-size: 0.75rem;
+        }
+        
+        /* Actions stack vertically */
         .card-actions-horizontal {
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
-        .filters-section {
-            margin: 15px;
+        
+        .btn-view-horizontal,
+        .btn-edit-horizontal,
+        .btn-delete-horizontal {
+            padding: 8px;
         }
-        .candidates-grid {
-            padding: 0 15px 15px 15px;
+        
+        /* Status badge adjustment */
+        .card-badge {
+            top: 10px;
+            right: 10px;
+            padding: 4px 10px;
+            font-size: 0.65rem;
+        }
+        
+        /* Checkbox adjustment */
+        .checkbox-container {
+            top: 10px;
+            left: 10px;
+            font-size: 0.6rem;
         }
     }
     
+    /* Small mobile (max-width: 480px) */
+    @media (max-width: 480px) {
+        .stats-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .card-image-horizontal {
+            height: 180px;
+        }
+        
+        .candidate-name-horizontal {
+            font-size: 1rem;
+        }
+        
+        .card-content-horizontal {
+            padding: 12px;
+        }
+        
+        .info-label-horizontal {
+            font-size: 0.6rem;
+        }
+        
+        .info-value-horizontal {
+            font-size: 0.7rem;
+        }
+    }
+    
+    /* Tablet landscape (769px - 1024px) */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .card-image-horizontal {
+            width: 180px;
+        }
+        
+        .info-grid-horizontal {
+            gap: 10px;
+        }
+        
+        .info-item-horizontal {
+            gap: 8px;
+        }
+    }
+    @media (max-width: 768px) {
+    /* Image container - flexible height */
+    .card-image-horizontal {
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+    }
+    
+    /* Image - shows completely without cropping */
+    .card-image-horizontal img {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+        object-fit: contain;
+        border-radius: 16px;
+    }
+    
+    /* Placeholder */
+    .image-placeholder-horizontal {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        padding: 20px;
+        font-size: 3rem;
+    }
+}
 </style>
 {% endblock %}
 
@@ -818,7 +954,6 @@
         health: null
     };
     
-    let searchTerm = '';
     let selectedCandidates = [];
 
     function initChips() {
@@ -957,6 +1092,11 @@
             if (show) visibleCount++;
         });
         
+        // Update result count display if exists
+        const resultCount = document.getElementById('resultCount');
+        if (resultCount) resultCount.innerText = visibleCount;
+        
+        // No results message
         let noResults = document.querySelector('.no-results-message');
         if (visibleCount === 0 && cards.length > 0) {
             if (!noResults) {
@@ -999,16 +1139,12 @@
     }
     
     function deleteCandidate(id, name) {
-        if (confirm(`Delete "${name}"?`)) {
+        if (confirm(`Delete "${name}"? This action cannot be undone.`)) {
             window.location.href = `/candidate/${id}/delete/`;
         }
     }
     
     // Mass selection
-    document.querySelectorAll('.candidate-checkbox').forEach(cb => {
-        cb.addEventListener('change', updateMassSelection);
-    });
-    
     function updateMassSelection() {
         selectedCandidates = Array.from(document.querySelectorAll('.candidate-checkbox:checked')).map(cb => ({
             id: cb.dataset.id,
@@ -1044,7 +1180,11 @@
         }
     }
     
-    // Search input
+    // Event listeners
+    document.querySelectorAll('.candidate-checkbox').forEach(cb => {
+        cb.addEventListener('change', updateMassSelection);
+    });
+    
     document.getElementById('searchInput').addEventListener('input', function() {
         filterCards();
     });

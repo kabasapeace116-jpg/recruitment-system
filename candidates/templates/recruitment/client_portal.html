@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>MAHIKENG INVESTMENTS | Candidate Search Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -478,6 +478,7 @@
             overflow: hidden;
             transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         .candidate-card:hover {
@@ -485,17 +486,40 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
+        /* Status Badge - Top Right Corner */
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 20;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .card-badge.AVA { background: #d1fae5; color: #065f46; }
+        .card-badge.RES { background: #e0e7ff; color: #4338ca; }
+        .card-badge.SEL { background: #fed7aa; color: #9a3412; }
+        .card-badge.VIS { background: #dbeafe; color: #1e40af; }
+
         .card-horizontal {
             display: flex;
             gap: 0;
         }
 
-        /* Left Column - Image */
+        /* Left Column - Image Container */
         .card-image-horizontal {
-            position: relative;
-            width: 220px;
+            width: 200px;
+            min-height: 240px;
             flex-shrink: 0;
             background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
 
@@ -503,13 +527,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            aspect-ratio: 3/4;
+            object-position: center;
         }
 
         .image-placeholder-horizontal {
             width: 100%;
             height: 100%;
-            aspect-ratio: 3/4;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -517,22 +540,6 @@
             color: #FFD700;
             background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
         }
-
-        .card-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            z-index: 10;
-        }
-
-        .card-badge.AVA { background: #d1fae5; color: #065f46; }
-        .card-badge.RES { background: #e0e7ff; color: #4338ca; }
-        .card-badge.SEL { background: #fed7aa; color: #9a3412; }
-        .card-badge.VIS { background: #dbeafe; color: #1e40af; }
 
         /* Right Column - Content */
         .card-content-horizontal {
@@ -561,7 +568,6 @@
             margin: 0;
         }
 
-        /* Info Grid - 2x2 Layout */
         .info-grid-horizontal {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -670,6 +676,7 @@
             transform: translateX(0);
         }
 
+        /* ========== RESPONSIVE STYLES ========== */
         @media (max-width: 768px) {
             .navbar { padding: 10px 20px; }
             .hero { margin: 20px 15px; padding: 25px 20px; }
@@ -678,123 +685,997 @@
             .filters-grid { grid-template-columns: 1fr; }
             .stats-banner { flex-direction: column; align-items: center; }
             
+            /* Card becomes vertical */
             .card-horizontal {
                 flex-direction: column;
             }
+            
+            /* Image takes full width, maintains aspect ratio */
             .card-image-horizontal {
                 width: 100%;
-                height: 200px;
+                height: auto;
+                min-height: 220px;
+                max-height: 260px;
             }
-            .card-image-horizontal img,
-            .image-placeholder-horizontal {
+            
+            .card-image-horizontal img {
                 width: 100%;
-                height: 200px;
-                aspect-ratio: unset;
+                height: 100%;
+                object-fit: cover;
             }
+            
+            .image-placeholder-horizontal {
+                min-height: 220px;
+                font-size: 3rem;
+            }
+            
+            /* Content adjustments */
+            .card-content-horizontal {
+                padding: 15px;
+            }
+            
+            .candidate-name-horizontal {
+                font-size: 1.1rem;
+            }
+            
             .info-grid-horizontal {
                 grid-template-columns: 1fr;
                 gap: 8px;
             }
+            
+            .info-item-horizontal {
+                gap: 8px;
+            }
+            
+            .info-icon-horizontal {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            
+            .info-value-horizontal {
+                font-size: 0.7rem;
+            }
+            
+            /* Buttons stack */
             .card-actions-horizontal {
                 flex-direction: column;
+                gap: 8px;
+            }
+            
+            .btn-view-profile-horizontal,
+            .btn-book-horizontal {
+                padding: 8px;
+            }
+            
+            /* Status badge position */
+            .card-badge {
+                top: 10px;
+                right: 10px;
+                padding: 4px 10px;
+                font-size: 0.65rem;
             }
         }
-        /* Status Badge - Upper Right Corner */
-.card-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 5px 12px;
-    border-radius: 50px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    z-index: 10;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(4px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+        /* Small mobile (max-width: 480px) */
+        @media (max-width: 480px) {
+            .card-image-horizontal {
+                min-height: 180px;
+                max-height: 200px;
+            }
+            
+            .image-placeholder-horizontal {
+                min-height: 180px;
+                font-size: 2.5rem;
+            }
+            
+            .candidate-name-horizontal {
+                font-size: 1rem;
+            }
+            
+            .info-value-horizontal {
+                font-size: 0.65rem;
+            }
+        }
+        @media (max-width: 768px) {
+    .navbar { padding: 10px 20px; }
+    .hero { margin: 20px 15px; padding: 25px 20px; }
+    .hero h3 { font-size: 1.3rem; }
+    .main-container { padding: 0 15px 40px; }
+    .filters-grid { grid-template-columns: 1fr; }
+    .stats-banner { flex-direction: column; align-items: center; }
+    
+    /* Card becomes vertical */
+    .card-horizontal {
+        flex-direction: column;
+    }
+    
+    /* FIXED: Image container - shows full image without cropping */
+    .card-image-horizontal {
+        width: 100%;
+        height: auto;
+        min-height: 220px;
+        max-height: 260px;
+        padding: 0;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Image fills container but maintains aspect ratio */
+    .card-image-horizontal img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    
+    /* Placeholder adjustment */
+    .image-placeholder-horizontal {
+        width: 100%;
+        height: 100%;
+        min-height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+    
+    /* Content padding */
+    .card-content-horizontal {
+        padding: 18px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+    
+    .candidate-passport-horizontal {
+        font-size: 0.7rem;
+    }
+    
+    /* Info grid - single column */
+    .info-grid-horizontal {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 10px 0;
+    }
+    
+    .info-item-horizontal {
+        gap: 10px;
+        padding: 4px 0;
+    }
+    
+    .info-icon-horizontal {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+    
+    .info-label-horizontal {
+        font-size: 0.65rem;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.75rem;
+    }
+    
+    /* FIXED: Buttons - better spacing and visual appeal */
+    .card-actions-horizontal {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        gap: 10px;
+    }
+    
+    /* Status badge adjustment */
+    .card-badge {
+        top: 12px;
+        right: 12px;
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
 }
 
-.card-badge.AVA { background: #d1fae5; color: #065f46; }
-.card-badge.RES { background: #e0e7ff; color: #4338ca; }
-.card-badge.SEL { background: #fed7aa; color: #9a3412; }
-.card-badge.VIS { background: #dbeafe; color: #1e40af; }
+/* Small mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .card-image-horizontal {
+        min-height: 180px;
+        max-height: 200px;
+    }
+    
+    .image-placeholder-horizontal {
+        min-height: 180px;
+        font-size: 2.5rem;
+    }
+    
+    .card-content-horizontal {
+        padding: 15px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1rem;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.7rem;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .card-badge {
+        top: 10px;
+        right: 10px;
+        padding: 4px 10px;
+        font-size: 0.65rem;
+    }
+}
+/* ========== MOBILE RESPONSIVE (max-width: 768px) ========== */
+@media (max-width: 768px) {
+    .navbar { padding: 10px 20px; }
+    .hero { margin: 20px 15px; padding: 25px 20px; }
+    .hero h3 { font-size: 1.3rem; }
+    .main-container { padding: 0 15px 40px; }
+    .filters-grid { grid-template-columns: 1fr; }
+    .stats-banner { flex-direction: column; align-items: center; }
+    
+    .card-horizontal {
+        flex-direction: column;
+    }
+    
+    /* Image - No cropping */
+    .card-image-horizontal {
+        width: 100%;
+        height: auto;
+        min-height: 220px;
+        max-height: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+    }
+    
+    .card-image-horizontal img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    
+    .image-placeholder-horizontal {
+        width: 100%;
+        min-height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+    
+    /* Content */
+    .card-content-horizontal {
+        padding: 18px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1.1rem;
+    }
+    
+    .info-grid-horizontal {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 10px 0;
+    }
+    
+    .info-item-horizontal {
+        gap: 10px;
+    }
+    
+    .info-icon-horizontal {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+    
+    /* Buttons - Better spacing */
+    .card-actions-horizontal {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .card-badge {
+        top: 12px;
+        right: 12px;
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
+}
+@media (max-width: 768px) {
+    .navbar { padding: 10px 20px; }
+    .hero { margin: 20px 15px; padding: 25px 20px; }
+    .hero h3 { font-size: 1.3rem; }
+    .main-container { padding: 0 15px 40px; }
+    .filters-grid { grid-template-columns: 1fr; }
+    .stats-banner { flex-direction: column; align-items: center; }
+    
+    /* Card becomes vertical */
+    .card-horizontal {
+        flex-direction: column;
+    }
+    
+    /* FIXED: Image container - smaller but fully visible, NO CROPPING */
+    .card-image-horizontal {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    /* Image - smaller but fully visible, NO CROPPING */
+    .card-image-horizontal img {
+        width: auto;
+        height: auto;
+        max-width: 80%;
+        max-height: 180px;
+        object-fit: contain;
+        object-position: center;
+        border-radius: 12px;
+    }
+    
+    /* Placeholder adjustment */
+    .image-placeholder-horizontal {
+        width: auto;
+        height: auto;
+        min-height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        padding: 20px;
+        background: transparent;
+    }
+    
+    /* Content padding */
+    .card-content-horizontal {
+        padding: 18px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+    
+    .candidate-passport-horizontal {
+        font-size: 0.7rem;
+    }
+    
+    /* Info grid - single column */
+    .info-grid-horizontal {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 10px 0;
+    }
+    
+    .info-item-horizontal {
+        gap: 10px;
+        padding: 4px 0;
+    }
+    
+    .info-icon-horizontal {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+    
+    .info-label-horizontal {
+        font-size: 0.65rem;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.75rem;
+    }
+    
+    /* Buttons - better spacing */
+    .card-actions-horizontal {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        gap: 10px;
+    }
+    
+    /* Status badge adjustment */
+    .card-badge {
+        top: 12px;
+        right: 12px;
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
+}
 
-/* Make buttons more spacious */
-.card-actions-horizontal {
+/* Small mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .card-image-horizontal {
+        min-height: 160px;
+        padding: 15px;
+    }
+    
+    .card-image-horizontal img {
+        max-width: 85%;
+        max-height: 140px;
+    }
+    
+    .image-placeholder-horizontal {
+        font-size: 2.5rem;
+        padding: 15px;
+    }
+    
+    .card-content-horizontal {
+        padding: 15px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1rem;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.7rem;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .card-badge {
+        top: 10px;
+        right: 10px;
+        padding: 4px 10px;
+        font-size: 0.65rem;
+    }
+}
+/* Card hover effect enhancement */
+.candidate-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.candidate-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 35px -10px rgba(0,0,0,0.2);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* Content area spacing */
+.card-content-horizontal {
+    padding: 20px;
     display: flex;
-    gap: 15px;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #e2e8f0;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.btn-view-profile-horizontal,
-.btn-book-horizontal {
-    flex: 1;
-    padding: 12px 10px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    gap: 10px;
+/* Candidate header styling */
+.candidate-header {
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+    margin-bottom: 4px;
 }
 
-/* Increase spacing between info items */
-.info-grid-horizontal {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 5px;
+.candidate-name-horizontal {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.3px;
 }
 
+.candidate-passport-horizontal {
+    font-size: 0.7rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Info grid items with hover effect */
 .info-item-horizontal {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 5px 0;
+    padding: 6px 0;
+    transition: all 0.2s;
 }
 
-/* More space in candidate header */
-.candidate-header {
-    border-bottom: 2px solid #f1f5f9;
-    padding-bottom: 12px;
-    margin-bottom: 5px;
+.info-item-horizontal:hover {
+    transform: translateX(3px);
 }
 
-.candidate-name-horizontal {
-    font-size: 1.3rem;
-    margin-bottom: 6px;
-}
-/* Status Badge - Far Right Upper Corner of the Entire Card */
-.candidate-card {
-    position: relative;
+.info-icon-horizontal {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFD700;
+    font-size: 0.85rem;
+    transition: all 0.2s;
 }
 
-.card-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    padding: 6px 14px;
-    border-radius: 50px;
-    font-size: 0.75rem;
+.info-item-horizontal:hover .info-icon-horizontal {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #0f0c29;
+}
+
+/* Button styling enhancement */
+.btn-view-profile-horizontal,
+.btn-book-horizontal {
+    flex: 1;
+    padding: 11px;
+    border-radius: 12px;
     font-weight: 600;
-    z-index: 20;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(4px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    pointer-events: none; /* So it doesn't block clicks on buttons */
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
 }
 
-.card-badge.AVA { background: #d1fae5; color: #065f46; }
-.card-badge.RES { background: #e0e7ff; color: #4338ca; }
-.card-badge.SEL { background: #fed7aa; color: #9a3412; }
-.card-badge.VIS { background: #dbeafe; color: #1e40af; }
-
-/* Remove the badge from inside the image container */
-.card-image-horizontal .card-badge {
-    display: none;
+.btn-view-profile-horizontal {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
-</style>
+.btn-book-horizontal {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+.btn-view-profile-horizontal:hover,
+.btn-book-horizontal:hover {
+    transform: translateY(-2px);
+}
+
+.btn-view-profile-horizontal:hover {
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-book-horizontal:hover {
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+/* Button ripple effect */
+.btn-view-profile-horizontal::after,
+.btn-book-horizontal::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-view-profile-horizontal:active::after,
+.btn-book-horizontal:active::after {
+    width: 200px;
+    height: 200px;
+}
+@media (max-width: 768px) {
+    .navbar { padding: 10px 20px; }
+    .hero { margin: 20px 15px; padding: 25px 20px; }
+    .hero h3 { font-size: 1.3rem; }
+    .main-container { padding: 0 15px 40px; }
+    .filters-grid { grid-template-columns: 1fr; }
+    .stats-banner { flex-direction: column; align-items: center; }
+    
+    /* Card becomes vertical with balanced sizing */
+    .card-horizontal {
+        flex-direction: column;
+    }
+    
+    /* Image container - smaller and proportional */
+    .card-image-horizontal {
+        width: 100%;
+        height: auto;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+    }
+    
+    /* Image - smaller, fully visible */
+    .card-image-horizontal img {
+        width: auto;
+        height: auto;
+        max-width: 70%;
+        max-height: 160px;
+        object-fit: contain;
+        border-radius: 12px;
+    }
+    
+    .image-placeholder-horizontal {
+        width: auto;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        padding: 15px;
+        background: transparent;
+    }
+    
+    /* Content area - proportionally smaller */
+    .card-content-horizontal {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .candidate-header {
+        padding-bottom: 8px;
+        margin-bottom: 0;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1rem;
+        margin-bottom: 3px;
+    }
+    
+    .candidate-passport-horizontal {
+        font-size: 0.65rem;
+    }
+    
+    /* Info grid - more compact */
+    .info-grid-horizontal {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin: 5px 0;
+    }
+    
+    .info-item-horizontal {
+        gap: 6px;
+        padding: 3px 0;
+    }
+    
+    .info-icon-horizontal {
+        width: 26px;
+        height: 26px;
+        font-size: 0.65rem;
+        border-radius: 8px;
+    }
+    
+    .info-label-horizontal {
+        font-size: 0.55rem;
+        margin-bottom: 1px;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.65rem;
+    }
+    
+    /* Buttons - smaller but still tappable */
+    .card-actions-horizontal {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        gap: 8px;
+    }
+    
+    /* Status badge - smaller */
+    .card-badge {
+        top: 10px;
+        right: 10px;
+        padding: 4px 10px;
+        font-size: 0.65rem;
+    }
+}
+
+/* Small mobile (max-width: 480px) - even more compact */
+@media (max-width: 480px) {
+    .card-image-horizontal {
+        padding: 12px;
+    }
+    
+    .card-image-horizontal img {
+        max-width: 65%;
+        max-height: 130px;
+    }
+    
+    .image-placeholder-horizontal {
+        font-size: 2rem;
+        padding: 12px;
+    }
+    
+    .card-content-horizontal {
+        padding: 12px;
+        gap: 8px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 0.9rem;
+    }
+    
+    .candidate-passport-horizontal {
+        font-size: 0.6rem;
+    }
+    
+    .info-grid-horizontal {
+        gap: 6px;
+    }
+    
+    .info-item-horizontal {
+        gap: 5px;
+    }
+    
+    .info-icon-horizontal {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+    }
+    
+    .info-label-horizontal {
+        font-size: 0.5rem;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.6rem;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        padding: 8px 12px;
+        font-size: 0.7rem;
+        gap: 6px;
+    }
+    
+    .card-badge {
+        top: 8px;
+        right: 8px;
+        padding: 3px 8px;
+        font-size: 0.6rem;
+    }
+}
+@media (max-width: 768px) {
+    .navbar { padding: 10px 20px; }
+    .hero { margin: 20px 15px; padding: 25px 20px; }
+    .hero h3 { font-size: 1.3rem; }
+    .main-container { padding: 0 15px 40px; }
+    .filters-grid { grid-template-columns: 1fr; }
+    .stats-banner { flex-direction: column; align-items: center; }
+    
+    /* Card becomes vertical with larger spacing */
+    .card-horizontal {
+        flex-direction: column;
+    }
+    
+    /* Image container - larger but fully visible */
+    .card-image-horizontal {
+        width: 100%;
+        height: auto;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+    }
+    
+    /* Image - larger, fully visible */
+    .card-image-horizontal img {
+        width: auto;
+        height: auto;
+        max-width: 85%;
+        max-height: 240px;
+        object-fit: contain;
+        border-radius: 16px;
+    }
+    
+    .image-placeholder-horizontal {
+        width: auto;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        padding: 20px;
+        background: transparent;
+    }
+    
+    /* Content area - more spacious */
+    .card-content-horizontal {
+        padding: 20px;
+        gap: 14px;
+    }
+    
+    .candidate-header {
+        padding-bottom: 10px;
+        margin-bottom: 5px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+    
+    .candidate-passport-horizontal {
+        font-size: 0.75rem;
+    }
+    
+    /* Info grid - 2 columns with more space */
+    .info-grid-horizontal {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin: 10px 0;
+    }
+    
+    .info-item-horizontal {
+        gap: 10px;
+        padding: 6px 0;
+    }
+    
+    .info-icon-horizontal {
+        width: 34px;
+        height: 34px;
+        font-size: 0.8rem;
+        border-radius: 10px;
+    }
+    
+    .info-label-horizontal {
+        font-size: 0.65rem;
+        margin-bottom: 2px;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.8rem;
+    }
+    
+    /* Buttons - larger and more tappable */
+    .card-actions-horizontal {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        gap: 10px;
+    }
+    
+    /* Status badge - appropriately sized */
+    .card-badge {
+        top: 12px;
+        right: 12px;
+        padding: 6px 14px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Small mobile (max-width: 480px) - still spacious but adjusted */
+@media (max-width: 480px) {
+    .card-image-horizontal {
+        padding: 20px;
+    }
+    
+    .card-image-horizontal img {
+        max-width: 80%;
+        max-height: 200px;
+    }
+    
+    .image-placeholder-horizontal {
+        font-size: 3rem;
+        padding: 15px;
+    }
+    
+    .card-content-horizontal {
+        padding: 18px;
+        gap: 12px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1.1rem;
+    }
+    
+    .info-grid-horizontal {
+        gap: 10px;
+    }
+    
+    .info-icon-horizontal {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+    
+    .info-label-horizontal {
+        font-size: 0.6rem;
+    }
+    
+    .info-value-horizontal {
+        font-size: 0.75rem;
+    }
+    
+    .btn-view-profile-horizontal,
+    .btn-book-horizontal {
+        padding: 12px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .card-badge {
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
+}
+
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -938,9 +1819,9 @@
             {% for candidate in candidates %}
             <div class="candidate-card">
                 <div class="card-badge {{ candidate.application_status }}">
-        <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% else %}clock{% endif %}"></i>
-        {{ candidate.get_application_status_display }}
-    </div>
+                    <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% else %}clock{% endif %}"></i>
+                    {{ candidate.get_application_status_display }}
+                </div>
                 <div class="card-horizontal">
                     <!-- Left Column - Picture -->
                     <div class="card-image-horizontal">
@@ -951,7 +1832,6 @@
                                 <i class="fas fa-user-circle"></i>
                             </div>
                         {% endif %}
-                        
                     </div>
                     
                     <!-- Right Column - Information -->

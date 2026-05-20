@@ -14,91 +14,109 @@
         box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
     
-    /* Two Column Layout */
+    /* Two Column Layout - No Gap */
     .profile-grid {
         display: grid;
-        grid-template-columns: 350px 1fr;
+        grid-template-columns: 380px 1fr;
         gap: 0;
+        margin: 0;
+        padding: 0;
+        min-height: 500px;
     }
     
-    /* Left Column - Photo Sidebar */
+    /* Left Column - Photo Sidebar (Fills completely) */
     .profile-sidebar {
-        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
-        padding: 30px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        position: relative;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
     }
     
+    /* Photo fills entire left column */
     .candidate-photo {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        max-width: 280px;
-        height: auto;
-        aspect-ratio: 3/4;
+        height: 100%;
         object-fit: cover;
-        border-radius: 20px;
-        border: 4px solid #FFD700;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    
-    .candidate-photo:hover {
-        transform: scale(1.02);
-        box-shadow: 0 15px 40px rgba(255,215,0,0.2);
+        object-position: center;
     }
     
     .candidate-photo-placeholder {
         width: 100%;
-        max-width: 280px;
-        aspect-ratio: 3/4;
-        background: rgba(255,255,255,0.1);
-        border-radius: 20px;
-        border: 4px solid #FFD700;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 5rem;
+        font-size: 6rem;
         color: #FFD700;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    
-    .candidate-photo-placeholder:hover {
-        transform: scale(1.02);
-        background: rgba(255,255,255,0.15);
-    }
-    
-    .photo-caption {
-        margin-top: 15px;
-        color: #94a3b8;
-        font-size: 0.8rem;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        min-height: 500px;
     }
     
     /* Right Column - Content */
     .profile-content {
-        padding: 30px;
+        padding: 30px 35px;
+        background: white;
+        margin: 0;
     }
     
+    /* Status Badge Container - Top Right */
+    .status-badge-container {
+        text-align: right;
+        margin-bottom: 20px;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .health-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    
+    .status-AVA { background: #d1fae5; color: #065f46; }
+    .status-SEL { background: #fed7aa; color: #9a3412; }
+    .status-CAN { background: #fee2e2; color: #991b1b; }
+    .status-VIS { background: #dbeafe; color: #1e40af; }
+    .status-RES { background: #e0e7ff; color: #4338ca; }
+    
+    .health-FIT { background: #d1fae5; color: #065f46; }
+    .health-UNFIT { background: #fee2e2; color: #991b1b; }
+    .health-PENDING { background: #fef3c7; color: #d97706; }
+    
+    /* Typography */
     .candidate-name {
         font-size: 2rem;
         font-weight: 800;
         background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
     
     .candidate-passport {
         color: #64748b;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         padding-bottom: 15px;
-        border-bottom: 2px solid #e2e8f0;
+        border-bottom: 2px solid #f1f5f9;
+        font-size: 0.9rem;
     }
     
+    /* Info Sections */
     .info-section {
-        margin-bottom: 25px;
+        margin-bottom: 28px;
     }
     
     .section-title {
@@ -119,20 +137,27 @@
     .info-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 15px;
     }
     
     .info-item {
         display: flex;
         background: #f8fafc;
-        border-radius: 12px;
-        padding: 12px;
+        border-radius: 14px;
+        padding: 14px 18px;
+        transition: all 0.3s;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .info-item:hover {
+        transform: translateY(-2px);
+        border-color: #FFD700;
     }
     
     .info-label {
         font-weight: 600;
         color: #64748b;
-        width: 100px;
+        width: 110px;
         font-size: 0.8rem;
     }
     
@@ -143,32 +168,7 @@
         font-size: 0.85rem;
     }
     
-    .status-badge {
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-    
-    .status-AVA { background: #d1fae5; color: #065f46; }
-    .status-SEL { background: #fed7aa; color: #9a3412; }
-    .status-CAN { background: #fee2e2; color: #991b1b; }
-    .status-VIS { background: #dbeafe; color: #1e40af; }
-    .status-RES { background: #e0e7ff; color: #4338ca; }
-    
-    .health-badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 50px;
-        font-size: 0.7rem;
-        font-weight: 600;
-    }
-    
-    .health-FIT { background: #d1fae5; color: #065f46; }
-    .health-UNFIT { background: #fee2e2; color: #991b1b; }
-    .health-PENDING { background: #fef3c7; color: #d97706; }
-    
+    /* Skills Tags */
     .skills-container {
         display: flex;
         flex-wrap: wrap;
@@ -185,17 +185,18 @@
         font-weight: 500;
     }
     
+    /* Documents Grid */
     .documents-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 12px;
-        margin-top: 10px;
+        margin-top: 15px;
     }
     
     .doc-card {
         background: #f8fafc;
         border-radius: 12px;
-        padding: 12px;
+        padding: 15px;
         text-align: center;
         text-decoration: none;
         transition: all 0.3s;
@@ -205,13 +206,12 @@
     .doc-card:hover {
         transform: translateY(-3px);
         border-color: #FFD700;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
     .doc-icon {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         color: #FFD700;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
     
     .doc-title {
@@ -224,19 +224,21 @@
         max-width: 100%;
         border-radius: 12px;
         margin-top: 10px;
+        border: 1px solid #e2e8f0;
     }
     
+    /* Action Buttons */
     .button-group {
         display: flex;
         gap: 15px;
-        margin-top: 25px;
+        margin-top: 30px;
         padding-top: 20px;
         border-top: 1px solid #e2e8f0;
     }
     
     .btn {
-        padding: 10px 20px;
-        border-radius: 10px;
+        padding: 12px 24px;
+        border-radius: 12px;
         text-decoration: none;
         font-weight: 600;
         transition: all 0.3s;
@@ -252,111 +254,149 @@
         color: #475569;
     }
     
-    .btn-contact {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    .btn-book {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
         color: white;
     }
     
-    .btn-shortlist {
-        background: white;
-        border: 2px solid #e2e8f0;
-        color: #475569;
-    }
-    
-    .btn-back:hover, .btn-contact:hover, .btn-shortlist:hover {
+    .btn-back:hover, .btn-book:hover {
         transform: translateY(-2px);
     }
     
+    /* Responsive */
     @media (max-width: 768px) {
         .profile-grid {
             grid-template-columns: 1fr;
         }
+        
         .profile-sidebar {
-            padding: 20px;
+            min-height: 300px;
         }
-        .candidate-photo, .candidate-photo-placeholder {
-            max-width: 200px;
+        
+        .candidate-photo-placeholder {
+            min-height: 300px;
         }
+        
         .info-grid {
             grid-template-columns: 1fr;
         }
+        
         .button-group {
             flex-direction: column;
         }
+        
         .btn {
             justify-content: center;
         }
+        
+        .profile-content {
+            padding: 20px;
+        }
+        
+        .status-badge-container {
+            text-align: left;
+        }
+        
+        .candidate-name {
+            font-size: 1.5rem;
+        }
+        
+        .documents-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
-    /* Make profile sidebar taller to align with content */
-.profile-sidebar {
-    background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    height: 100%;  /* Make sidebar full height */
-    min-height: 100%;  /* Ensure it stretches */
-}
-
-/* Make the profile container use flex alignment */
-.profile-grid {
-    display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 0;
-    align-items: stretch;  /* Make both columns equal height */
-}
-
-/* Make candidate photo taller */
-.candidate-photo {
-    width: 100%;
-    max-width: 280px;
-    height: auto;
-    aspect-ratio: 2/3;  /* Changed from 3/4 to 2/3 (taller) */
-    object-fit: cover;
-    border-radius: 20px;
-    border: 4px solid #FFD700;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.candidate-photo-placeholder {
-    width: 100%;
-    max-width: 280px;
-    aspect-ratio: 2/3;  /* Changed from 3/4 to 2/3 */
-    background: rgba(255,255,255,0.1);
-    border-radius: 20px;
-    border: 4px solid #FFD700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    color: #FFD700;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-/* Ensure the sidebar content stretches */
-.profile-sidebar {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
-/* Make the photo container take appropriate space */
-.candidate-photo-container {
-    margin-bottom: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-/* For mobile responsiveness */
-@media (max-width: 768px) {
-    .candidate-photo, .candidate-photo-placeholder {
-        aspect-ratio: 3/4;  /* Slightly less tall on mobile */
-        max-width: 200px;
+    
+    @media (max-width: 480px) {
+        .documents-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    
+    /* Left Column - Photo Sidebar on Mobile */
+    .profile-sidebar {
+        min-height: 300px;
+        position: relative;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+    }
+    
+    /* Make photo fully visible without cropping */
+    .candidate-photo {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 250px;
+        object-fit: contain;
+        object-position: center;
+    }
+    
+    /* Alternative: If using absolute positioning */
+    .profile-sidebar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .candidate-photo {
+        position: relative;
+        width: auto;
+        max-width: 80%;
+        height: auto;
+        max-height: 280px;
+        object-fit: contain;
+        border-radius: 16px;
+    }
+    
+    .candidate-photo-placeholder {
+        min-height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        padding: 20px;
+    }
+    
+    /* Remove absolute positioning for mobile */
+    .profile-sidebar {
+        position: relative;
+        overflow: visible;
+    }
+    
+    /* Rest of your mobile styles */
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        justify-content: center;
+    }
+    
+    .profile-content {
+        padding: 20px;
+    }
+    
+    .candidate-name {
+        font-size: 1.5rem;
+    }
+    
+    .status-badge-container {
+        text-align: left;
+    }
+    
+    .documents-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 }
 </style>
@@ -365,21 +405,21 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-grid">
-        <!-- Left Column - Standing Rectangle Photo -->
+        <!-- Left Column - Photo fills completely -->
         <div class="profile-sidebar">
             {% if candidate.profile_photo %}
                 <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-photo" onclick="openPhotoModal('{{ candidate.profile_photo.url }}', '{{ candidate.full_name }}')">
             {% else %}
-                <div class="candidate-photo-placeholder" onclick="openPhotoModal('', '{{ candidate.full_name }}')">
+                <div class="candidate-photo-placeholder">
                     <i class="fas fa-user-circle"></i>
                 </div>
             {% endif %}
-            <div class="photo-caption">
-                <i class="fas fa-camera"></i> Click to view full size
-            </div>
-            
-            <!-- Status Badge in Sidebar -->
-            <div style="margin-top: 20px;">
+        </div>
+        
+        <!-- Right Column - Content -->
+        <div class="profile-content">
+            <!-- Status Badges -->
+            <div class="status-badge-container">
                 <span class="status-badge status-{{ candidate.application_status }}">
                     <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% elif candidate.application_status == 'SEL' %}user-check{% elif candidate.application_status == 'VIS' %}passport{% elif candidate.application_status == 'RES' %}clock{% else %}info-circle{% endif %}"></i>
                     {% if candidate.application_status == 'AVA' %}Available
@@ -389,11 +429,14 @@
                     {% elif candidate.application_status == 'RES' %}Reserved
                     {% else %}{{ candidate.get_application_status_display }}{% endif %}
                 </span>
+                <span class="health-badge health-{{ candidate.health_status }}">
+                    <i class="fas fa-stethoscope"></i>
+                    {% if candidate.health_status == 'FIT' %}Fit
+                    {% elif candidate.health_status == 'UNFIT' %}Unfit
+                    {% else %}Pending{% endif %}
+                </span>
             </div>
-        </div>
-        
-        <!-- Right Column - Content -->
-        <div class="profile-content">
+            
             <h1 class="candidate-name">{{ candidate.full_name }}</h1>
             <div class="candidate-passport">
                 <i class="fas fa-passport"></i> Passport: {{ candidate.passport_number }} | Registered: {{ candidate.registered_at|date:"F d, Y" }}
@@ -447,80 +490,136 @@
             </div>
             
             <!-- Media & Documents -->
-            <div class="info-section">
-                <h3 class="section-title"><i class="fas fa-file-alt"></i> Documents</h3>
-                <div class="documents-grid">
-                    {% if candidate.cv_pdf %}
-                    <a href="{{ candidate.cv_pdf.url }}" target="_blank" class="doc-card">
-                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
-                        <div class="doc-title">CV / Resume</div>
-                    </a>
-                    {% endif %}
-                    {% if candidate.passport_copy %}
-                    <a href="{{ candidate.passport_copy.url }}" target="_blank" class="doc-card">
-                        <div class="doc-icon"><i class="fas fa-passport"></i></div>
-                        <div class="doc-title">Passport Copy</div>
-                    </a>
-                    {% endif %}
-                    {% if candidate.visa_document %}
-    <a href="{{ candidate.visa_document.url }}" target="_blank" class="doc-card">
-        <div class="doc-icon"><i class="fas fa-stamp"></i></div>
-        <div class="doc-title">Visa Document</div>
-    </a>
+<div class="info-section">
+    <h3 class="section-title"><i class="fas fa-file-alt"></i> Media & Documents</h3>
+    
+    <!-- Video Interview -->
+    {% if candidate.candidate_video %}
+    <div style="margin-bottom: 20px;">
+        <div class="info-label" style="margin-bottom: 8px;">
+            <i class="fas fa-video"></i> Video Interview
+        </div>
+        <video width="100%" controls style="max-width: 100%; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
     {% endif %}
-                </div>
-                {% if candidate.candidate_video %}
-                <video controls style="margin-top: 15px;">
-                    <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
-                </video>
-                {% endif %}
-            </div>
+    
+    <!-- Documents Grid - All Documents -->
+    <div class="documents-grid">
+        <!-- Profile Photo -->
+        <div class="doc-card">
+            <div class="doc-icon"><i class="fas fa-camera"></i></div>
+            <div class="doc-title">Profile Photo</div>
+            {% if candidate.profile_photo %}
+                <a href="{{ candidate.profile_photo.url }}" target="_blank" style="color: #FFD700; font-size: 0.7rem; text-decoration: none;">Click to view</a>
+            {% else %}
+                <span style="color: #94a3b8; font-size: 0.65rem;">Not uploaded</span>
+            {% endif %}
+        </div>
+        
+        <!-- CV / Resume -->
+        <div class="doc-card">
+            <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+            <div class="doc-title">CV / Resume</div>
+            {% if candidate.cv_pdf %}
+                <a href="{{ candidate.cv_pdf.url }}" target="_blank" style="color: #FFD700; font-size: 0.7rem; text-decoration: none;">Click to view</a>
+            {% else %}
+                <span style="color: #94a3b8; font-size: 0.65rem;">Not uploaded</span>
+            {% endif %}
+        </div>
+        
+        <!-- Passport Copy -->
+        <div class="doc-card">
+            <div class="doc-icon"><i class="fas fa-passport"></i></div>
+            <div class="doc-title">Passport Copy</div>
+            {% if candidate.passport_copy %}
+                <a href="{{ candidate.passport_copy.url }}" target="_blank" style="color: #FFD700; font-size: 0.7rem; text-decoration: none;">Click to view</a>
+            {% else %}
+                <span style="color: #94a3b8; font-size: 0.65rem;">Not uploaded</span>
+            {% endif %}
+        </div>
+        
+        <!-- Visa Document -->
+        <div class="doc-card">
+            <div class="doc-icon"><i class="fas fa-stamp"></i></div>
+            <div class="doc-title">Visa Document</div>
+            {% if candidate.visa_document %}
+                <a href="{{ candidate.visa_document.url }}" target="_blank" style="color: #FFD700; font-size: 0.7rem; text-decoration: none;">Click to view</a>
+            {% else %}
+                <span style="color: #94a3b8; font-size: 0.65rem;">Not uploaded</span>
+            {% endif %}
+        </div>
+        
+       
+        
+        
+    </div>
+    
+    {% if not candidate.profile_photo and not candidate.cv_pdf and not candidate.passport_copy and not candidate.visa_document and not candidate.medical_certificate and not candidate.training_certificates and not candidate.candidate_video %}
+    <div style="text-align: center; padding: 30px; color: #64748b;">
+        <i class="fas fa-cloud-upload-alt fa-2x"></i>
+        <p style="margin-top: 10px;">No documents or media uploaded yet.</p>
+    </div>
+    {% endif %}
+</div>
             
             <!-- Action Buttons -->
             <div class="button-group">
                 <a href="{% url 'client_portal' %}" class="btn btn-back">
                     <i class="fas fa-arrow-left"></i> Back to Search
                 </a>
-               
+                <button class="btn btn-book" onclick="bookCandidate({{ candidate.id }}, '{{ candidate.full_name }}')">
+                    <i class="fas fa-calendar-check"></i> Book This Candidate
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function shortlistCandidate() {
-        let shortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-        const candidateId = {{ candidate.id }};
-        if (!shortlist.includes(candidateId)) {
-            shortlist.push(candidateId);
-            localStorage.setItem('shortlist', JSON.stringify(shortlist));
-            alert('✓ {{ candidate.full_name }} added to your shortlist!');
-        } else {
-            alert('This candidate is already in your shortlist');
+    function bookCandidate(candidateId, candidateName) {
+        if (confirm(`Book "${candidateName}"? The candidate will be reserved for you.`)) {
+            fetch('/book-candidate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ candidate_id: candidateId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✓ Candidate booked successfully!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
         }
     }
     
-    function contactAgency() {
-        const subject = encodeURIComponent('Interview Request for {{ candidate.full_name }}');
-        const body = encodeURIComponent(
-            `Dear Recruitment Team,\n\n` +
-            `I am interested in interviewing the following candidate:\n\n` +
-            `Name: {{ candidate.full_name }}\n` +
-            `Passport Number: {{ candidate.passport_number }}\n` +
-            `Job Category: {{ candidate.get_job_category_display }}\n` +
-            `Age: {{ candidate.age }} years\n\n` +
-            `Please contact me to arrange an interview.\n\n` +
-            `Best regards,\n` +
-            `{{ user.get_full_name|default:user.username }}`
-        );
-        window.location.href = `mailto:recruitment@mahikenginvestments.com?subject=${subject}&body=${body}`;
-        alert('Opening email client...');
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 </script>
 
 <!-- Photo Modal -->
 <div id="photoModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:10000;align-items:center;justify-content:center">
-    <span onclick="document.getElementById('photoModal').style.display='none'" style="position:absolute;top:20px;right:30px;color:white;font-size:40px;cursor:pointer">&times;</span>
+    <span onclick="closePhotoModal()" style="position:absolute;top:20px;right:30px;color:white;font-size:40px;cursor:pointer">&times;</span>
     <img id="modalPhoto" style="max-width:90%;max-height:90%;object-fit:contain">
 </div>
 
@@ -533,8 +632,17 @@
             modal.style.display = 'flex';
         }
     }
+    
+    function closePhotoModal() {
+        document.getElementById('photoModal').style.display = 'none';
+    }
+    
     document.getElementById('photoModal')?.addEventListener('click', function(e) {
-        if (e.target === this) this.style.display = 'none';
+        if (e.target === this) closePhotoModal();
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closePhotoModal();
     });
 </script>
 {% endblock %}
