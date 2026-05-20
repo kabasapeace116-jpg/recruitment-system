@@ -131,6 +131,12 @@ class Candidate(models.Model):
         upload_to=document_path,
         null=True, blank=True
     )
+    visa_document = models.FileField(  
+        upload_to=document_path,
+        validators=[FileExtensionValidator(['pdf', 'jpg', 'jpeg', 'png'])],
+        null=True, blank=True,
+        help_text="Upload visa copy or related documents"
+    )
     
     
     # Tracking
@@ -195,36 +201,28 @@ class Candidate(models.Model):
 
 
 class ClientSelection(models.Model):
-    """Model to track which clients selected which candidates"""
     client = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='selections')
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='selected_by_clients')
     selected_at = models.DateTimeField(auto_now_add=True)
     
-    # NEW: Sponsor/Client Details for Booking
+    # Sponsor Details (filled on confirmation)
     sponsor_name = models.CharField(max_length=200, blank=True, null=True)
     sponsor_address = models.TextField(blank=True, null=True)
     sponsor_contact = models.CharField(max_length=50, blank=True, null=True)
     sponsor_email = models.EmailField(blank=True, null=True)
     booking_notes = models.TextField(blank=True, null=True)
-    is_booked = models.BooleanField(default=False)  # True = Booked/Reserved, False = Just Selected
+    
+    # Status flags
+    is_booked = models.BooleanField(default=False)  # True = Booked/Reserved
+    is_confirmed = models.BooleanField(default=False)  # True = Confirmed/Selected
     
     class Meta:
         unique_together = ('client', 'candidate')
         ordering = ['-selected_at']
     
     def __str__(self):
-        status = "Booked" if self.is_booked else "Selected"
-        return f"{self.client.username} {status} {self.candidate.full_name}"
-    """Model to track which clients selected which candidates"""
-    client = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='selections')
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='selected_by_clients')
-    selected_at = models.DateTimeField(auto_now_add=True)
-    notes = models.TextField(blank=True, help_text="Client notes about this candidate")
-    
-    class Meta:
-        unique_together = ('client', 'candidate')  # Prevent duplicate selections
-        ordering = ['-selected_at']
-    
-    def __str__(self):
-        return f"{self.client.username} selected {self.candidate.full_name}"
-    
+        if self.is_confirmed:
+            return f"{self.client.username} Confirmed {self.candidate.full_name}"
+        elif self.is_booked:
+            return f"{self.client.username} Booked {self.candidate.full_name}"
+        return f"{self.client.username} Selected {self.candidate.full_name}"

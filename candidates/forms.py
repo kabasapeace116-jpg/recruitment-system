@@ -25,6 +25,7 @@ class CandidateRegistrationForm(forms.ModelForm):
             'preferred_country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., UAE, Saudi Arabia, Qatar'}),
             'expected_salary': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Amount in USD'}),
             'health_status': forms.Select(attrs={'class': 'form-control'}),
+            'visa_document': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
 class ClientUserCreationForm(forms.ModelForm):

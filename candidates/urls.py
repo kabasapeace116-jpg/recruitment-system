@@ -55,5 +55,6 @@ path('cancel-booking/', views.cancel_booking, name='cancel_booking'),
 
 path('admin-reserved/', views.admin_reserved, name='admin_reserved'),
 path('admin-visa-issued/', views.admin_visa_issued, name='admin_visa_issued'),
+path('confirm-selection/', views.confirm_selection, name='confirm_selection'),
 
 ]

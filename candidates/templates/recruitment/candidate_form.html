@@ -584,11 +584,10 @@
                 </div>
             </div>
 
-           <!-- Section 4: Documents & Media -->
+          <!-- Section 4: Documents & Media -->
 <div class="form-section" data-section="4">
     <h2 class="section-title"><i class="fas fa-file-upload"></i> Documents & Media</h2>
     <div class="form-grid">
-        <!-- Profile Photo -->
         <div class="form-group full-width">
             <label><i class="fas fa-camera"></i> Profile Photo</label>
             {{ form.profile_photo }}
@@ -597,7 +596,6 @@
             </div>
         </div>
         
-        <!-- Video Introduction -->
         <div class="form-group full-width">
             <label><i class="fas fa-video"></i> Candidate Video Introduction</label>
             {{ form.candidate_video }}
@@ -609,7 +607,6 @@
             </div>
         </div>
         
-        <!-- Passport Copy -->
         <div class="form-group full-width">
             <label><i class="fas fa-passport"></i> Passport Copy</label>
             {{ form.passport_copy }}
@@ -618,11 +615,22 @@
             </div>
         </div>
         
-        <!-- CV / Resume -->
         <div class="form-group full-width">
             <label><i class="fas fa-file-alt"></i> CV / Resume (PDF)</label>
             {{ form.cv_pdf }}
             <div class="file-preview" id="cvPreview">
+                <i class="fas fa-file-pdf"></i> File selected
+            </div>
+        </div>
+        
+        <!-- NEW: Visa Document Field -->
+        <div class="form-group full-width">
+            <label><i class="fas fa-stamp"></i> Visa Document</label>
+            {{ form.visa_document }}
+            <small style="color: #64748b; display: block; margin-top: 5px;">
+                <i class="fas fa-info-circle"></i> Upload visa copy (PDF, JPG, PNG) - Max 10MB.
+            </small>
+            <div class="file-preview" id="visaPreview">
                 <i class="fas fa-file-pdf"></i> File selected
             </div>
         </div>
@@ -780,6 +788,8 @@
         // Setup file previews
         setupFilePreview('id_profile_photo', 'photoPreview');
         setupFilePreview('id_candidate_video', 'videoPreview');
+        setupFilePreview('id_cv_pdf', 'cvPreview');
+        setupFilePreview('id_visa_document', 'visaPreview');
 
         // Form submission - keep user on same page
         document.getElementById('candidateForm').addEventListener('submit', (e) => {

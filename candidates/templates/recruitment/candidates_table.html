@@ -5,801 +5,988 @@
 
 {% block extra_css %}
 <style>
-    .candidates-card {
+    /* Stats Container */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        padding: 20px 25px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        cursor: pointer;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+    }
+    
+    .stat-icon.total { background: rgba(100, 116, 139, 0.1); color: #475569; }
+    .stat-icon.available { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+    .stat-icon.selected { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .stat-icon.reserved { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+    .stat-icon.visa { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    
+    .stat-info .stat-number {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1e293b;
+        line-height: 1.2;
+    }
+    
+    .stat-info .stat-label {
+        font-size: 0.7rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+    
+    /* Filters Section */
+    .filters-section {
+        background: white;
+        border-radius: 20px;
+        margin: 20px 25px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .filters-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        padding: 5px 0;
+    }
+    
+    .filters-header h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .filters-header h3 i {
+        color: #FFD700;
+        margin-right: 8px;
+    }
+    
+    .toggle-filters {
+        color: #FFD700;
+        cursor: pointer;
+    }
+    
+    .search-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #FFD700;
+        box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #FFD700;
+    }
+    
+    .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .filter-group label {
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        font-size: 0.8rem;
+    }
+    
+    .filter-group label i {
+        color: #FFD700;
+        margin-right: 5px;
+    }
+    
+    .chip-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .chip {
+        padding: 6px 14px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #475569;
+    }
+    
+    .chip:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
+    }
+    
+    .chip.active {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+        border-color: #FFD700;
+    }
+    
+    .filter-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .btn-filter, .btn-reset {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s;
+    }
+    
+    .btn-filter {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+    }
+    
+    .btn-reset {
+        background: #f1f5f9;
+        color: #475569;
+    }
+    
+    .btn-filter:hover, .btn-reset:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Active Filters Bar */
+    .active-filters-bar {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .filter-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 500;
+    }
+    
+    .filter-tag i {
+        cursor: pointer;
+    }
+    
+    .clear-all {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        margin-left: auto;
+    }
+    
+    /* Horizontal Card Layout */
+    .candidates-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 25px 25px 25px;
+    }
+    
+    .candidate-card {
         background: white;
         border-radius: 20px;
         overflow: hidden;
+        transition: all 0.3s;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        position: relative;
     }
-    .card-header {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        padding: 20px 25px;
+    
+    .candidate-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    /* Status Badge - Far Right Upper Corner */
+    .card-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 20;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        pointer-events: none;
+    }
+    
+    .card-badge.AVA { background: #d1fae5; color: #065f46; }
+    .card-badge.SEL { background: #fed7aa; color: #9a3412; }
+    .card-badge.RES { background: #e0e7ff; color: #4338ca; }
+    .card-badge.VIS { background: #dbeafe; color: #1e40af; }
+    .card-badge.CAN { background: #fee2e2; color: #991b1b; }
+    
+    /* Card Horizontal Layout */
+    .card-horizontal {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
+        gap: 0;
     }
-    .card-header h3 { margin: 0; color: #0f0c29; }
-    .btn-add { background: #0f0c29; color: white; border: none; padding: 10px 20px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
-    .filters-section { padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-    .filters-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 5px 0; }
-    .filters-header h4 { margin: 0; color: #1e293b; }
-    .filters-header h4 i { color: #FFD700; margin-right: 8px; }
-    .toggle-filters { color: #FFD700; }
-    .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-    .filter-group { display: flex; flex-direction: column; }
-    .filter-group label { font-weight: 600; color: #334155; margin-bottom: 8px; font-size: 0.8rem; }
-    .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip { padding: 5px 12px; background: white; border: 1px solid #e2e8f0; border-radius: 50px; font-size: 0.7rem; cursor: pointer; }
-    .chip.active { background: #FFD700; color: #0f0c29; border-color: #FFD700; }
-    .search-wrapper { position: relative; margin-bottom: 15px; }
-    .search-input { width: 100%; padding: 10px 15px 10px 40px; border: 2px solid #e2e8f0; border-radius: 10px; }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #FFD700; }
-    .candidates-table { width: 100%; border-collapse: collapse; }
-    .candidates-table th, .candidates-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-    .candidates-table th { background: #f8fafc; font-weight: 600; }
-    .thumbnail-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; cursor: pointer; }
-    .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
-    .status-AVA { background: #d1fae5; color: #065f46; }
-    .status-SEL { background: #fed7aa; color: #9a3412; }
-    .health-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+    
+    /* Left Column - Image */
+    .card-image-horizontal {
+        position: relative;
+        width: 220px;
+        min-height: 260px;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .card-image-horizontal img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        max-height: 100%;
+    }
+    
+    .image-placeholder-horizontal {
+        width: 100%;
+        height: 100%;
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: #FFD700;
+        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+    }
+    
+    /* Right Column - Content */
+    .card-content-horizontal {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .candidate-header {
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 12px;
+    }
+    
+    .candidate-name-horizontal {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 6px 0;
+    }
+    
+    .candidate-passport-horizontal {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin: 0;
+    }
+    
+    /* Info Grid */
+    .info-grid-horizontal {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin: 5px 0;
+    }
+    
+    .info-item-horizontal {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 5px 0;
+    }
+    
+    .info-icon-horizontal {
+        width: 34px;
+        height: 34px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFD700;
+        font-size: 0.85rem;
+    }
+    
+    .info-label-horizontal {
+        font-size: 0.65rem;
+        color: #64748b;
+        margin-bottom: 2px;
+    }
+    
+    .info-value-horizontal {
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 0.8rem;
+    }
+    
+    /* Health Badge */
+    .health-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+    
     .health-FIT { background: #d1fae5; color: #065f46; }
     .health-UNFIT { background: #fee2e2; color: #991b1b; }
     .health-PENDING { background: #fef3c7; color: #d97706; }
-    .action-buttons { display: flex; gap: 5px; flex-wrap: wrap; }
-    .btn-icon { padding: 4px 8px; border-radius: 5px; border: none; cursor: pointer; font-size: 0.65rem; }
-    .btn-view { background: #e0e7ff; color: #4338ca; }
-    .btn-edit { background: #fed7aa; color: #9a3412; }
-    .btn-delete { background: #fee2e2; color: #991b1b; }
-    .pagination-container { padding: 20px; text-align: center; border-top: 1px solid #e2e8f0; }
-    .page-link { padding: 5px 12px; background: #f1f5f9; color: #475569; text-decoration: none; border-radius: 5px; margin: 0 3px; display: inline-block; }
-    .page-link.active { background: #FFD700; color: #0f0c29; }
-    @media (max-width: 768px) { .filters-grid { grid-template-columns: 1fr; } .candidates-table { font-size: 0.7rem; min-width: 650px; } }
-    /* Stats Container */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-/* Common Stat Card Styles */
-.stat-card-total,
-.stat-card-available,
-.stat-card-selected,
-.stat-card-reserved,
-.stat-card-visa {
-    background: white;
-    border-radius: 16px;
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.stat-card-total:hover,
-.stat-card-available:hover,
-.stat-card-selected:hover,
-.stat-card-reserved:hover,
-.stat-card-visa:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-
-/* Icon Styles */
-.stat-icon-total,
-.stat-icon-available,
-.stat-icon-selected,
-.stat-icon-reserved,
-.stat-icon-visa {
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-}
-
-.stat-icon-total {
-    background: rgba(100, 116, 139, 0.1);
-    color: #475569;
-}
-
-.stat-icon-available {
-    background: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
-}
-
-.stat-icon-selected {
-    background: rgba(245, 158, 11, 0.1);
-    color: #f59e0b;
-}
-
-.stat-icon-reserved {
-    background: rgba(139, 92, 246, 0.1);
-    color: #8b5cf6;
-}
-
-.stat-icon-visa {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-}
-
-/* Info Styles */
-.stat-info {
-    flex: 1;
-}
-
-.stat-number {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #1e293b;
-    line-height: 1.2;
-}
-
-.stat-label {
-    font-size: 0.75rem;
-    color: #64748b;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 15px;
-    }
     
-    .stat-card-total,
-    .stat-card-available,
-    .stat-card-selected,
-    .stat-card-reserved,
-    .stat-card-visa {
-        padding: 12px;
-    }
-    
-    .stat-icon-total,
-    .stat-icon-available,
-    .stat-icon-selected,
-    .stat-icon-reserved,
-    .stat-icon-visa {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-    
-    .stat-number {
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .stats-container {
-        grid-template-columns: 1fr;
-    }
-}
-/* Compact Stats Bar */
-.stats-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1px;
-    background: #e2e8f0;
-    border-radius: 16px;
-    overflow: hidden;
-    margin: 0 20px 20px 20px;
-}
-
-.stat-card-total,
-.stat-card-available,
-.stat-card-selected,
-.stat-card-reserved,
-.stat-card-visa {
-    flex: 1;
-    background: white;
-    padding: 15px;
-    text-align: center;
-    transition: all 0.3s;
-}
-
-.stat-card-total:hover,
-.stat-card-available:hover,
-.stat-card-selected:hover,
-.stat-card-reserved:hover,
-.stat-card-visa:hover {
-    background: #f8fafc;
-}
-
-.stat-number {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #1e293b;
-}
-
-.stat-label {
-    font-size: 0.7rem;
-    color: #64748b;
-    margin-top: 5px;
-}
-
-.stat-icon-total,
-.stat-icon-available,
-.stat-icon-selected,
-.stat-icon-reserved,
-.stat-icon-visa {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .stats-container {
-        flex-direction: column;
-        gap: 1px;
-        margin: 0 15px 15px 15px;
-    }
-    
-    .stat-card-total,
-    .stat-card-available,
-    .stat-card-selected,
-    .stat-card-reserved,
-    .stat-card-visa {
+    /* Action Buttons */
+    .card-actions-horizontal {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 20px;
-        text-align: left;
-    }
-    
-    .stat-number {
-        font-size: 1.3rem;
-    }
-}
-/* Stats Container */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    padding: 25px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-bottom: 1px solid #e2e8f0;
-}
-
-/* Common Stat Card Styles */
-.stat-card-total,
-.stat-card-available,
-.stat-card-selected,
-.stat-card-reserved,
-.stat-card-visa {
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-/* Card Hover Effects */
-.stat-card-total:hover,
-.stat-card-available:hover,
-.stat-card-selected:hover,
-.stat-card-reserved:hover,
-.stat-card-visa:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-}
-
-/* Animated Border Effect */
-.stat-card-total::before,
-.stat-card-available::before,
-.stat-card-selected::before,
-.stat-card-reserved::before,
-.stat-card-visa::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    transition: all 0.3s;
-}
-
-.stat-card-total::before { background: linear-gradient(90deg, #64748b, #94a3b8); }
-.stat-card-available::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
-.stat-card-selected::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-.stat-card-reserved::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-.stat-card-visa::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-
-.stat-card-total:hover::before,
-.stat-card-available:hover::before,
-.stat-card-selected:hover::before,
-.stat-card-reserved:hover::before,
-.stat-card-visa:hover::before {
-    height: 6px;
-}
-
-/* Icon Styles */
-.stat-icon-total,
-.stat-icon-available,
-.stat-icon-selected,
-.stat-icon-reserved,
-.stat-icon-visa {
-    width: 60px;
-    height: 60px;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    transition: all 0.3s;
-}
-
-.stat-card-total:hover .stat-icon-total,
-.stat-card-available:hover .stat-icon-available,
-.stat-card-selected:hover .stat-icon-selected,
-.stat-card-reserved:hover .stat-icon-reserved,
-.stat-card-visa:hover .stat-icon-visa {
-    transform: scale(1.1) rotate(5deg);
-}
-
-.stat-icon-total {
-    background: linear-gradient(135deg, #475569 0%, #64748b 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(71, 85, 105, 0.2);
-}
-
-.stat-icon-available {
-    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(34, 197, 94, 0.2);
-}
-
-.stat-icon-selected {
-    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.2);
-}
-
-.stat-icon-reserved {
-    background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(139, 92, 246, 0.2);
-}
-
-.stat-icon-visa {
-    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
-}
-
-/* Info Styles */
-.stat-info {
-    flex: 1;
-}
-
-.stat-number {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #1e293b;
-    line-height: 1.1;
-    margin-bottom: 5px;
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    color: #64748b;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stat-trend {
-    font-size: 0.7rem;
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.trend-up {
-    color: #22c55e;
-}
-
-.trend-down {
-    color: #ef4444;
-}
-
-/* Pulse Animation for New Data */
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.stat-card-total .stat-number,
-.stat-card-available .stat-number,
-.stat-card-selected .stat-number,
-.stat-card-reserved .stat-number,
-.stat-card-visa .stat-number {
-    animation: pulse 0.5s ease;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .stats-container {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 15px;
-        padding: 20px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
     }
     
-    .stat-icon-total,
-    .stat-icon-available,
-    .stat-icon-selected,
-    .stat-icon-reserved,
-    .stat-icon-visa {
-        width: 50px;
-        height: 50px;
-        font-size: 1.4rem;
-        border-radius: 14px;
+    .btn-view-horizontal,
+    .btn-edit-horizontal,
+    .btn-delete-horizontal {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        border: none;
     }
     
-    .stat-number {
-        font-size: 1.6rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 15px;
+    .btn-view-horizontal {
+        background: #e0e7ff;
+        color: #4338ca;
     }
     
-    .stat-card-total,
-    .stat-card-available,
-    .stat-card-selected,
-    .stat-card-reserved,
-    .stat-card-visa {
-        padding: 15px;
-        gap: 12px;
+    .btn-edit-horizontal {
+        background: #fed7aa;
+        color: #9a3412;
     }
     
-    .stat-icon-total,
-    .stat-icon-available,
-    .stat-icon-selected,
-    .stat-icon-reserved,
-    .stat-icon-visa {
-        width: 45px;
-        height: 45px;
-        font-size: 1.2rem;
-        border-radius: 12px;
+    .btn-delete-horizontal {
+        background: #fee2e2;
+        color: #991b1b;
     }
     
-    .stat-number {
-        font-size: 1.3rem;
+    .btn-view-horizontal:hover,
+    .btn-edit-horizontal:hover,
+    .btn-delete-horizontal:hover {
+        transform: translateY(-2px);
     }
     
-    .stat-label {
+    /* Checkbox for bulk actions */
+    .checkbox-container {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 20;
+        background: rgba(255,255,255,0.9);
+        padding: 5px 8px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
         font-size: 0.7rem;
     }
-}
-
-@media (max-width: 480px) {
-    .stats-container {
-        grid-template-columns: 1fr;
+    
+    .candidate-checkbox {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
     }
     
-    .stat-card-total,
-    .stat-card-available,
-    .stat-card-selected,
-    .stat-card-reserved,
-    .stat-card-visa {
-        padding: 12px 18px;
+    /* Mass Actions Bar */
+    #massActionsBar {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        padding: 10px 20px;
+        border-radius: 50px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 15px;
     }
-}
+    
+    #massActionsBar button {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 6px 15px;
+        border-radius: 30px;
+        cursor: pointer;
+    }
+    
+    /* Pagination */
+    .pagination-container {
+        padding: 20px;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .pagination {
+        display: inline-flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .page-link {
+        padding: 6px 12px;
+        background: #f1f5f9;
+        color: #475569;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .page-link:hover, .page-link.active {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 15px;
+        }
+        .card-horizontal {
+            flex-direction: column;
+        }
+        .card-image-horizontal {
+            width: 100%;
+            height: 220px;
+            min-height: auto;
+        }
+        .info-grid-horizontal {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .card-actions-horizontal {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .filters-section {
+            margin: 15px;
+        }
+        .candidates-grid {
+            padding: 0 15px 15px 15px;
+        }
+    }
+    
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- Stats Cards -->
 <div class="stats-container">
-    <div class="stat-card-total">
-        <div class="stat-icon-total">
-            <i class="fas fa-users"></i>
-        </div>
+    <div class="stat-card">
+        <div class="stat-icon total"><i class="fas fa-users"></i></div>
         <div class="stat-info">
             <div class="stat-number">{{ total_candidates }}</div>
             <div class="stat-label">Total Candidates</div>
         </div>
     </div>
-    
-    <div class="stat-card-available">
-        <div class="stat-icon-available">
-            <i class="fas fa-check-circle"></i>
-        </div>
+    <div class="stat-card">
+        <div class="stat-icon available"><i class="fas fa-check-circle"></i></div>
         <div class="stat-info">
             <div class="stat-number">{{ available_count }}</div>
             <div class="stat-label">Available</div>
         </div>
     </div>
-    
-    <div class="stat-card-selected">
-        <div class="stat-icon-selected">
-            <i class="fas fa-heart"></i>
-        </div>
+    <div class="stat-card">
+        <div class="stat-icon selected"><i class="fas fa-heart"></i></div>
         <div class="stat-info">
             <div class="stat-number">{{ selected_count }}</div>
             <div class="stat-label">Selected</div>
         </div>
     </div>
-    
-    <div class="stat-card-reserved">
-        <div class="stat-icon-reserved">
-            <i class="fas fa-calendar-check"></i>
-        </div>
+    <div class="stat-card">
+        <div class="stat-icon reserved"><i class="fas fa-calendar-check"></i></div>
         <div class="stat-info">
             <div class="stat-number">{{ reserved_count }}</div>
             <div class="stat-label">Reserved</div>
         </div>
     </div>
-    
-    <div class="stat-card-visa">
-        <div class="stat-icon-visa">
-            <i class="fas fa-passport"></i>
-        </div>
+    <div class="stat-card">
+        <div class="stat-icon visa"><i class="fas fa-passport"></i></div>
         <div class="stat-info">
             <div class="stat-number">{{ visa_count }}</div>
             <div class="stat-label">Visa Issued</div>
         </div>
     </div>
 </div>
-<div class="candidates-card">
-    <div class="card-header">
-        <h3><i class="fas fa-users"></i> All Candidates</h3>
-        <a href="{% url 'candidate_create' %}" class="btn-add"><i class="fas fa-plus"></i> Register New Candidate</a>
-    </div>
 
+<!-- Filters Section -->
+<div class="filters-section">
+    <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, passport, or NIN...">
+    </div>
     
+    <div class="filters-header" onclick="toggleFilters()">
+        <h3><i class="fas fa-sliders-h"></i> Advanced Filters</h3>
+        <div class="toggle-filters">
+            <i class="fas fa-chevron-down" id="filterToggleIcon"></i>
+        </div>
+    </div>
     
-    <div class="filters-section">
-        <div class="search-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search by name, passport, or NIN...">
+    <div class="filters-grid" id="filtersGrid" style="display: none;">
+        <div class="filter-group">
+            <label><i class="fas fa-briefcase"></i> Job Category</label>
+            <div class="chip-group" id="jobFilter">
+                <div class="chip" data-job="maid">Maid</div>
+                <div class="chip" data-job="cleaner">Cleaner</div>
+                <div class="chip" data-job="caregiver">Caregiver</div>
+                <div class="chip" data-job="driver">Driver</div>
+                <div class="chip" data-job="home teacher">Home Teacher</div>
+                <div class="chip" data-job="waiter">Waiter</div>
+                <div class="chip" data-job="waitress">Waitress</div>
+                <div class="chip" data-job="nanny">Nanny</div>
+                <div class="chip" data-job="security">Security</div>
+                <div class="chip" data-job="housekeeper">Housekeeper</div>
+                <div class="chip" data-job="gardener">Gardener</div>
+                <div class="chip" data-job="cook">Cook</div>
+            </div>
         </div>
         
-        <div class="filters-header" onclick="toggleFilters()">
-            <h4><i class="fas fa-sliders-h"></i> Advanced Filters</h4>
-            <div class="toggle-filters"><i class="fas fa-chevron-down" id="filterToggleIcon"></i></div>
+        <div class="filter-group">
+            <label><i class="fas fa-chart-line"></i> Experience</label>
+            <div class="chip-group" id="expFilter">
+                <div class="chip" data-exp="0-2">0-2 years</div>
+                <div class="chip" data-exp="3-5">3-5 years</div>
+                <div class="chip" data-exp="6-10">6-10 years</div>
+                <div class="chip" data-exp="10+">10+ years</div>
+            </div>
         </div>
         
-        <div class="filters-grid" id="filtersGrid" style="display: none;">
-            <div class="filter-group">
-                <label>Job Category</label>
-                <div class="chip-group" id="jobFilter">
-                    <div class="chip" data-job="maid">Maid</div>
-                    <div class="chip" data-job="cleaner">Cleaner</div>
-                    <div class="chip" data-job="caregiver">Caregiver</div>
-                    <div class="chip" data-job="driver">Driver</div>
-                    <div class="chip" data-job="home teacher">Home Teacher</div>
-                    <div class="chip" data-job="waiter">Waiter</div>
-                    <div class="chip" data-job="waitress">Waitress</div>
-                    <div class="chip" data-job="nanny">Nanny</div>
-                    <div class="chip" data-job="security">Security</div>
-                    <div class="chip" data-job="housekeeper">Housekeeper</div>
-                    <div class="chip" data-job="gardener">Gardener</div>
-                    <div class="chip" data-job="cook">Cook</div>
-                </div>
+        <div class="filter-group">
+            <label><i class="fas fa-calendar"></i> Age Range</label>
+            <div class="chip-group" id="ageFilter">
+                <div class="chip" data-age="18-25">18-25 years</div>
+                <div class="chip" data-age="26-35">26-35 years</div>
+                <div class="chip" data-age="36-45">36-45 years</div>
+                <div class="chip" data-age="46-55">46-55 years</div>
+                <div class="chip" data-age="55+">55+ years</div>
             </div>
-            <div class="filter-group">
-                <label>Experience</label>
-                <div class="chip-group" id="expFilter">
-                    <div class="chip" data-exp="0-2">0-2 years</div>
-                    <div class="chip" data-exp="3-5">3-5 years</div>
-                    <div class="chip" data-exp="6-10">6-10 years</div>
-                    <div class="chip" data-exp="10+">10+ years</div>
-                </div>
+        </div>
+        
+        <div class="filter-group">
+            <label><i class="fas fa-pray"></i> Religion</label>
+            <div class="chip-group" id="religionFilter">
+                <div class="chip" data-religion="muslim">Muslim</div>
+                <div class="chip" data-religion="christian">Christian</div>
+                <div class="chip" data-religion="other">Other</div>
             </div>
-            <div class="filter-group">
-                <label>Age</label>
-                <div class="chip-group" id="ageFilter">
-                    <div class="chip" data-age="18-25">18-25 years</div>
-                    <div class="chip" data-age="26-35">26-35 years</div>
-                    <div class="chip" data-age="36-45">36-45 years</div>
-                    <div class="chip" data-age="46-55">46-55 years</div>
-                    <div class="chip" data-age="55+">55+ years</div>
-                </div>
+        </div>
+        
+        <div class="filter-group">
+            <label><i class="fas fa-tag"></i> Status</label>
+            <div class="chip-group" id="statusFilter">
+                <div class="chip" data-status="available">Available</div>
+                <div class="chip" data-status="selected">Selected</div>
+                <div class="chip" data-status="reserved">Reserved</div>
+                <div class="chip" data-status="visa issued">Visa Issued</div>
+                <div class="chip" data-status="cancelled">Cancelled</div>
             </div>
-            <div class="filter-group">
-                <label>Religion</label>
-                <div class="chip-group" id="religionFilter">
-                    <div class="chip" data-religion="muslim">Muslim</div>
-                    <div class="chip" data-religion="christian">Christian</div>
-                    <div class="chip" data-religion="other">Other</div>
-                </div>
-            </div>
-            <!-- Status Filter - CORRECTED -->
-<div class="filter-group">
-    <label>Status</label>
-    <div class="chip-group" id="statusFilter">
-        <div class="chip" data-status="available">Available</div>
-        <div class="chip" data-status="selected">Selected</div>
-        <div class="chip" data-status="cancelled">Cancelled</div>
-        <div class="chip" data-status="visa issued">Visa Issued</div>
-        <div class="chip" data-status="reserved">Reserved</div>
-    </div>
-</div>
-            <div class="filter-group">
-                <label>Health</label>
-                <div class="chip-group" id="healthFilter">
-                    <div class="chip" data-health="fit">Fit</div>
-                    <div class="chip" data-health="unfit">Unfit</div>
-                    <div class="chip" data-health="pending">Pending</div>
-                </div>
+        </div>
+        
+        <div class="filter-group">
+            <label><i class="fas fa-stethoscope"></i> Health Status</label>
+            <div class="chip-group" id="healthFilter">
+                <div class="chip" data-health="fit">Fit</div>
+                <div class="chip" data-health="unfit">Unfit</div>
+                <div class="chip" data-health="pending">Pending</div>
             </div>
         </div>
     </div>
     
-    <div style="overflow-x: auto;">
-        <table class="candidates-table">
-            <thead>
-                <tr><th><input type="checkbox" id="selectAll"></th><th>Photo</th><th>Name</th><th>Passport</th><th>Job</th><th>Exp</th><th>Age</th><th>Religion</th><th>Status</th><th>Health</th><th>Registered</th><th>Actions</th></tr>
-            </thead>
-            <tbody id="tableBody">
-                {% for candidate in page_obj %}
-                <tr>
-                    <td><input type="checkbox" class="candidate-checkbox" data-id="{{ candidate.id }}"></td>
-                    <td>{% if candidate.profile_photo %}<img src="{{ candidate.profile_photo.url }}" class="thumbnail-img" onclick="openPhotoModal('{{ candidate.profile_photo.url }}', '{{ candidate.full_name }}')">{% else %}<div style="width:40px;height:40px;background:#e2e8f0;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-user"></i></div>{% endif %}</td>
-                    <td class="candidate-name"><strong>{{ candidate.full_name }}</strong></td>
-                    <td class="candidate-passport">{{ candidate.passport_number }}</td>
-                    <td class="candidate-job">{{ candidate.get_job_category_display|lower }}</td>
-                    <td class="candidate-exp">{{ candidate.years_of_experience }}</td>
-                    <td class="candidate-age">{{ candidate.age }}</td>
-                    <td class="candidate-religion">{{ candidate.get_religion_display|lower }}</td>
-                    <td><span class="status-badge status-{{ candidate.application_status }}">{{ candidate.get_application_status_display|lower }}</span></td>
-                    <td><span class="health-badge health-{{ candidate.health_status }}">{{ candidate.get_health_status_display|lower }}</span></td>
-                    <td>{{ candidate.registered_at|date:"M d, Y" }}</td>
-                    <td><div class="action-buttons"><button class="btn-icon btn-view" onclick="location.href='{% url 'candidate_detail' candidate.pk %}'"><i class="fas fa-eye"></i> View</button><button class="btn-icon btn-edit" onclick="location.href='{% url 'candidate_update' candidate.pk %}'"><i class="fas fa-edit"></i> Edit</button><button class="btn-icon btn-delete" onclick="if(confirm('Delete?')) location.href='/candidate/{{ candidate.id }}/delete/'"><i class="fas fa-trash"></i> Del</button></div></td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="12" style="text-align:center;padding:50px;"><i class="fas fa-users fa-3x"></i><p>No candidates found.</p></td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    
-    <div class="pagination-container">
-        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>{% endif %}
-        <span class="page-link active">{{ page_obj.number }}</span>
-        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>{% endif %}
+    <div class="filter-actions">
+        <button class="btn-filter" onclick="applyFilters()"><i class="fas fa-search"></i> Apply Filters</button>
+        <button class="btn-reset" onclick="resetFilters()"><i class="fas fa-undo"></i> Reset</button>
     </div>
 </div>
 
-<div id="photoModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:10000;align-items:center;justify-content:center">
-    <span onclick="document.getElementById('photoModal').style.display='none'" style="position:absolute;top:20px;right:30px;color:white;font-size:40px;cursor:pointer">&times;</span>
-    <img id="modalPhoto" style="max-width:90%;max-height:90%;object-fit:contain">
+<!-- Active Filters Bar -->
+<div id="activeFiltersBar" class="active-filters-bar" style="display: none;">
+    <span><i class="fas fa-filter"></i> Active Filters:</span>
+    <div id="selectedFiltersList"></div>
+    <button class="clear-all" onclick="resetFilters()">Clear All</button>
+</div>
+
+<!-- Candidates Grid -->
+<div class="candidates-grid" id="candidatesGrid">
+    {% for candidate in candidates %}
+    <div class="candidate-card">
+        
+        
+        <div class="card-badge {{ candidate.application_status }}">
+            <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% elif candidate.application_status == 'SEL' %}user-check{% elif candidate.application_status == 'VIS' %}passport{% elif candidate.application_status == 'RES' %}clock{% else %}times-circle{% endif %}"></i>
+            {{ candidate.get_application_status_display }}
+        </div>
+        
+        <div class="card-horizontal">
+            <!-- Left Column - Picture -->
+            <div class="card-image-horizontal">
+                {% if candidate.profile_photo %}
+                    <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}">
+                {% else %}
+                    <div class="image-placeholder-horizontal">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Right Column - Information -->
+            <div class="card-content-horizontal">
+                <div class="candidate-header">
+                    <h3 class="candidate-name-horizontal">{{ candidate.full_name }}</h3>
+                    <p class="candidate-passport-horizontal">
+                        <i class="fas fa-passport"></i> {{ candidate.passport_number }}
+                    </p>
+                </div>
+                
+                <div class="info-grid-horizontal">
+                    <div class="info-item-horizontal">
+                        <div class="info-icon-horizontal"><i class="fas fa-briefcase"></i></div>
+                        <div>
+                            <div class="info-label-horizontal">Job Category</div>
+                            <div class="info-value-horizontal">{{ candidate.get_job_category_display }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item-horizontal">
+                        <div class="info-icon-horizontal"><i class="fas fa-calendar"></i></div>
+                        <div>
+                            <div class="info-label-horizontal">Age</div>
+                            <div class="info-value-horizontal">{{ candidate.age }} years</div>
+                        </div>
+                    </div>
+                    <div class="info-item-horizontal">
+                        <div class="info-icon-horizontal"><i class="fas fa-pray"></i></div>
+                        <div>
+                            <div class="info-label-horizontal">Religion</div>
+                            <div class="info-value-horizontal">{{ candidate.get_religion_display }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item-horizontal">
+                        <div class="info-icon-horizontal"><i class="fas fa-chart-line"></i></div>
+                        <div>
+                            <div class="info-label-horizontal">Experience</div>
+                            <div class="info-value-horizontal">{{ candidate.years_of_experience }} years</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="health-badge health-{{ candidate.health_status }}">
+                    <i class="fas fa-stethoscope"></i> Health: {{ candidate.get_health_status_display }}
+                </div>
+                
+                <div class="card-actions-horizontal">
+                    <a href="{% url 'candidate_detail' candidate.pk %}" class="btn-view-horizontal">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a href="{% url 'candidate_update' candidate.pk %}" class="btn-edit-horizontal">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <button class="btn-delete-horizontal" onclick="deleteCandidate({{ candidate.id }}, '{{ candidate.full_name }}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align:center; padding:60px; background:white; border-radius:20px;">
+        <i class="fas fa-users fa-4x" style="color:#cbd5e1;"></i>
+        <h3>No candidates found</h3>
+        <p>Try adjusting your filters</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<div class="pagination-container">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
+    {% endif %}
+    <span class="page-link active">{{ page_obj.number }}</span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+    {% endif %}
+</div>
+
+<!-- Mass Actions Bar -->
+<div id="massActionsBar" style="display: none;">
+    <span><i class="fas fa-check-circle"></i> <span id="selectedCount">0</span> selected</span>
+    <button onclick="confirmMassDelete()"><i class="fas fa-trash"></i> Delete</button>
 </div>
 
 <script>
-    // SIMPLE WORKING FILTERS - NO COMPLEXITY
-    let filters = { job: '', exp: '', age: '', religion: '', status: '', health: '' };
+    // Active filters storage
+    let activeFilters = {
+        job: null,
+        exp: null,
+        age: null,
+        religion: null,
+        status: null,
+        health: null
+    };
     
-    // Setup chip clicks
-    document.querySelectorAll('.chip').forEach(chip => {
-        chip.onclick = function() {
-            let group = this.parentElement.id;
-            let value = this.dataset.job || this.dataset.exp || this.dataset.age || this.dataset.religion || this.dataset.status || this.dataset.health;
-            
-            if (group === 'jobFilter') filters.job = filters.job === value ? '' : value;
-            if (group === 'expFilter') filters.exp = filters.exp === value ? '' : value;
-            if (group === 'ageFilter') filters.age = filters.age === value ? '' : value;
-            if (group === 'religionFilter') filters.religion = filters.religion === value ? '' : value;
-            if (group === 'statusFilter') filters.status = filters.status === value ? '' : value;
-            if (group === 'healthFilter') filters.health = filters.health === value ? '' : value;
-            
-            // Update UI
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll(`.chip[data-${this.dataset.hasOwnProperty('job') ? 'job' : this.dataset.hasOwnProperty('exp') ? 'exp' : this.dataset.hasOwnProperty('age') ? 'age' : this.dataset.hasOwnProperty('religion') ? 'religion' : this.dataset.hasOwnProperty('status') ? 'status' : 'health'}="${value}"]`).forEach(c => {
-                if ((group === 'jobFilter' && filters.job === value) ||
-                    (group === 'expFilter' && filters.exp === value) ||
-                    (group === 'ageFilter' && filters.age === value) ||
-                    (group === 'religionFilter' && filters.religion === value) ||
-                    (group === 'statusFilter' && filters.status === value) ||
-                    (group === 'healthFilter' && filters.health === value)) {
-                    c.classList.add('active');
-                }
-            });
-            
-            filterTable();
-        };
-    });
+    let searchTerm = '';
+    let selectedCandidates = [];
+
+    function initChips() {
+        document.querySelectorAll('#jobFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => toggleChip(chip, 'job', chip.dataset.job));
+        });
+        document.querySelectorAll('#expFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => toggleChip(chip, 'exp', chip.dataset.exp));
+        });
+        document.querySelectorAll('#ageFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => toggleChip(chip, 'age', chip.dataset.age));
+        });
+        document.querySelectorAll('#religionFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => toggleChip(chip, 'religion', chip.dataset.religion));
+        });
+        document.querySelectorAll('#statusFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => toggleChip(chip, 'status', chip.dataset.status));
+        });
+        document.querySelectorAll('#healthFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => toggleChip(chip, 'health', chip.dataset.health));
+        });
+    }
     
-    function filterTable() {
-        let search = document.getElementById('searchInput').value.toLowerCase();
-        let rows = document.querySelectorAll('#tableBody tr');
-        let visible = 0;
+    function toggleChip(chip, filterType, value) {
+        if (chip.classList.contains('active')) {
+            chip.classList.remove('active');
+            activeFilters[filterType] = null;
+        } else {
+            document.querySelectorAll(`#${chip.parentElement.id} .chip`).forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeFilters[filterType] = value;
+        }
+        updateActiveFiltersDisplay();
+        filterCards();
+    }
+    
+    function updateActiveFiltersDisplay() {
+        const bar = document.getElementById('activeFiltersBar');
+        const container = document.getElementById('selectedFiltersList');
+        if (!container) return;
         
-        rows.forEach(row => {
+        container.innerHTML = '';
+        let hasFilters = false;
+        
+        if (activeFilters.job) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Job: ${activeFilters.job} <i class="fas fa-times" onclick="removeFilter('job')"></i>`;
+            container.appendChild(tag);
+        }
+        if (activeFilters.exp) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Exp: ${activeFilters.exp} <i class="fas fa-times" onclick="removeFilter('exp')"></i>`;
+            container.appendChild(tag);
+        }
+        if (activeFilters.age) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Age: ${activeFilters.age} <i class="fas fa-times" onclick="removeFilter('age')"></i>`;
+            container.appendChild(tag);
+        }
+        if (activeFilters.religion) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Religion: ${activeFilters.religion} <i class="fas fa-times" onclick="removeFilter('religion')"></i>`;
+            container.appendChild(tag);
+        }
+        if (activeFilters.status) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Status: ${activeFilters.status} <i class="fas fa-times" onclick="removeFilter('status')"></i>`;
+            container.appendChild(tag);
+        }
+        if (activeFilters.health) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Health: ${activeFilters.health} <i class="fas fa-times" onclick="removeFilter('health')"></i>`;
+            container.appendChild(tag);
+        }
+        
+        bar.style.display = hasFilters ? 'flex' : 'none';
+    }
+    
+    function removeFilter(filterType) {
+        activeFilters[filterType] = null;
+        document.querySelectorAll(`#${filterType}Filter .chip`).forEach(c => c.classList.remove('active'));
+        updateActiveFiltersDisplay();
+        filterCards();
+    }
+    
+    function filterCards() {
+        const searchTerm = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
+        const cards = document.querySelectorAll('.candidate-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
             let show = true;
-            let name = row.querySelector('.candidate-name')?.innerText.toLowerCase() || '';
-            let passport = row.querySelector('.candidate-passport')?.innerText.toLowerCase() || '';
-            let job = row.querySelector('.candidate-job')?.innerText.toLowerCase() || '';
-            let exp = parseInt(row.querySelector('.candidate-exp')?.innerText) || 0;
-            let age = parseInt(row.querySelector('.candidate-age')?.innerText) || 0;
-            let religion = row.querySelector('.candidate-religion')?.innerText.toLowerCase() || '';
-            let status = row.querySelector('.status-badge')?.innerText.toLowerCase() || '';
-            let health = row.querySelector('.health-badge')?.innerText.toLowerCase() || '';
+            const name = card.querySelector('.candidate-name-horizontal')?.innerText.toLowerCase() || '';
+            const passport = card.querySelector('.candidate-passport-horizontal')?.innerText.toLowerCase() || '';
+            const job = card.querySelectorAll('.info-value-horizontal')[0]?.innerText.toLowerCase() || '';
+            const exp = parseInt(card.querySelectorAll('.info-value-horizontal')[3]?.innerText) || 0;
+            const age = parseInt(card.querySelectorAll('.info-value-horizontal')[1]?.innerText) || 0;
+            const religion = card.querySelectorAll('.info-value-horizontal')[2]?.innerText.toLowerCase() || '';
+            const statusSpan = card.querySelector('.card-badge');
+            const status = statusSpan?.innerText.toLowerCase() || '';
+            const healthSpan = card.querySelector('.health-badge');
+            const health = healthSpan?.innerText.toLowerCase() || '';
             
-            if (search && !name.includes(search) && !passport.includes(search)) show = false;
-            if (show && filters.job && !job.includes(filters.job)) show = false;
-            if (show && filters.exp) {
-                let expNum = parseInt(filters.exp);
-                if (filters.exp === '0-2') { if (exp < 0 || exp > 2) show = false; }
-                else if (filters.exp === '3-5') { if (exp < 3 || exp > 5) show = false; }
-                else if (filters.exp === '6-10') { if (exp < 6 || exp > 10) show = false; }
-                else if (filters.exp === '10+') { if (exp < 10) show = false; }
+            if (searchTerm && !name.includes(searchTerm) && !passport.includes(searchTerm)) show = false;
+            if (show && activeFilters.job && !job.includes(activeFilters.job)) show = false;
+            if (show && activeFilters.exp) {
+                if (activeFilters.exp === '0-2') show = exp >= 0 && exp <= 2;
+                else if (activeFilters.exp === '3-5') show = exp >= 3 && exp <= 5;
+                else if (activeFilters.exp === '6-10') show = exp >= 6 && exp <= 10;
+                else if (activeFilters.exp === '10+') show = exp >= 10;
             }
-            if (show && filters.age) {
-                let ageNum = parseInt(filters.age);
-                if (filters.age === '18-25') { if (age < 18 || age > 25) show = false; }
-                else if (filters.age === '26-35') { if (age < 26 || age > 35) show = false; }
-                else if (filters.age === '36-45') { if (age < 36 || age > 45) show = false; }
-                else if (filters.age === '46-55') { if (age < 46 || age > 55) show = false; }
-                else if (filters.age === '55+') { if (age < 55) show = false; }
+            if (show && activeFilters.age) {
+                if (activeFilters.age === '18-25') show = age >= 18 && age <= 25;
+                else if (activeFilters.age === '26-35') show = age >= 26 && age <= 35;
+                else if (activeFilters.age === '36-45') show = age >= 36 && age <= 45;
+                else if (activeFilters.age === '46-55') show = age >= 46 && age <= 55;
+                else if (activeFilters.age === '55+') show = age >= 55;
             }
-            if (show && filters.religion && !religion.includes(filters.religion)) show = false;
-            if (show && filters.status) {
-    let statusMap = { 'available': 'available', 'selected': 'selected', 'cancelled': 'cancelled', 'visa issued': 'visa issued', 'reserved': 'reserved' };
-    show = status.includes(filters.status);
-}
-            if (show && filters.status && !status.includes(filters.status)) show = false;
-            if (show && filters.health && !health.includes(filters.health)) show = false;
+            if (show && activeFilters.religion && !religion.includes(activeFilters.religion)) show = false;
+            if (show && activeFilters.status && !status.includes(activeFilters.status)) show = false;
+            if (show && activeFilters.health && !health.includes(activeFilters.health)) show = false;
             
-            row.style.display = show ? '' : 'none';
-            if (show) visible++;
+            card.style.display = show ? '' : 'none';
+            if (show) visibleCount++;
         });
         
-        let resultInfo = document.getElementById('searchResultsInfo');
-        if (resultInfo) resultInfo.innerHTML = `<i class="fas fa-filter"></i> Showing ${visible} candidates`;
-        
-        // Remove no results message if exists
-        let noResult = document.getElementById('noResultsRow');
-        if (noResult) noResult.remove();
-        
-        // Add no results message if needed
-        if (visible === 0 && rows.length > 0) {
-            let tbody = document.getElementById('tableBody');
-            let msgRow = document.createElement('tr');
-            msgRow.id = 'noResultsRow';
-            msgRow.innerHTML = '<td colspan="12" style="text-align:center;padding:40px;"><i class="fas fa-search fa-3x"></i><p>No candidates found</p></td>';
-            tbody.appendChild(msgRow);
+        let noResults = document.querySelector('.no-results-message');
+        if (visibleCount === 0 && cards.length > 0) {
+            if (!noResults) {
+                const grid = document.querySelector('.candidates-grid');
+                const msg = document.createElement('div');
+                msg.className = 'no-results-message';
+                msg.style.cssText = 'text-align:center;padding:40px;background:white;border-radius:20px;margin-top:20px';
+                msg.innerHTML = '<i class="fas fa-search fa-4x" style="color:#cbd5e1;"></i><h3 style="margin-top:20px;">No candidates found</h3><p>Try adjusting your filters</p>';
+                grid.appendChild(msg);
+            }
+        } else if (noResults && visibleCount > 0) {
+            noResults.remove();
         }
     }
     
-    // Search input
-    document.getElementById('searchInput').addEventListener('input', filterTable);
+    function applyFilters() {
+        filterCards();
+    }
     
-    // Toggle filters panel
+    function resetFilters() {
+        activeFilters = { job: null, exp: null, age: null, religion: null, status: null, health: null };
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        document.getElementById('searchInput').value = '';
+        updateActiveFiltersDisplay();
+        filterCards();
+    }
+    
     function toggleFilters() {
-        let grid = document.getElementById('filtersGrid');
-        let icon = document.getElementById('filterToggleIcon');
+        const grid = document.getElementById('filtersGrid');
+        const icon = document.getElementById('filterToggleIcon');
         if (grid.style.display === 'none') {
             grid.style.display = 'grid';
             icon.classList.remove('fa-chevron-down');
@@ -811,23 +998,62 @@
         }
     }
     
-    // Select all
-    document.getElementById('selectAll').onchange = function() {
-        document.querySelectorAll('.candidate-checkbox').forEach(cb => cb.checked = this.checked);
-    };
-    
-    // Photo modal
-    function openPhotoModal(url, name) {
-        let modal = document.getElementById('photoModal');
-        document.getElementById('modalPhoto').src = url;
-        modal.style.display = 'flex';
+    function deleteCandidate(id, name) {
+        if (confirm(`Delete "${name}"?`)) {
+            window.location.href = `/candidate/${id}/delete/`;
+        }
     }
     
-    document.getElementById('photoModal').onclick = function(e) {
-        if (e.target === this) this.style.display = 'none';
-    };
+    // Mass selection
+    document.querySelectorAll('.candidate-checkbox').forEach(cb => {
+        cb.addEventListener('change', updateMassSelection);
+    });
     
-    // Initial filter
-    filterTable();
+    function updateMassSelection() {
+        selectedCandidates = Array.from(document.querySelectorAll('.candidate-checkbox:checked')).map(cb => ({
+            id: cb.dataset.id,
+            name: cb.dataset.name
+        }));
+        const bar = document.getElementById('massActionsBar');
+        if (selectedCandidates.length > 0) {
+            bar.style.display = 'flex';
+            document.getElementById('selectedCount').innerText = selectedCandidates.length;
+        } else {
+            bar.style.display = 'none';
+        }
+    }
+    
+    function confirmMassDelete() {
+        if (selectedCandidates.length === 0) return;
+        if (confirm(`Delete ${selectedCandidates.length} candidate(s)?`)) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{% url "mass_delete_candidates" %}';
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            form.appendChild(csrfInput);
+            const idsInput = document.createElement('input');
+            idsInput.type = 'hidden';
+            idsInput.name = 'candidate_ids';
+            idsInput.value = JSON.stringify(selectedCandidates.map(c => c.id));
+            form.appendChild(idsInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    
+    // Search input
+    document.getElementById('searchInput').addEventListener('input', function() {
+        filterCards();
+    });
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        initChips();
+        document.getElementById('filtersGrid').style.display = 'none';
+        filterCards();
+    });
 </script>
 {% endblock %}

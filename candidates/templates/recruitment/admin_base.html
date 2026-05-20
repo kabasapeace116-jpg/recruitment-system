@@ -343,10 +343,7 @@
         <a href="{% url 'candidate_create' %}"><i class="fas fa-user-plus"></i> Register Candidate</a>
     </div>
     
-    <!-- NEW: Reserved Candidates Link -->
-    <div class="menu-item {% if request.resolver_match.url_name == 'admin_reserved' %}active{% endif %}">
-        <a href="{% url 'admin_reserved' %}"><i class="fas fa-calendar-check"></i> Reserved Candidates</a>
-    </div>
+   
     
     <!-- NEW: Visa Issued Candidates Link -->
     <div class="menu-item {% if request.resolver_match.url_name == 'admin_visa_issued' %}active{% endif %}">

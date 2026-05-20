@@ -18,6 +18,7 @@
         padding: 20px;
         text-align: center;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-top: 4px solid #FFD700;
     }
     
     .stat-value {
@@ -77,7 +78,7 @@
     
     .selections-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
         gap: 20px;
     }
     
@@ -91,23 +92,44 @@
     
     .selection-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    /* Candidate Photo Styles */
+    .candidate-photo {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    
+    .candidate-photo-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 3rem;
     }
     
     .card-header {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
         padding: 15px;
-        color: #0f0c29;
+        color: white;
     }
     
     .card-header.selection {
         background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: white;
     }
     
     .card-header.booking {
         background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-        color: white;
+    }
+    
+    .card-header h4 {
+        margin: 0 0 5px 0;
+        font-size: 1.1rem;
     }
     
     .card-body {
@@ -158,6 +180,7 @@
         text-decoration: none;
         font-size: 0.75rem;
         margin-top: 10px;
+        margin-right: 8px;
         transition: all 0.3s;
     }
     
@@ -206,15 +229,23 @@
     </button>
 </div>
 
-<!-- Selections Tab (Only selections, NOT bookings) -->
+<!-- Selections Tab -->
 <div id="selectionsTab" class="tab-content active">
     <div class="selections-grid">
         {% for selection in selections %}
         <div class="selection-card">
+            {% if selection.candidate.profile_photo %}
+                <img src="{{ selection.candidate.profile_photo.url }}" alt="{{ selection.candidate.full_name }}" class="candidate-photo">
+            {% else %}
+                <div class="candidate-photo-placeholder">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            {% endif %}
             <div class="card-header selection">
                 <h4><i class="fas fa-user"></i> {{ selection.candidate.full_name }}</h4>
-                <p style="font-size: 0.75rem; opacity: 0.9;">Passport: {{ selection.candidate.passport_number }}</p>
+                <p style="font-size: 0.7rem; opacity: 0.9;">Passport: {{ selection.candidate.passport_number }}</p>
             </div>
+            
             <div class="card-body">
                 <div class="info-row">
                     <span class="info-label">Client:</span>
@@ -235,6 +266,32 @@
                     </a>
                 </div>
             </div>
+            <!-- Inside the Selections tab card body, add sponsor details if they exist -->
+{% if selection.sponsor_name %}
+<div style="background: #f0fdf4; border-radius: 10px; padding: 12px; margin-top: 12px; border-left: 4px solid #f59e0b;">
+    <h5 style="margin: 0 0 8px 0; color: #d97706; font-size: 0.8rem;">
+        <i class="fas fa-building"></i> Sponsor Details
+    </h5>
+    <div class="info-row">
+        <span class="info-label">Sponsor Name:</span>
+        <span class="info-value">{{ selection.sponsor_name }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Address:</span>
+        <span class="info-value">{{ selection.sponsor_address|default:"Not provided" }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Contact:</span>
+        <span class="info-value">{{ selection.sponsor_contact|default:"Not provided" }}</span>
+    </div>
+    {% if selection.sponsor_email %}
+    <div class="info-row">
+        <span class="info-label">Email:</span>
+        <span class="info-value">{{ selection.sponsor_email }}</span>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
         </div>
         {% empty %}
         <div style="text-align: center; padding: 50px; background: white; border-radius: 15px; grid-column: 1/-1;">
@@ -245,14 +302,21 @@
     </div>
 </div>
 
-<!-- Bookings Tab (Only confirmed bookings) -->
+<!-- Bookings Tab - With Sponsor Details -->
 <div id="bookingsTab" class="tab-content">
     <div class="selections-grid">
         {% for booking in bookings %}
         <div class="selection-card">
+            {% if booking.candidate.profile_photo %}
+                <img src="{{ booking.candidate.profile_photo.url }}" alt="{{ booking.candidate.full_name }}" class="candidate-photo">
+            {% else %}
+                <div class="candidate-photo-placeholder">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            {% endif %}
             <div class="card-header booking">
                 <h4><i class="fas fa-user"></i> {{ booking.candidate.full_name }}</h4>
-                <p style="font-size: 0.75rem; opacity: 0.9;">Passport: {{ booking.candidate.passport_number }}</p>
+                <p style="font-size: 0.7rem; opacity: 0.9;">Passport: {{ booking.candidate.passport_number }}</p>
             </div>
             <div class="card-body">
                 <div class="info-row">
@@ -260,18 +324,54 @@
                     <span class="info-value">{{ booking.client.get_full_name|default:booking.client.username }}</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Sponsor:</span>
-                    <span class="info-value">{{ booking.sponsor_name|default:"Not provided" }}</span>
+                    <span class="info-label">Job Category:</span>
+                    <span class="info-value">{{ booking.candidate.get_job_category_display }}</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Contact:</span>
-                    <span class="info-value">{{ booking.sponsor_contact|default:"Not provided" }}</span>
+                    <span class="info-label">Age:</span>
+                    <span class="info-value">{{ booking.candidate.age }} years</span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">Booked On:</span>
-                    <span class="info-value">{{ booking.selected_at|date:"M d, Y H:i" }}</span>
+                    <span class="info-label">Experience:</span>
+                    <span class="info-value">{{ booking.candidate.years_of_experience }} years</span>
                 </div>
-                <div>
+                
+                <!-- Sponsor Details Section -->
+                <div style="background: #f0fdf4; border-radius: 10px; padding: 12px; margin-top: 12px; border-left: 4px solid #8b5cf6;">
+                    <h5 style="margin: 0 0 8px 0; color: #7c3aed; font-size: 0.8rem;">
+                        <i class="fas fa-building"></i> Sponsor Details
+                    </h5>
+                    <div class="info-row" style="margin-bottom: 5px;">
+                        <span class="info-label" style="width: 90px;">Sponsor Name:</span>
+                        <span class="info-value">{{ booking.sponsor_name|default:"Not provided" }}</span>
+                    </div>
+                    <div class="info-row" style="margin-bottom: 5px;">
+                        <span class="info-label" style="width: 90px;">Address:</span>
+                        <span class="info-value">{{ booking.sponsor_address|default:"Not provided" }}</span>
+                    </div>
+                    <div class="info-row" style="margin-bottom: 5px;">
+                        <span class="info-label" style="width: 90px;">Contact:</span>
+                        <span class="info-value">{{ booking.sponsor_contact|default:"Not provided" }}</span>
+                    </div>
+                    {% if booking.sponsor_email %}
+                    <div class="info-row" style="margin-bottom: 5px;">
+                        <span class="info-label" style="width: 90px;">Email:</span>
+                        <span class="info-value">{{ booking.sponsor_email }}</span>
+                    </div>
+                    {% endif %}
+                    {% if booking.booking_notes %}
+                    <div class="info-row" style="margin-bottom: 5px;">
+                        <span class="info-label" style="width: 90px;">Notes:</span>
+                        <span class="info-value">{{ booking.booking_notes }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="info-row">
+                        <span class="info-label" style="width: 90px;">Booked On:</span>
+                        <span class="info-value">{{ booking.selected_at|date:"M d, Y H:i" }}</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px;">
                     <span class="badge badge-booking"><i class="fas fa-calendar-check"></i> Booked</span>
                     <a href="{% url 'candidate_detail' booking.candidate.pk %}" class="btn-view">
                         <i class="fas fa-eye"></i> View Candidate
