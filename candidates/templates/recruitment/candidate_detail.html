@@ -12,61 +12,79 @@
         border-radius: 24px;
         overflow: hidden;
         box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        position: relative;
     }
     
-    /* Two Column Layout - No Gap */
     .profile-grid {
         display: grid;
-        grid-template-columns: 380px 1fr;
+        grid-template-columns: 320px 1fr;
         gap: 0;
-        margin: 0;
-        padding: 0;
         min-height: 500px;
     }
     
-    /* Left Column - Photo Sidebar (Fills completely) */
+    /* Left Column - Photo Sidebar */
     .profile-sidebar {
-        position: relative;
         background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     
-    /* Photo fills entire left column */
-    .candidate-photo {
-        position: absolute;
-        top: 0;
-        left: 0;
+    /* Photo Container - Full fit */
+    .photo-wrapper {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .candidate-photo {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 20px;
+    border: 4px solid #FFD700;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+    background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+}
+    
+    .candidate-photo:hover {
+        transform: scale(1.02);
     }
     
     .candidate-photo-placeholder {
         width: 100%;
-        height: 100%;
+        max-width: 260px;
+        aspect-ratio: 1/1;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        border: 4px solid #FFD700;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 6rem;
+        font-size: 5rem;
         color: #FFD700;
-        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
-        min-height: 500px;
+        cursor: pointer;
     }
     
-    /* Right Column - Content */
-    .profile-content {
-        padding: 30px 35px;
-        background: white;
-        margin: 0;
+    .photo-caption {
+        margin-top: 12px;
+        color: #94a3b8;
+        font-size: 0.7rem;
+        text-align: center;
     }
     
-    /* Status Badge Container - Top Right */
-    .status-badge-container {
-        text-align: right;
-        margin-bottom: 20px;
+    .sidebar-status {
+        margin-top: 10px;
+        text-align: center;
+        width: 100%;
     }
     
     .status-badge {
@@ -77,26 +95,37 @@
         font-weight: 600;
     }
     
-    .health-badge {
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-left: 10px;
-    }
-    
     .status-AVA { background: #d1fae5; color: #065f46; }
     .status-SEL { background: #fed7aa; color: #9a3412; }
     .status-CAN { background: #fee2e2; color: #991b1b; }
     .status-VIS { background: #dbeafe; color: #1e40af; }
     .status-RES { background: #e0e7ff; color: #4338ca; }
     
+    .health-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-left: 8px;
+    }
+    
     .health-FIT { background: #d1fae5; color: #065f46; }
     .health-UNFIT { background: #fee2e2; color: #991b1b; }
     .health-PENDING { background: #fef3c7; color: #d97706; }
     
-    /* Typography */
+    /* Right Column */
+    .profile-content {
+        padding: 30px 35px;
+        background: white;
+    }
+    
+    .candidate-header {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f1f5f9;
+    }
+    
     .candidate-name {
         font-size: 2rem;
         font-weight: 800;
@@ -108,13 +137,9 @@
     
     .candidate-passport {
         color: #64748b;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #f1f5f9;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
-    /* Info Sections */
     .info-section {
         margin-bottom: 28px;
     }
@@ -145,19 +170,13 @@
         background: #f8fafc;
         border-radius: 14px;
         padding: 14px 18px;
-        transition: all 0.3s;
         border: 1px solid #e2e8f0;
-    }
-    
-    .info-item:hover {
-        transform: translateY(-2px);
-        border-color: #FFD700;
     }
     
     .info-label {
         font-weight: 600;
         color: #64748b;
-        width: 110px;
+        width: 140px;
         font-size: 0.8rem;
     }
     
@@ -168,28 +187,48 @@
         font-size: 0.85rem;
     }
     
-    /* Skills Tags */
-    .skills-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 10px;
+    /* Edit Mode Styles */
+    .edit-mode .info-item {
+        background: #fffbeb;
+        border-color: #f59e0b;
     }
     
-    .skill-tag {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        color: #0f0c29;
-        padding: 5px 12px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 500;
+    .edit-input, .edit-select, .edit-textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-family: inherit;
+        background: white;
+    }
+    
+    .edit-input:focus, .edit-select:focus, .edit-textarea:focus {
+        outline: none;
+        border-color: #f59e0b;
+    }
+    
+    .edit-textarea {
+        resize: vertical;
+    }
+    
+    .edit-mode-banner {
+        background: #fef3c7;
+        color: #92400e;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
     }
     
     /* Documents Grid */
     .documents-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
         margin-top: 15px;
     }
     
@@ -201,43 +240,64 @@
         text-decoration: none;
         transition: all 0.3s;
         border: 1px solid #e2e8f0;
+        display: block;
     }
     
     .doc-card:hover {
         transform: translateY(-3px);
         border-color: #FFD700;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
     .doc-icon {
-        font-size: 1.8rem;
+        font-size: 2rem;
         color: #FFD700;
         margin-bottom: 8px;
     }
     
     .doc-title {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
+        font-weight: 600;
         color: #1e293b;
-        font-weight: 500;
+        margin-bottom: 5px;
+    }
+    
+    .doc-link {
+        font-size: 0.7rem;
+        color: #3b82f6;
+        text-decoration: none;
+    }
+    
+    .doc-link:hover {
+        text-decoration: underline;
+    }
+    
+    /* Document Edit Mode */
+    .doc-edit-input {
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        margin-top: 8px;
     }
     
     video {
         max-width: 100%;
         border-radius: 12px;
         margin-top: 10px;
-        border: 1px solid #e2e8f0;
     }
     
-    /* Action Buttons */
-    .button-group {
+    .action-buttons-bottom {
         display: flex;
         gap: 15px;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #e2e8f0;
+        margin-top: 35px;
+        padding-top: 25px;
+        border-top: 2px solid #e2e8f0;
     }
     
     .btn {
-        padding: 12px 24px;
+        padding: 12px 28px;
         border-radius: 12px;
         text-decoration: none;
         font-weight: 600;
@@ -245,6 +305,9 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        cursor: pointer;
+        border: none;
+        font-size: 0.85rem;
     }
     
     .btn-back {
@@ -253,80 +316,104 @@
     }
     
     .btn-edit {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        color: #0f0c29;
+        background: #f59e0b;
+        color: white;
     }
     
-    .btn-back:hover, .btn-edit:hover {
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+    }
+    
+    .btn-save {
+        background: #10b981;
+        color: white;
+    }
+    
+    .btn-cancel {
+        background: #64748b;
+        color: white;
+    }
+    
+    .btn:hover {
         transform: translateY(-2px);
     }
     
-    /* Responsive */
     @media (max-width: 768px) {
-        .profile-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .profile-sidebar {
-            min-height: 300px;
-        }
-        
-        .candidate-photo-placeholder {
-            min-height: 300px;
-        }
-        
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .button-group {
-            flex-direction: column;
-        }
-        
-        .btn {
-            justify-content: center;
-        }
-        
-        .profile-content {
-            padding: 20px;
-        }
-        
-        .status-badge-container {
-            text-align: left;
-        }
+        .profile-grid { grid-template-columns: 1fr; }
+        .profile-sidebar { padding: 20px; }
+        .info-grid { grid-template-columns: 1fr; }
+        .action-buttons-bottom { flex-direction: column; }
+        .btn { justify-content: center; }
+        .documents-grid { grid-template-columns: 1fr; }
     }
-    @media (max-width: 768px) {
-    .profile-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    /* Left Column */
-    .profile-sidebar {
-        padding: 20px;
-        min-height: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* Make photo a contained element, not absolute */
-    .candidate-photo {
-        position: relative;
-        width: auto;
-        max-width: 80%;
-        height: auto;
-        max-height: 300px;
-        object-fit: contain;
-        border-radius: 20px;
-        margin: 20px auto;
-    }
-    
-    .candidate-photo-placeholder {
-        min-height: auto;
-        padding: 40px;
-        width: 80%;
-        aspect-ratio: 3/4;
-    }
+    /* Document Edit Mode */
+.doc-edit-input {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    margin-top: 8px;
+    font-family: inherit;
+}
+
+.doc-edit-input:focus {
+    outline: none;
+    border-color: #f59e0b;
+}
+
+.doc-current-file {
+    font-size: 0.7rem;
+    color: #10b981;
+    margin-top: 5px;
+    display: block;
+}
+
+.doc-edit-note {
+    font-size: 0.65rem;
+    color: #64748b;
+    margin-top: 5px;
+    display: block;
+}
+/* Video Section Styles */
+.video-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.video-edit-input {
+    margin-top: 10px;
+}
+
+.current-file-info {
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+.doc-edit-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-family: inherit;
+    background: white;
+}
+
+.doc-edit-input:focus {
+    outline: none;
+    border-color: #f59e0b;
+}
+
+.doc-edit-note {
+    display: block;
+    font-size: 0.65rem;
+    color: #64748b;
+    margin-top: 5px;
 }
 </style>
 {% endblock %}
@@ -334,56 +421,57 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-grid">
-        <!-- Left Column - Photo fills completely -->
+        <!-- Left Column -->
         <div class="profile-sidebar">
-            {% if candidate.profile_photo %}
-                <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-photo" onclick="openPhotoModal('{{ candidate.profile_photo.url }}', '{{ candidate.full_name }}')">
-            {% else %}
-                <div class="candidate-photo-placeholder">
-                    <i class="fas fa-user-circle"></i>
+            <div class="photo-wrapper">
+                {% if candidate.profile_photo %}
+                    <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-photo" onclick="openPhotoModal('{{ candidate.profile_photo.url }}', '{{ candidate.full_name }}')">
+                {% else %}
+                    <div class="candidate-photo-placeholder" onclick="openPhotoModal('', '{{ candidate.full_name }}')">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                {% endif %}
+                <div class="photo-caption">
+                    <i class="fas fa-camera"></i> Click to view full size
                 </div>
-            {% endif %}
-        </div>
-        
-        <!-- Right Column - Content -->
-        <div class="profile-content">
-            <!-- Status Badges -->
-            <div class="status-badge-container">
+            </div>
+            <div class="sidebar-status">
                 <span class="status-badge status-{{ candidate.application_status }}">
-                    <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% elif candidate.application_status == 'SEL' %}user-check{% elif candidate.application_status == 'VIS' %}passport{% elif candidate.application_status == 'RES' %}clock{% else %}info-circle{% endif %}"></i>
-                    {% if candidate.application_status == 'AVA' %}Available
-                    {% elif candidate.application_status == 'SEL' %}Selected
-                    {% elif candidate.application_status == 'CAN' %}Cancelled
-                    {% elif candidate.application_status == 'VIS' %}Visa Issued
-                    {% elif candidate.application_status == 'RES' %}Reserved
-                    {% else %}{{ candidate.get_application_status_display }}{% endif %}
+                    {{ candidate.get_application_status_display }}
                 </span>
                 <span class="health-badge health-{{ candidate.health_status }}">
-                    <i class="fas fa-stethoscope"></i>
-                    {% if candidate.health_status == 'FIT' %}Fit
-                    {% elif candidate.health_status == 'UNFIT' %}Unfit
-                    {% else %}Pending{% endif %}
+                    {{ candidate.get_health_status_display }}
                 </span>
             </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="profile-content">
+            <div class="candidate-header">
+                <h1 class="candidate-name">{{ candidate.full_name }}</h1>
+                <div class="candidate-passport">
+                    Passport: {{ candidate.passport_number }} | NIN: {{ candidate.nin }}
+                </div>
+            </div>
             
-            <h1 class="candidate-name">{{ candidate.full_name }}</h1>
-            <div class="candidate-passport">
-                <i class="fas fa-passport"></i> Passport: {{ candidate.passport_number }} | NIN: {{ candidate.nin }} | Registered: {{ candidate.registered_at|date:"F d, Y" }}
+            <div id="editModeBanner" class="edit-mode-banner" style="display: none;">
+                <i class="fas fa-edit"></i> Edit Mode Active - Make your changes and click Save
             </div>
             
             <!-- Personal Information -->
             <div class="info-section">
                 <h3 class="section-title"><i class="fas fa-id-card"></i> Personal Information</h3>
                 <div class="info-grid">
-                    <div class="info-item"><span class="info-label">Full Name:</span><span class="info-value">{{ candidate.full_name }}</span></div>
-                    <div class="info-item"><span class="info-label">National ID:</span><span class="info-value">{{ candidate.nin }}</span></div>
-                    <div class="info-item"><span class="info-label">Passport Number:</span><span class="info-value">{{ candidate.passport_number }}</span></div>
-                    <div class="info-item"><span class="info-label">Passport Issue:</span><span class="info-value">{{ candidate.passport_issue_date|date:"F d, Y"|default:"Not specified" }}</span></div>
-                    <div class="info-item"><span class="info-label">Passport Expiry:</span><span class="info-value">{{ candidate.passport_expiry_date|date:"F d, Y"|default:"Not specified" }}</span></div>
-                    <div class="info-item"><span class="info-label">Date of Birth:</span><span class="info-value">{{ candidate.date_of_birth|date:"F d, Y" }} (Age: {{ candidate.age }})</span></div>
-                    <div class="info-item"><span class="info-label">Place of Birth:</span><span class="info-value">{{ candidate.place_of_birth|default:"Not specified" }}</span></div>
-                    <div class="info-item"><span class="info-label">Gender:</span><span class="info-value">{{ candidate.get_gender_display }}</span></div>
-                    <div class="info-item"><span class="info-label">Religion:</span><span class="info-value">{{ candidate.get_religion_display }}</span></div>
+                    <div class="info-item"><span class="info-label">Full Name:</span><span class="info-value" data-field="full_name">{{ candidate.full_name }}</span></div>
+                    <div class="info-item"><span class="info-label">National ID:</span><span class="info-value" data-field="nin">{{ candidate.nin }}</span></div>
+                    <div class="info-item"><span class="info-label">Passport Number:</span><span class="info-value" data-field="passport_number">{{ candidate.passport_number }}</span></div>
+                    <div class="info-item"><span class="info-label">Passport Issue:</span><span class="info-value" data-field="passport_issue_date">{{ candidate.passport_issue_date|date:"Y-m-d"|default:"" }}</span></div>
+                    <div class="info-item"><span class="info-label">Passport Expiry:</span><span class="info-value" data-field="passport_expiry_date">{{ candidate.passport_expiry_date|date:"Y-m-d"|default:"" }}</span></div>
+                    <div class="info-item"><span class="info-label">Date of Birth:</span><span class="info-value" data-field="date_of_birth">{{ candidate.date_of_birth|date:"Y-m-d" }}</span></div>
+                    <div class="info-item"><span class="info-label">Age:</span><span class="info-value">{{ candidate.age }} years</span></div>
+                    <div class="info-item"><span class="info-label">Place of Birth:</span><span class="info-value" data-field="place_of_birth">{{ candidate.place_of_birth|default:"" }}</span></div>
+                    <div class="info-item"><span class="info-label">Gender:</span><span class="info-value" data-field="gender">{{ candidate.get_gender_display }}</span></div>
+                    <div class="info-item"><span class="info-label">Religion:</span><span class="info-value" data-field="religion">{{ candidate.get_religion_display }}</span></div>
                 </div>
             </div>
             
@@ -391,12 +479,12 @@
             <div class="info-section">
                 <h3 class="section-title"><i class="fas fa-address-book"></i> Contact Information</h3>
                 <div class="info-grid">
-                    <div class="info-item"><span class="info-label">Phone:</span><span class="info-value">{{ candidate.phone_number|default:"Not provided" }}</span></div>
-                    <div class="info-item"><span class="info-label">Alternative Phone:</span><span class="info-value">{{ candidate.alternative_phone|default:"Not provided" }}</span></div>
-                    <div class="info-item"><span class="info-label">Email:</span><span class="info-value">{{ candidate.email|default:"Not provided" }}</span></div>
-                    <div class="info-item"><span class="info-label">Address:</span><span class="info-value">{{ candidate.home_address|default:"Not provided" }}</span></div>
-                    <div class="info-item"><span class="info-label">Next of Kin:</span><span class="info-value">{{ candidate.emergency_contact_name|default:"Not provided" }}</span></div>
-                    <div class="info-item"><span class="info-label">Next of Kin Phone:</span><span class="info-value">{{ candidate.emergency_contact_phone|default:"Not provided" }}</span></div>
+                    <div class="info-item"><span class="info-label">Phone:</span><span class="info-value" data-field="phone_number">{{ candidate.phone_number|default:"" }}</span></div>
+                    <div class="info-item"><span class="info-label">Alternative Phone:</span><span class="info-value" data-field="alternative_phone">{{ candidate.alternative_phone|default:"" }}</span></div>
+                    <div class="info-item"><span class="info-label">Next of Kin:</span><span class="info-value" data-field="emergency_contact_name">{{ candidate.emergency_contact_name|default:"" }}</span></div>
+                                        <div class="info-item"><span class="info-label">Address:</span><span class="info-value" data-field="home_address">{{ candidate.home_address|default:"" }}</span></div>
+                                                            <div class="info-item"><span class="info-label">Next of Kin Phone:</span><span class="info-value" data-field="emergency_contact_phone">{{ candidate.emergency_contact_phone|default:"" }}</span></div>
+
                 </div>
             </div>
             
@@ -404,123 +492,126 @@
             <div class="info-section">
                 <h3 class="section-title"><i class="fas fa-briefcase"></i> Professional Information</h3>
                 <div class="info-grid">
-                    <div class="info-item"><span class="info-label">Job Category:</span><span class="info-value">{{ candidate.get_job_category_display }}</span></div>
-                    <div class="info-item"><span class="info-label">Experience:</span><span class="info-value">{{ candidate.years_of_experience }} years</span></div>
-                    <div class="info-item"><span class="info-label">Languages:</span><span class="info-value">{{ candidate.languages_spoken|default:"English" }}</span></div>
-                    <div class="info-item"><span class="info-label">Country of Exp:</span><span class="info-value">{{ candidate.preferred_country|default:"Not specified" }}</span></div>
+                    <div class="info-item"><span class="info-label">Job Category:</span><span class="info-value" data-field="job_category">{{ candidate.get_job_category_display }}</span></div>
+                    <div class="info-item"><span class="info-label">Experience:</span><span class="info-value" data-field="years_of_experience">{{ candidate.years_of_experience }}</span></div>
+                    <div class="info-item"><span class="info-label">Country of Exp:</span><span class="info-value" data-field="preferred_country">{{ candidate.preferred_country|default:"" }}</span></div>
                 </div>
-                {% if candidate.skills %}
-                <div class="skills-container">
-                    {% for skill in candidate.skills.split|slice:":8" %}
-                        <span class="skill-tag"><i class="fas fa-check"></i> {{ skill }}</span>
-                    {% endfor %}
-                </div>
-                {% endif %}
+               
             </div>
             
             <!-- Health Information -->
             <div class="info-section">
                 <h3 class="section-title"><i class="fas fa-stethoscope"></i> Health Information</h3>
                 <div class="info-grid">
-                    <div class="info-item"><span class="info-label">Health Status:</span><span class="info-value"><span class="health-badge health-{{ candidate.health_status }}">{{ candidate.get_health_status_display }}</span></span></div>
+                    <div class="info-item"><span class="info-label">Health Status:</span><span class="info-value" data-field="health_status">{{ candidate.get_health_status_display }}</span></div>
                 </div>
             </div>
             
-            <!-- Media & Documents -->
+          <!-- Media & Documents Section -->
 <div class="info-section">
     <h3 class="section-title"><i class="fas fa-file-alt"></i> Media & Documents</h3>
     
-    <!-- Video Interview -->
-    {% if candidate.candidate_video %}
-    <div style="margin-bottom: 20px;">
-        <div class="info-label" style="margin-bottom: 8px;">
-            <i class="fas fa-video"></i> Video Interview
+    <!-- Video Interview - Editable in edit mode -->
+    <div class="video-section" data-doc-field="candidate_video">
+        <div class="info-label" style="margin-bottom: 8px; font-weight: 600;">
+            <i class="fas fa-video"></i> Video Introduction
         </div>
-        <video width="100%" controls style="max-width: 400px; border-radius: 12px;">
-            <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+        <div class="video-container" id="videoContainer">
+            {% if candidate.candidate_video %}
+                <video width="100%" controls style="max-width: 500px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="current-file-info">
+                    <span class="file-name">Current: {{ candidate.candidate_video.name|slice:"20:" }}</span>
+                </div>
+            {% else %}
+                <div class="no-video-message" style="padding: 20px; background: #f8fafc; border-radius: 12px; text-align: center; color: #64748b;">
+                    <i class="fas fa-video fa-2x"></i>
+                    <p style="margin-top: 8px;">No video uploaded</p>
+                </div>
+            {% endif %}
+        </div>
+        <div class="video-edit-input" style="display: none;">
+            <input type="file" class="doc-edit-input" data-doc-field="candidate_video" accept="video/mp4,video/mov,video/avi,video/webm">
+            <small class="doc-edit-note">Upload MP4, MOV, AVI, or WebM (Max 50MB)</small>
+        </div>
     </div>
-    {% endif %}
     
     <!-- Documents Grid -->
     <div class="documents-grid">
         <!-- Profile Photo -->
-        {% if candidate.profile_photo %}
-        <a href="{{ candidate.profile_photo.url }}" target="_blank" class="doc-card">
+        <div class="doc-card" data-doc-field="profile_photo">
             <div class="doc-icon"><i class="fas fa-camera"></i></div>
             <div class="doc-title">Profile Photo</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Click to view</div>
-        </a>
-        {% else %}
-        <div class="doc-card" style="opacity: 0.5;">
-            <div class="doc-icon"><i class="fas fa-camera"></i></div>
-            <div class="doc-title">Profile Photo</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Not uploaded</div>
+            <div class="doc-value" data-doc="profile_photo">
+                {% if candidate.profile_photo %}
+                    <a href="{{ candidate.profile_photo.url }}" target="_blank" class="doc-link">View Current</a>
+                {% else %}
+                    <span class="doc-empty">Not uploaded</span>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
         
         <!-- CV / Resume -->
-        {% if candidate.cv_pdf %}
-        <a href="{{ candidate.cv_pdf.url }}" target="_blank" class="doc-card">
+        <div class="doc-card" data-doc-field="cv_pdf">
             <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
             <div class="doc-title">CV / Resume</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Click to view</div>
-        </a>
-        {% else %}
-        <div class="doc-card" style="opacity: 0.5;">
-            <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
-            <div class="doc-title">CV / Resume</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Not uploaded</div>
+            <div class="doc-value" data-doc="cv_pdf">
+                {% if candidate.cv_pdf %}
+                    <a href="{{ candidate.cv_pdf.url }}" target="_blank" class="doc-link">View Current</a>
+                {% else %}
+                    <span class="doc-empty">Not uploaded</span>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
         
         <!-- Passport Copy -->
-        {% if candidate.passport_copy %}
-        <a href="{{ candidate.passport_copy.url }}" target="_blank" class="doc-card">
+        <div class="doc-card" data-doc-field="passport_copy">
             <div class="doc-icon"><i class="fas fa-passport"></i></div>
             <div class="doc-title">Passport Copy</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Click to view</div>
-        </a>
-        {% else %}
-        <div class="doc-card" style="opacity: 0.5;">
-            <div class="doc-icon"><i class="fas fa-passport"></i></div>
-            <div class="doc-title">Passport Copy</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Not uploaded</div>
+            <div class="doc-value" data-doc="passport_copy">
+                {% if candidate.passport_copy %}
+                    <a href="{{ candidate.passport_copy.url }}" target="_blank" class="doc-link">View Current</a>
+                {% else %}
+                    <span class="doc-empty">Not uploaded</span>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
         
         <!-- Visa Document -->
-        {% if candidate.visa_document %}
-        <a href="{{ candidate.visa_document.url }}" target="_blank" class="doc-card">
+        <div class="doc-card" data-doc-field="visa_document">
             <div class="doc-icon"><i class="fas fa-stamp"></i></div>
             <div class="doc-title">Visa Document</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Click to view</div>
-        </a>
-        {% else %}
-        <div class="doc-card" style="opacity: 0.5;">
-            <div class="doc-icon"><i class="fas fa-stamp"></i></div>
-            <div class="doc-title">Visa Document</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Not uploaded</div>
+            <div class="doc-value" data-doc="visa_document">
+                {% if candidate.visa_document %}
+                    <a href="{{ candidate.visa_document.url }}" target="_blank" class="doc-link">View Current</a>
+                {% else %}
+                    <span class="doc-empty">Not uploaded</span>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
+        
+        
+        
     </div>
-    
-    {% if not candidate.profile_photo and not candidate.cv_pdf and not candidate.passport_copy and not candidate.visa_document and not candidate.candidate_video %}
-    <div style="text-align: center; padding: 30px; color: #64748b;">
-        <i class="fas fa-cloud-upload-alt fa-2x"></i>
-        <p style="margin-top: 10px;">No documents or media uploaded yet.</p>
-    </div>
-    {% endif %}
 </div>
+            
+            
+            {% if candidate.notes %}
+            <div class="info-section">
+                <h3 class="section-title"><i class="fas fa-sticky-note"></i> Notes</h3>
+                <div class="info-item">
+                    <span class="info-value" data-field="notes">{{ candidate.notes|linebreaks }}</span>
+                </div>
+            </div>
+            {% endif %}
+            
             <!-- Action Buttons -->
-            <div class="button-group">
-                <a href="{% url 'candidates_table' %}" class="btn btn-back">
-                    <i class="fas fa-arrow-left"></i> Back to Candidates
-                </a>
-                <a href="{% url 'candidate_update' candidate.pk %}" class="btn btn-edit">
-                    <i class="fas fa-edit"></i> Edit Candidate
-                </a>
+            <div class="action-buttons-bottom" id="actionButtons">
+                <a href="{% url 'candidates_table' %}" class="btn btn-back"><i class="fas fa-arrow-left"></i> Back</a>
+                <button class="btn btn-edit" id="editBtn"><i class="fas fa-edit"></i> Edit Candidate</button>
+                <button class="btn btn-delete" onclick="deleteCandidate({{ candidate.id }}, '{{ candidate.full_name }}')"><i class="fas fa-trash"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -533,6 +624,191 @@
 </div>
 
 <script>
+    let isEditMode = false;
+    
+    // Field mappings for dropdowns
+    const fieldMappings = {
+        'gender': { 'Male': 'M', 'Female': 'F' },
+        'religion': { 'Muslim': 'MUS', 'Christian': 'CHR', 'Other': 'OTH' },
+        'health_status': { 'Fit': 'FIT', 'Unfit': 'UNFIT', 'Pending': 'PENDING' },
+        'job_category': {
+            'Maid': 'MAID', 'Cleaner': 'CLN', 'Caregiver': 'CAR', 'Driver': 'DRV',
+            'Home Teacher': 'TCH', 'Waiter': 'WTR', 'Waitress': 'WTS', 'Nanny': 'NAN',
+            'Security': 'SEC', 'Housekeeper': 'HOU', 'Gardener': 'GAR', 'Cook': 'COK'
+        }
+    };
+    
+    function enableEditMode() {
+    if (isEditMode) return;
+    isEditMode = true;
+    
+    document.getElementById('editModeBanner').style.display = 'flex';
+    
+    const editBtn = document.getElementById('editBtn');
+    editBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    editBtn.className = 'btn btn-save';
+    editBtn.onclick = saveChanges;
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn btn-cancel';
+    cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+    cancelBtn.onclick = cancelEdit;
+    document.getElementById('actionButtons').appendChild(cancelBtn);
+    
+    // Convert text fields to inputs
+    document.querySelectorAll('.info-value[data-field]').forEach(el => {
+        const field = el.dataset.field;
+        const currentValue = el.innerText.trim();
+        
+        let inputHtml = '';
+        
+        if (field === 'gender') {
+            inputHtml = `<select class="edit-select" data-field="${field}">
+                <option value="M" ${currentValue === 'Male' ? 'selected' : ''}>Male</option>
+                <option value="F" ${currentValue === 'Female' ? 'selected' : ''}>Female</option>
+            </select>`;
+        } else if (field === 'religion') {
+            inputHtml = `<select class="edit-select" data-field="${field}">
+                <option value="MUS" ${currentValue === 'Muslim' ? 'selected' : ''}>Muslim</option>
+                <option value="CHR" ${currentValue === 'Christian' ? 'selected' : ''}>Christian</option>
+                <option value="OTH" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
+            </select>`;
+        } else if (field === 'job_category') {
+            inputHtml = `<select class="edit-select" data-field="${field}">
+                <option value="MAID" ${currentValue === 'Maid' ? 'selected' : ''}>Maid</option>
+                <option value="CLN" ${currentValue === 'Cleaner' ? 'selected' : ''}>Cleaner</option>
+                <option value="CAR" ${currentValue === 'Caregiver' ? 'selected' : ''}>Caregiver</option>
+                <option value="DRV" ${currentValue === 'Driver' ? 'selected' : ''}>Driver</option>
+                <option value="TCH" ${currentValue === 'Home Teacher' ? 'selected' : ''}>Home Teacher</option>
+                <option value="WTR" ${currentValue === 'Waiter' ? 'selected' : ''}>Waiter</option>
+                <option value="WTS" ${currentValue === 'Waitress' ? 'selected' : ''}>Waitress</option>
+                <option value="NAN" ${currentValue === 'Nanny' ? 'selected' : ''}>Nanny</option>
+                <option value="SEC" ${currentValue === 'Security' ? 'selected' : ''}>Security</option>
+                <option value="HOU" ${currentValue === 'Housekeeper' ? 'selected' : ''}>Housekeeper</option>
+                <option value="GAR" ${currentValue === 'Gardener' ? 'selected' : ''}>Gardener</option>
+                <option value="COK" ${currentValue === 'Cook' ? 'selected' : ''}>Cook</option>
+            </select>`;
+        } else if (field === 'health_status') {
+            inputHtml = `<select class="edit-select" data-field="${field}">
+                <option value="FIT" ${currentValue === 'Fit' ? 'selected' : ''}>Fit</option>
+                <option value="UNFIT" ${currentValue === 'Unfit' ? 'selected' : ''}>Unfit</option>
+                <option value="PENDING" ${currentValue === 'Pending' ? 'selected' : ''}>Pending</option>
+            </select>`;
+        } else if (field.includes('date')) {
+            inputHtml = `<input type="date" class="edit-input" data-field="${field}" value="${currentValue}">`;
+        } else if (field === 'notes') {
+            inputHtml = `<textarea class="edit-textarea" data-field="${field}" rows="3">${currentValue}</textarea>`;
+        } else {
+            inputHtml = `<input type="text" class="edit-input" data-field="${field}" value="${currentValue}">`;
+        }
+        
+        el.innerHTML = inputHtml;
+    });
+    
+    // Handle Video Section
+    const videoContainer = document.getElementById('videoContainer');
+    const videoEditInput = document.querySelector('.video-edit-input');
+    if (videoContainer && videoEditInput) {
+        videoContainer.style.display = 'none';
+        videoEditInput.style.display = 'block';
+    }
+    
+    // Handle Documents (files)
+    document.querySelectorAll('.doc-card[data-doc-field]').forEach(card => {
+        const docField = card.dataset.docField;
+        const valueDiv = card.querySelector('.doc-value');
+        if (!valueDiv) return;
+        
+        const currentHtml = valueDiv.innerHTML;
+        valueDiv.dataset.original = currentHtml;
+        
+        // Determine accepted file types
+        let acceptTypes = '.pdf,.jpg,.jpeg,.png';
+        if (docField === 'candidate_video') {
+            acceptTypes = 'video/mp4,video/mov,video/avi,video/webm';
+        } else if (docField === 'profile_photo') {
+            acceptTypes = '.jpg,.jpeg,.png';
+        }
+        
+        valueDiv.innerHTML = `
+            <input type="file" class="doc-edit-input" data-doc-field="${docField}" accept="${acceptTypes}">
+            <small class="doc-edit-note">Leave empty to keep current file</small>
+            <div class="current-file" style="font-size: 0.65rem; color: #64748b; margin-top: 5px;">${currentHtml}</div>
+        `;
+    });
+    
+    document.querySelector('.profile-container').classList.add('edit-mode');
+}
+    
+ function saveChanges() {
+    const updatedData = {};
+    const formData = new FormData();
+    
+    // Collect text data
+    document.querySelectorAll('.edit-input, .edit-select, .edit-textarea').forEach(input => {
+        const field = input.dataset.field;
+        let value = input.value;
+        
+        if (field === 'full_name' && (!value || value.trim() === '')) {
+            alert('Full Name is required!');
+            return;
+        }
+        if (field === 'date_of_birth' && (!value || value === '')) {
+            alert('Date of Birth is required!');
+            return;
+        }
+        updatedData[field] = value;
+    });
+    
+    // Collect file uploads (including video)
+    document.querySelectorAll('.doc-edit-input').forEach(input => {
+        const field = input.dataset.docField;
+        if (input.files && input.files.length > 0) {
+            formData.append(field, input.files[0]);
+        }
+    });
+    
+    // Add JSON data to formData
+    formData.append('json_data', JSON.stringify(updatedData));
+    
+    const saveBtn = document.getElementById('editBtn');
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    saveBtn.disabled = true;
+    
+    fetch(`/candidate/{{ candidate.id }}/update/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + data.error);
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+            saveBtn.disabled = false;
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error);
+        saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+        saveBtn.disabled = false;
+    });
+}
+    
+    function cancelEdit() {
+        location.reload();
+    }
+    
+    function deleteCandidate(id, name) {
+        if (confirm(`Delete "${name}"? This cannot be undone.`)) {
+            window.location.href = `/candidate/${id}/delete/`;
+        }
+    }
+    
     function openPhotoModal(url, name) {
         const modal = document.getElementById('photoModal');
         const img = document.getElementById('modalPhoto');
@@ -550,8 +826,21 @@
         if (e.target === this) closePhotoModal();
     });
     
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closePhotoModal();
-    });
+    document.getElementById('editBtn').addEventListener('click', enableEditMode);
+    
+    function getCookie(name) {
+        let value = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    value = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return value;
+    }
 </script>
 {% endblock %}

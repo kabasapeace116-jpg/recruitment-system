@@ -20,15 +20,14 @@
             min-height: 100vh;
         }
 
-        /* Navigation */
+        /* ========== HORIZONTAL NAVBAR - CLIENT VERSION ========== */
         .navbar {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            padding: 0 30px;
+            background: linear-gradient(135deg, #0a0a2a 0%, #0f0f35 50%, #1a1a4a 100%);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .nav-container {
@@ -37,116 +36,208 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 0 30px;
             flex-wrap: wrap;
-            gap: 15px;
         }
 
+        /* Logo Section */
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
+            padding: 12px 0;
         }
 
         .logo-icon {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
         .logo-icon i {
-            font-size: 1.3rem;
-            color: #0f0c29;
+            font-size: 1.5rem;
+            color: #0a0a2a;
         }
 
         .logo-text h1 {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 800;
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 0;
+            letter-spacing: -0.3px;
         }
 
         .logo-text p {
             font-size: 0.6rem;
-            color: #64748b;
+            color: #94a3b8;
             margin: 0;
+            letter-spacing: 0.5px;
         }
 
+        /* Navigation Links */
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
+            padding: 8px 0;
         }
 
-        .user-menu {
+        .nav-link {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #f1f5f9;
-            padding: 6px 15px;
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #cbd5e1;
+            position: relative;
+        }
+
+        .nav-link i {
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            width: 60%;
+        }
+
+        .nav-link:hover {
+            color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: #FFD700;
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .nav-link.active i {
+            color: #FFD700;
+        }
+
+        /* Special styled nav links */
+        .nav-link-selections {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .nav-link-selections i {
+            color: #FFD700;
+        }
+
+        .nav-link-reservations {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(124, 58, 237, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-link-reservations i {
+            color: #a78bfa;
+        }
+
+        .nav-link-reservations:hover,
+        .nav-link-selections:hover {
+            transform: translateY(-2px);
+        }
+
+        /* User Menu */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .user-menu:hover {
+            border-color: rgba(255, 215, 0, 0.5);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 38px;
+            height: 38px;
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0f0c29;
+            color: #0a0a2a;
             font-weight: bold;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
-        .nav-link-selections {
+        .user-info {
             display: flex;
-            align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #0f0c29;
-            padding: 6px 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s;
+            flex-direction: column;
         }
 
-        .nav-link-selections:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+        .user-name {
+            font-weight: 600;
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        .user-role {
+            font-size: 0.65rem;
+            color: #94a3b8;
         }
 
         .logout-btn {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
-            padding: 6px 15px;
-            border-radius: 50px;
+            padding: 8px 18px;
+            border-radius: 40px;
             text-decoration: none;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
         }
 
         .logout-btn:hover {
-            background: #dc2626;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
         }
 
+        /* Main Content */
         .main-content {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px;
         }
 
         /* Messages */
@@ -156,7 +247,7 @@
 
         .alert {
             padding: 12px 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -187,93 +278,86 @@
             border-left: 4px solid #ef4444;
         }
 
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 10px 15px;
-            }
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            color: #0a0a2a;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
             .nav-container {
-                flex-direction: column;
+                padding: 0 20px;
             }
-            .main-content {
-                margin: 20px auto;
-                padding: 0 15px;
+            
+            .nav-link {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+                gap: 8px;
+            }
+            
+            .user-menu {
+                padding: 6px 15px;
+            }
+            
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
             }
         }
-        .nav-link-reservations {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white;
-    padding: 8px 18px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s;
-}
 
-.nav-link-reservations:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
-}
-/* Navigation Links Styles */
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 18px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.3s;
-    background: #f1f5f9;
-    color: #475569;
-}
-
-.nav-link i {
-    font-size: 1rem;
-}
-
-.nav-link:hover {
-    transform: translateY(-2px);
-    background: #e2e8f0;
-}
-
-.nav-link.active {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: #0f0c29;
-}
-
-/* Specific nav link variations */
-.nav-link-selections {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: #0f0c29;
-}
-
-.nav-link-selections i {
-    color: #0f0c29;
-}
-
-.nav-link-reservations {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white;
-}
-
-.nav-link-reservations i {
-    color: white;
-}
-
-.nav-link-reservations:hover {
-    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
-}
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                padding: 12px 20px;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 8px;
+                padding: 15px 0;
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .nav-link {
+                width: 100%;
+                justify-content: center;
+                padding: 12px;
+            }
+            
+            .user-menu {
+                margin-top: 10px;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -281,26 +365,39 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="logo-icon">
+                    <img src="{% static 'images/logo.jpeg' %}" alt="MAHIKENG INVESTMENTS" style="width: 38px; height: 38px; border-radius: 10px; object-fit: cover;">
+                </div>
                 <div class="logo-text">
                     <h1>MAHIKENG INVESTMENTS</h1>
                     <p>Global Travel Services & Growth Opportunities</p>
                 </div>
             </div>
-            <div class="nav-links">
-                <div class="user-menu">
-                    <div class="user-avatar">{{ user.username|first|upper }}</div>
-                    <span>Welcome, {{ user.username }}</span>
-                </div>
-                <a href="{% url 'client_selections' %}" class="nav-link-selections">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'client_portal' %}" class="nav-link {% if request.resolver_match.url_name == 'client_portal' %}active{% endif %}">
+                    <i class="fas fa-search"></i> Find Candidates
+                </a>
+                <a href="{% url 'client_selections' %}" class="nav-link nav-link-selections {% if request.resolver_match.url_name == 'client_selections' %}active{% endif %}">
                     <i class="fas fa-heart"></i> My Selections
                 </a>
-                 <a href="{% url 'client_reservations' %}" class="nav-link">
-        <i class="fas fa-calendar-check"></i> My Bookings
-    </a>
+                <a href="{% url 'client_reservations' %}" class="nav-link nav-link-reservations {% if request.resolver_match.url_name == 'client_reservations' %}active{% endif %}">
+                    <i class="fas fa-calendar-check"></i> My Bookings
+                </a>
+            </div>
+            <div class="user-menu">
+                <div class="user-avatar">{{ user.username|first|upper }}</div>
+                <div class="user-info">
+                    <span class="user-name">{{ user.username }}</span>
+                    <span class="user-role">Client Portal</span>
+                </div>
                 <form action="{% url 'client_logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </form>
             </div>
         </div>
@@ -311,7 +408,7 @@
         <div class="messages">
             {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">
-                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
                 {{ message }}
             </div>
             {% endfor %}
@@ -321,6 +418,39 @@
         {% block content %}{% endblock %}
     </div>
 
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('show');
+            });
+        }
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('show');
+                }
+            });
+        });
+        
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.messages .alert');
+            messages.forEach(function(message) {
+                message.style.opacity = '0';
+                message.style.transition = 'opacity 0.5s ease';
+                setTimeout(function() {
+                    message.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

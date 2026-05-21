@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <style>
-    /* Stats Container */
+    /* ========== STATS CARDS ========== */
     .stats-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -60,37 +60,13 @@
         font-weight: 500;
     }
     
-    /* Filters Section */
+    /* ========== FILTERS SECTION ========== */
     .filters-section {
         background: white;
         border-radius: 20px;
+        padding: 25px;
         margin: 20px 25px;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    .filters-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        padding: 5px 0;
-    }
-    
-    .filters-header h3 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #1e293b;
-    }
-    
-    .filters-header h3 i {
-        color: #FFD700;
-        margin-right: 8px;
-    }
-    
-    .toggle-filters {
-        color: #FFD700;
-        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     
     .search-wrapper {
@@ -123,7 +99,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 15px;
-        margin-top: 20px;
+        margin-top: 15px;
     }
     
     .filter-group {
@@ -140,7 +116,7 @@
     
     .filter-group label i {
         color: #FFD700;
-        margin-right: 5px;
+        margin-right: 6px;
     }
     
     .chip-group {
@@ -186,6 +162,7 @@
         cursor: pointer;
         font-weight: 600;
         font-size: 0.8rem;
+        transition: all 0.3s;
     }
     
     .btn-filter {
@@ -198,16 +175,15 @@
         color: #475569;
     }
     
-    /* Active Filters Bar */
     .active-filters-bar {
         background: #f8fafc;
         border-radius: 12px;
-        padding: 12px 15px;
-        margin-bottom: 20px;
+        padding: 10px 15px;
+        margin: 0 25px 20px 25px;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
     }
     
     .filter-tag {
@@ -237,74 +213,38 @@
         margin-left: auto;
     }
     
-    /* Horizontal Card Layout */
+    /* ========== CANDIDATE CARDS - Same as Client Portal ========== */
     .candidates-grid {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 20px;
         padding: 0 25px 25px 25px;
     }
     
     .candidate-card {
         background: white;
-        border-radius: 20px;
+        border-radius: 16px;
         overflow: hidden;
         transition: all 0.3s;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
         position: relative;
     }
     
-    /* Status Badge - Top Right Corner */
-    .card-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        z-index: 20;
-        background: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    .candidate-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     }
     
-    .card-badge.AVA { background: #d1fae5; color: #065f46; }
-    .card-badge.SEL { background: #fed7aa; color: #9a3412; }
-    .card-badge.RES { background: #e0e7ff; color: #4338ca; }
-    .card-badge.VIS { background: #dbeafe; color: #1e40af; }
-    .card-badge.CAN { background: #fee2e2; color: #991b1b; }
-    
-    /* Checkbox for bulk actions */
-    .checkbox-container {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        z-index: 20;
-        background: rgba(255,255,255,0.9);
-        padding: 5px 8px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.7rem;
-    }
-    
-    .candidate-checkbox {
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-    }
-    
-    /* Horizontal Layout */
     .card-horizontal {
         display: flex;
-        gap: 0;
+        flex-direction: row;
+        height: 100%;
     }
     
-    /* Left Column - Image */
+    /* Left Column - Picture */
     .card-image-horizontal {
-        width: 220px;
-        min-height: 260px;
+        width: 110px;
         flex-shrink: 0;
         background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
         display: flex;
@@ -323,89 +263,84 @@
     .image-placeholder-horizontal {
         width: 100%;
         height: 100%;
-        min-height: 260px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 4rem;
+        font-size: 2.5rem;
         color: #FFD700;
-        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
     }
     
-    /* Right Column - Content */
+    /* Right Column - Information */
     .card-content-horizontal {
         flex: 1;
-        padding: 20px;
+        padding: 14px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
-    }
-    
-    .candidate-header {
-        border-bottom: 2px solid #f1f5f9;
-        padding-bottom: 12px;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 13px;
     }
     
     .candidate-name-horizontal {
-        font-size: 1.3rem;
+        font-size: 0.95rem;
         font-weight: 700;
         color: #1e293b;
-        margin: 0 0 6px 0;
-    }
-    
-    .candidate-passport-horizontal {
-        font-size: 0.75rem;
-        color: #64748b;
         margin: 0;
+        line-height: 1.3;
     }
     
-    /* Info Grid */
-    .info-grid-horizontal {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        margin: 5px 0;
-    }
-    
-    .info-item-horizontal {
+    .candidate-details-row {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 5px 0;
-    }
-    
-    .info-icon-horizontal {
-        width: 34px;
-        height: 34px;
-        background: #f1f5f9;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #FFD700;
-        font-size: 0.85rem;
-    }
-    
-    .info-label-horizontal {
-        font-size: 0.65rem;
+        flex-wrap: wrap;
+        font-size: 0.7rem;
         color: #64748b;
-        margin-bottom: 2px;
     }
     
-    .info-value-horizontal {
-        font-weight: 600;
-        color: #1e293b;
-        font-size: 0.8rem;
+    .candidate-details-row i {
+        color: #FFD700;
+        width: 14px;
+        font-size: 0.65rem;
     }
+    
+    .candidate-religion,
+    .candidate-job,
+    .candidate-age,
+    .candidate-experience {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    /* Status Badge */
+    .card-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        z-index: 10;
+        background: rgba(255,255,255,0.95);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .card-badge.AVA { background: #d1fae5; color: #065f46; }
+    .card-badge.SEL { background: #fed7aa; color: #9a3412; }
+    .card-badge.RES { background: #e0e7ff; color: #4338ca; }
+    .card-badge.VIS { background: #dbeafe; color: #1e40af; }
+    .card-badge.CAN { background: #fee2e2; color: #991b1b; }
     
     /* Health Badge */
     .health-badge {
         display: inline-block;
-        padding: 4px 10px;
-        border-radius: 50px;
-        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 0.6rem;
         font-weight: 600;
-        margin-top: 5px;
+        margin-top: 4px;
     }
     
     .health-FIT { background: #d1fae5; color: #065f46; }
@@ -415,77 +350,89 @@
     /* Action Buttons */
     .card-actions-horizontal {
         display: flex;
-        gap: 15px;
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid #e2e8f0;
+        gap: 8px;
+        margin-top: 4px;
     }
     
-    .btn-view-horizontal,
-    .btn-edit-horizontal,
-    .btn-delete-horizontal {
+    .btn-view-horizontal {
         flex: 1;
-        padding: 10px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 0.8rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-weight: 500;
         text-align: center;
         text-decoration: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        cursor: pointer;
-        border: none;
-    }
-    
-    .btn-view-horizontal {
-        background: #e0e7ff;
-        color: #4338ca;
+        gap: 5px;
     }
     
     .btn-edit-horizontal {
-        background: #fed7aa;
-        color: #9a3412;
+        flex: 1;
+        background: #f59e0b;
+        color: white;
+        border: none;
+        padding: 8px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
     }
     
     .btn-delete-horizontal {
-        background: #fee2e2;
-        color: #991b1b;
+        flex: 1;
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 8px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
     }
     
     .btn-view-horizontal:hover,
     .btn-edit-horizontal:hover,
     .btn-delete-horizontal:hover {
-        transform: translateY(-2px);
+        transform: translateY(-1px);
+        opacity: 0.9;
     }
     
-    /* Pagination */
-    .pagination-container {
-        padding: 20px;
-        text-align: center;
-        border-top: 1px solid #e2e8f0;
+    /* Checkbox for bulk actions */
+    .checkbox-container {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 10;
+        background: rgba(255,255,255,0.9);
+        padding: 3px 6px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.6rem;
     }
     
-    .pagination {
-        display: inline-flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .page-link {
-        padding: 6px 12px;
-        background: #f1f5f9;
-        color: #475569;
-        text-decoration: none;
-        border-radius: 6px;
+    .candidate-checkbox {
+        width: 14px;
+        height: 14px;
         cursor: pointer;
-    }
-    
-    .page-link:hover, .page-link.active {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        color: #0f0c29;
     }
     
     /* Mass Actions Bar */
@@ -512,188 +459,228 @@
         cursor: pointer;
     }
     
-    /* ========== MOBILE RESPONSIVE ========== */
-    @media (max-width: 768px) {
-        .stats-container {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding: 15px;
-        }
-        
-        .stat-card {
-            padding: 12px 15px;
-        }
-        
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            font-size: 1.2rem;
-        }
-        
-        .stat-number {
-            font-size: 1.3rem;
-        }
-        
-        .filters-section {
-            margin: 15px;
-            padding: 15px;
-        }
-        
-        .filters-grid {
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-        
-        .candidates-grid {
-            padding: 0 15px 15px 15px;
-            gap: 15px;
-        }
-        
-        /* Card becomes vertical on mobile */
-        .card-horizontal {
-            flex-direction: column;
-        }
-        
-        /* Image takes full width on mobile */
-        .card-image-horizontal {
-            width: 100%;
-            height: 220px;
-            min-height: auto;
-        }
-        
-        .card-image-horizontal img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .image-placeholder-horizontal {
-            min-height: 220px;
-            font-size: 3rem;
-        }
-        
-        /* Content padding adjustment */
-        .card-content-horizontal {
-            padding: 15px;
-        }
-        
-        .candidate-name-horizontal {
-            font-size: 1.1rem;
-        }
-        
-        .info-grid-horizontal {
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-        
-        .info-item-horizontal {
-            padding: 3px 0;
-        }
-        
-        .info-icon-horizontal {
-            width: 28px;
-            height: 28px;
-            font-size: 0.75rem;
-        }
-        
-        .info-value-horizontal {
-            font-size: 0.75rem;
-        }
-        
-        /* Actions stack vertically */
-        .card-actions-horizontal {
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .btn-view-horizontal,
-        .btn-edit-horizontal,
-        .btn-delete-horizontal {
-            padding: 8px;
-        }
-        
-        /* Status badge adjustment */
-        .card-badge {
-            top: 10px;
-            right: 10px;
-            padding: 4px 10px;
-            font-size: 0.65rem;
-        }
-        
-        /* Checkbox adjustment */
-        .checkbox-container {
-            top: 10px;
-            left: 10px;
-            font-size: 0.6rem;
-        }
+    /* Pagination */
+    .pagination-container {
+        padding: 20px;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
     }
     
-    /* Small mobile (max-width: 480px) */
-    @media (max-width: 480px) {
-        .stats-container {
-            grid-template-columns: 1fr;
-        }
-        
-        .card-image-horizontal {
-            height: 180px;
-        }
-        
-        .candidate-name-horizontal {
-            font-size: 1rem;
-        }
-        
-        .card-content-horizontal {
-            padding: 12px;
-        }
-        
-        .info-label-horizontal {
-            font-size: 0.6rem;
-        }
-        
-        .info-value-horizontal {
-            font-size: 0.7rem;
-        }
+    .pagination {
+        display: inline-flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
     }
     
-    /* Tablet landscape (769px - 1024px) */
+    .page-link {
+        padding: 6px 12px;
+        background: #f1f5f9;
+        color: #475569;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .page-link:hover, .page-link.active {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: #0f0c29;
+    }
+    
+    /* Responsive */
+    @media (min-width: 1025px) {
+        .candidates-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    }
     @media (min-width: 769px) and (max-width: 1024px) {
-        .card-image-horizontal {
-            width: 180px;
-        }
-        
-        .info-grid-horizontal {
-            gap: 10px;
-        }
-        
-        .info-item-horizontal {
-            gap: 8px;
-        }
+        .candidates-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     }
     @media (max-width: 768px) {
-    /* Image container - flexible height */
-    .card-image-horizontal {
-        width: 100%;
-        height: auto;
-        padding: 20px;
-        background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 100%);
+        .stats-container { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
+        .filters-section { margin: 15px; padding: 15px; }
+        .filters-grid { grid-template-columns: 1fr; }
+        .active-filters-bar { margin: 0 15px 15px 15px; }
+        .candidates-grid { padding: 0 15px 15px 15px; gap: 12px; }
+        .candidates-grid { grid-template-columns: 1fr; }
+        .card-image-horizontal { width: 80px; }
+        .card-content-horizontal { padding: 10px; }
+        .candidate-name-horizontal { font-size: 0.85rem; }
+        .candidate-details-row { font-size: 0.65rem; gap: 6px; }
+        .btn-view-horizontal, .btn-edit-horizontal, .btn-delete-horizontal { 
+            padding: 5px 6px; 
+            font-size: 0.6rem; 
+        }
+    }
+    @media (max-width: 480px) {
+        .card-image-horizontal { width: 70px; }
+        .candidate-name-horizontal { font-size: 0.8rem; }
+    }
+    /* Enhanced Stats Cards */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+}
+
+.stat-card:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.stat-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.stat-icon.total { 
+    background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(71, 85, 105, 0.3);
+}
+
+.stat-icon.available { 
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.stat-icon.selected { 
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+}
+
+.stat-icon.reserved { 
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+}
+
+.stat-icon.visa { 
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.stat-info {
+    text-align: left;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
+}
+
+.stat-trend {
+    font-size: 0.7rem;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-top: 8px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.trend-up {
+    color: #10b981;
+}
+
+.trend-down {
+    color: #ef4444;
+}
+
+/* Pulse animation for new data */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.stat-card {
+    animation: pulse 0.5s ease;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        padding: 15px;
     }
     
-    /* Image - shows completely without cropping */
-    .card-image-horizontal img {
-        width: 100%;
-        height: auto;
-        max-height: 250px;
-        object-fit: contain;
-        border-radius: 16px;
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
     }
     
-    /* Placeholder */
-    .image-placeholder-horizontal {
-        width: 100%;
-        height: auto;
-        min-height: 200px;
-        padding: 20px;
-        font-size: 3rem;
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-container {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -743,17 +730,43 @@
 <div class="filters-section">
     <div class="search-wrapper">
         <i class="fas fa-search search-icon"></i>
-        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, passport, or NIN...">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search candidates by name or passport...">
     </div>
     
-    <div class="filters-header" onclick="toggleFilters()">
-        <h3><i class="fas fa-sliders-h"></i> Advanced Filters</h3>
-        <div class="toggle-filters">
-            <i class="fas fa-chevron-down" id="filterToggleIcon"></i>
+    <div class="filters-grid" id="filtersGrid">
+       
+
+             <div class="filter-group">
+             <label><i class="fas fa-pray"></i> Religion</label>
+                <div class="chip-group" id="religionFilter">
+                 <div class="chip" data-religion="muslim">Muslim</div>
+                        <div class="chip" data-religion="christian">Christian</div>
+                </div>
+             </div>
+
+         <div class="filter-group">
+            <label><i class="fas fa-chart-line"></i> Experience</label>
+            <div class="chip-group" id="experienceFilter">
+                <div class="chip" data-exp="0-2">0-2 years</div>
+                <div class="chip" data-exp="3-5">3-5 years</div>
+                <div class="chip" data-exp="6-10">6-10 years</div>
+                <div class="chip" data-exp="10+">10+ years</div>
+            </div>
         </div>
-    </div>
-    
-    <div class="filters-grid" id="filtersGrid" style="display: none;">
+
+         <div class="filter-group">
+            
+        
+            <label><i class="fas fa-calendar"></i> Age Range</label>
+            <div class="chip-group" id="ageFilter">
+                <div class="chip" data-age="18-25">18-25 years</div>
+                <div class="chip" data-age="26-35">26-35 years</div>
+                <div class="chip" data-age="36-45">36-45 years</div>
+                <div class="chip" data-age="46-55">46-55 years</div>
+                <div class="chip" data-age="55+">55+ years</div>
+            </div>
+        </div>
+       
         <div class="filter-group">
             <label><i class="fas fa-briefcase"></i> Job Category</label>
             <div class="chip-group" id="jobFilter">
@@ -771,56 +784,7 @@
                 <div class="chip" data-job="cook">Cook</div>
             </div>
         </div>
-        
-        <div class="filter-group">
-            <label><i class="fas fa-chart-line"></i> Experience</label>
-            <div class="chip-group" id="expFilter">
-                <div class="chip" data-exp="0-2">0-2 years</div>
-                <div class="chip" data-exp="3-5">3-5 years</div>
-                <div class="chip" data-exp="6-10">6-10 years</div>
-                <div class="chip" data-exp="10+">10+ years</div>
-            </div>
-        </div>
-        
-        <div class="filter-group">
-            <label><i class="fas fa-calendar"></i> Age Range</label>
-            <div class="chip-group" id="ageFilter">
-                <div class="chip" data-age="18-25">18-25 years</div>
-                <div class="chip" data-age="26-35">26-35 years</div>
-                <div class="chip" data-age="36-45">36-45 years</div>
-                <div class="chip" data-age="46-55">46-55 years</div>
-                <div class="chip" data-age="55+">55+ years</div>
-            </div>
-        </div>
-        
-        <div class="filter-group">
-            <label><i class="fas fa-pray"></i> Religion</label>
-            <div class="chip-group" id="religionFilter">
-                <div class="chip" data-religion="muslim">Muslim</div>
-                <div class="chip" data-religion="christian">Christian</div>
-                <div class="chip" data-religion="other">Other</div>
-            </div>
-        </div>
-        
-        <div class="filter-group">
-            <label><i class="fas fa-tag"></i> Status</label>
-            <div class="chip-group" id="statusFilter">
-                <div class="chip" data-status="available">Available</div>
-                <div class="chip" data-status="selected">Selected</div>
-                <div class="chip" data-status="reserved">Reserved</div>
-                <div class="chip" data-status="visa issued">Visa Issued</div>
-                <div class="chip" data-status="cancelled">Cancelled</div>
-            </div>
-        </div>
-        
-        <div class="filter-group">
-            <label><i class="fas fa-stethoscope"></i> Health Status</label>
-            <div class="chip-group" id="healthFilter">
-                <div class="chip" data-health="fit">Fit</div>
-                <div class="chip" data-health="unfit">Unfit</div>
-                <div class="chip" data-health="pending">Pending</div>
-            </div>
-        </div>
+       
     </div>
     
     <div class="filter-actions">
@@ -839,86 +803,39 @@
 <!-- Candidates Grid -->
 <div class="candidates-grid" id="candidatesGrid">
     {% for candidate in candidates %}
-    <div class="candidate-card">
-        
-        
-        <div class="card-badge {{ candidate.application_status }}">
-            <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% elif candidate.application_status == 'SEL' %}user-check{% elif candidate.application_status == 'VIS' %}passport{% elif candidate.application_status == 'RES' %}clock{% else %}times-circle{% endif %}"></i>
-            {{ candidate.get_application_status_display }}
+    <div class="candidate-card" onclick="goToCandidateDetail({{ candidate.id }})" style="cursor: pointer;">
+    
+    <div class="card-badge {{ candidate.application_status }}" onclick="event.stopPropagation()">
+        <i class="fas fa-{% if candidate.application_status == 'AVA' %}check-circle{% elif candidate.application_status == 'SEL' %}user-check{% elif candidate.application_status == 'VIS' %}passport{% elif candidate.application_status == 'RES' %}clock{% else %}times-circle{% endif %}"></i>
+        {{ candidate.get_application_status_display }}
+    </div>
+    <div class="card-horizontal">
+        <div class="card-image-horizontal">
+            {% if candidate.profile_photo %}
+                <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}">
+            {% else %}
+                <div class="image-placeholder-horizontal">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            {% endif %}
         </div>
-        
-        <div class="card-horizontal">
-            <!-- Left Column - Picture -->
-            <div class="card-image-horizontal">
-                {% if candidate.profile_photo %}
-                    <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}">
-                {% else %}
-                    <div class="image-placeholder-horizontal">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                {% endif %}
+        <div class="card-content-horizontal">
+            <div class="candidate-name-horizontal">{{ candidate.full_name }}</div>
+            <div class="candidate-details-row">
+                <span class="candidate-religion"><i class="fas fa-pray"></i> {{ candidate.get_religion_display }}</span>
+                <span class="candidate-job"><i class="fas fa-briefcase"></i> {{ candidate.get_job_category_display|lower }}</span>
+                <span class="candidate-age"><i class="fas fa-calendar"></i> {{ candidate.age }} yrs</span>
+                <span class="candidate-experience"><i class="fas fa-chart-line"></i> {{ candidate.years_of_experience }} yrs exp</span>
             </div>
-            
-            <!-- Right Column - Information -->
-            <div class="card-content-horizontal">
-                <div class="candidate-header">
-                    <h3 class="candidate-name-horizontal">{{ candidate.full_name }}</h3>
-                    <p class="candidate-passport-horizontal">
-                        <i class="fas fa-passport"></i> {{ candidate.passport_number }}
-                    </p>
-                </div>
-                
-                <div class="info-grid-horizontal">
-                    <div class="info-item-horizontal">
-                        <div class="info-icon-horizontal"><i class="fas fa-briefcase"></i></div>
-                        <div>
-                            <div class="info-label-horizontal">Job Category</div>
-                            <div class="info-value-horizontal">{{ candidate.get_job_category_display }}</div>
-                        </div>
-                    </div>
-                    <div class="info-item-horizontal">
-                        <div class="info-icon-horizontal"><i class="fas fa-calendar"></i></div>
-                        <div>
-                            <div class="info-label-horizontal">Age</div>
-                            <div class="info-value-horizontal">{{ candidate.age }} years</div>
-                        </div>
-                    </div>
-                    <div class="info-item-horizontal">
-                        <div class="info-icon-horizontal"><i class="fas fa-pray"></i></div>
-                        <div>
-                            <div class="info-label-horizontal">Religion</div>
-                            <div class="info-value-horizontal">{{ candidate.get_religion_display }}</div>
-                        </div>
-                    </div>
-                    <div class="info-item-horizontal">
-                        <div class="info-icon-horizontal"><i class="fas fa-chart-line"></i></div>
-                        <div>
-                            <div class="info-label-horizontal">Experience</div>
-                            <div class="info-value-horizontal">{{ candidate.years_of_experience }} years</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="health-badge health-{{ candidate.health_status }}">
-                    <i class="fas fa-stethoscope"></i> Health: {{ candidate.get_health_status_display }}
-                </div>
-                
-                <div class="card-actions-horizontal">
-                    <a href="{% url 'candidate_detail' candidate.pk %}" class="btn-view-horizontal">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                    <a href="{% url 'candidate_update' candidate.pk %}" class="btn-edit-horizontal">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <button class="btn-delete-horizontal" onclick="deleteCandidate({{ candidate.id }}, '{{ candidate.full_name }}')">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
+            <div class="health-badge health-{{ candidate.health_status }}">
+                <i class="fas fa-stethoscope"></i> Health: {{ candidate.get_health_status_display }}
             </div>
+            <!-- REMOVED ACTION BUTTONS - Moved to detail page -->
         </div>
     </div>
+</div>
     {% empty %}
-    <div style="text-align:center; padding:60px; background:white; border-radius:20px;">
+    <div style="text-align:center; padding:60px; background:white; border-radius:20px; grid-column:1/-1;">
         <i class="fas fa-users fa-4x" style="color:#cbd5e1;"></i>
         <h3>No candidates found</h3>
         <p>Try adjusting your filters</p>
@@ -942,76 +859,41 @@
     <span><i class="fas fa-check-circle"></i> <span id="selectedCount">0</span> selected</span>
     <button onclick="confirmMassDelete()"><i class="fas fa-trash"></i> Delete</button>
 </div>
-
 <script>
     // Active filters storage
-    let activeFilters = {
-        job: null,
-        exp: null,
-        age: null,
-        religion: null,
-        status: null,
-        health: null
-    };
-    
+    let activeFilters = { age: null, religion: null, job: null, experience: null };
     let selectedCandidates = [];
-
-    function initChips() {
-        document.querySelectorAll('#jobFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => toggleChip(chip, 'job', chip.dataset.job));
-        });
-        document.querySelectorAll('#expFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => toggleChip(chip, 'exp', chip.dataset.exp));
-        });
-        document.querySelectorAll('#ageFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => toggleChip(chip, 'age', chip.dataset.age));
-        });
-        document.querySelectorAll('#religionFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => toggleChip(chip, 'religion', chip.dataset.religion));
-        });
-        document.querySelectorAll('#statusFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => toggleChip(chip, 'status', chip.dataset.status));
-        });
-        document.querySelectorAll('#healthFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => toggleChip(chip, 'health', chip.dataset.health));
-        });
-    }
+    let searchDebounceTimer;
+    let cachedCards = [];
     
-    function toggleChip(chip, filterType, value) {
-        if (chip.classList.contains('active')) {
-            chip.classList.remove('active');
-            activeFilters[filterType] = null;
-        } else {
-            document.querySelectorAll(`#${chip.parentElement.id} .chip`).forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            activeFilters[filterType] = value;
-        }
-        updateActiveFiltersDisplay();
-        filterCards();
+    // Cache card data on page load for faster filtering
+    function cacheCardData() {
+        const cards = document.querySelectorAll('.candidate-card');
+        cachedCards = [];
+        
+        cards.forEach(card => {
+            cachedCards.push({
+                element: card,
+                name: card.querySelector('.candidate-name-horizontal')?.innerText.toLowerCase() || '',
+                religion: card.querySelector('.candidate-religion')?.innerText.toLowerCase() || '',
+                job: card.querySelector('.candidate-job')?.innerText.toLowerCase() || '',
+                age: parseInt(card.querySelector('.candidate-age')?.innerText) || 0,
+                experience: (() => {
+                    const expText = card.querySelector('.candidate-experience')?.innerText || '';
+                    const match = expText.match(/\d+/);
+                    return match ? parseInt(match[0]) : 0;
+                })()
+            });
+        });
     }
     
     function updateActiveFiltersDisplay() {
         const bar = document.getElementById('activeFiltersBar');
         const container = document.getElementById('selectedFiltersList');
         if (!container) return;
-        
         container.innerHTML = '';
         let hasFilters = false;
         
-        if (activeFilters.job) {
-            hasFilters = true;
-            const tag = document.createElement('span');
-            tag.className = 'filter-tag';
-            tag.innerHTML = `Job: ${activeFilters.job} <i class="fas fa-times" onclick="removeFilter('job')"></i>`;
-            container.appendChild(tag);
-        }
-        if (activeFilters.exp) {
-            hasFilters = true;
-            const tag = document.createElement('span');
-            tag.className = 'filter-tag';
-            tag.innerHTML = `Exp: ${activeFilters.exp} <i class="fas fa-times" onclick="removeFilter('exp')"></i>`;
-            container.appendChild(tag);
-        }
         if (activeFilters.age) {
             hasFilters = true;
             const tag = document.createElement('span');
@@ -1026,79 +908,160 @@
             tag.innerHTML = `Religion: ${activeFilters.religion} <i class="fas fa-times" onclick="removeFilter('religion')"></i>`;
             container.appendChild(tag);
         }
-        if (activeFilters.status) {
+        if (activeFilters.job) {
             hasFilters = true;
             const tag = document.createElement('span');
             tag.className = 'filter-tag';
-            tag.innerHTML = `Status: ${activeFilters.status} <i class="fas fa-times" onclick="removeFilter('status')"></i>`;
+            tag.innerHTML = `Job: ${activeFilters.job} <i class="fas fa-times" onclick="removeFilter('job')"></i>`;
             container.appendChild(tag);
         }
-        if (activeFilters.health) {
+        if (activeFilters.experience) {
             hasFilters = true;
             const tag = document.createElement('span');
             tag.className = 'filter-tag';
-            tag.innerHTML = `Health: ${activeFilters.health} <i class="fas fa-times" onclick="removeFilter('health')"></i>`;
+            tag.innerHTML = `Exp: ${activeFilters.experience} <i class="fas fa-times" onclick="removeFilter('experience')"></i>`;
             container.appendChild(tag);
         }
-        
         bar.style.display = hasFilters ? 'flex' : 'none';
     }
     
-    function removeFilter(filterType) {
-        activeFilters[filterType] = null;
-        document.querySelectorAll(`#${filterType}Filter .chip`).forEach(c => c.classList.remove('active'));
+    function removeFilter(category) {
+        if (category === 'age') { 
+            activeFilters.age = null; 
+            document.querySelectorAll('#ageFilter .chip').forEach(c => c.classList.remove('active')); 
+        }
+        else if (category === 'religion') { 
+            activeFilters.religion = null; 
+            document.querySelectorAll('#religionFilter .chip').forEach(c => c.classList.remove('active')); 
+        }
+        else if (category === 'job') { 
+            activeFilters.job = null; 
+            document.querySelectorAll('#jobFilter .chip').forEach(c => c.classList.remove('active')); 
+        }
+        else if (category === 'experience') { 
+            activeFilters.experience = null; 
+            document.querySelectorAll('#experienceFilter .chip').forEach(c => c.classList.remove('active')); 
+        }
         updateActiveFiltersDisplay();
         filterCards();
     }
     
+    function initChips() {
+        document.querySelectorAll('#ageFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const value = chip.dataset.age;
+                if (activeFilters.age === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.age = null; 
+                } else { 
+                    document.querySelectorAll('#ageFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.age = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+        
+        document.querySelectorAll('#religionFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const value = chip.dataset.religion;
+                if (activeFilters.religion === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.religion = null; 
+                } else { 
+                    document.querySelectorAll('#religionFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.religion = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+        
+        document.querySelectorAll('#jobFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const value = chip.dataset.job;
+                if (activeFilters.job === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.job = null; 
+                } else { 
+                    document.querySelectorAll('#jobFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.job = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+        
+        document.querySelectorAll('#experienceFilter .chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const value = chip.dataset.exp;
+                if (activeFilters.experience === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.experience = null; 
+                } else { 
+                    document.querySelectorAll('#experienceFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.experience = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+    }
+    
+    // Optimized filter function using cached data
     function filterCards() {
         const searchTerm = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
-        const cards = document.querySelectorAll('.candidate-card');
         let visibleCount = 0;
         
-        cards.forEach(card => {
+        // Use cached data for faster filtering (no DOM queries)
+        cachedCards.forEach(card => {
             let show = true;
-            const name = card.querySelector('.candidate-name-horizontal')?.innerText.toLowerCase() || '';
-            const passport = card.querySelector('.candidate-passport-horizontal')?.innerText.toLowerCase() || '';
-            const job = card.querySelectorAll('.info-value-horizontal')[0]?.innerText.toLowerCase() || '';
-            const exp = parseInt(card.querySelectorAll('.info-value-horizontal')[3]?.innerText) || 0;
-            const age = parseInt(card.querySelectorAll('.info-value-horizontal')[1]?.innerText) || 0;
-            const religion = card.querySelectorAll('.info-value-horizontal')[2]?.innerText.toLowerCase() || '';
-            const statusSpan = card.querySelector('.card-badge');
-            const status = statusSpan?.innerText.toLowerCase() || '';
-            const healthSpan = card.querySelector('.health-badge');
-            const health = healthSpan?.innerText.toLowerCase() || '';
             
-            if (searchTerm && !name.includes(searchTerm) && !passport.includes(searchTerm)) show = false;
-            if (show && activeFilters.job && !job.includes(activeFilters.job)) show = false;
-            if (show && activeFilters.exp) {
-                if (activeFilters.exp === '0-2') show = exp >= 0 && exp <= 2;
-                else if (activeFilters.exp === '3-5') show = exp >= 3 && exp <= 5;
-                else if (activeFilters.exp === '6-10') show = exp >= 6 && exp <= 10;
-                else if (activeFilters.exp === '10+') show = exp >= 10;
-            }
+            // Search filter
+            if (searchTerm && !card.name.includes(searchTerm)) show = false;
+            
+            // Age filter
             if (show && activeFilters.age) {
-                if (activeFilters.age === '18-25') show = age >= 18 && age <= 25;
-                else if (activeFilters.age === '26-35') show = age >= 26 && age <= 35;
-                else if (activeFilters.age === '36-45') show = age >= 36 && age <= 45;
-                else if (activeFilters.age === '46-55') show = age >= 46 && age <= 55;
-                else if (activeFilters.age === '55+') show = age >= 55;
+                if (activeFilters.age === '18-25') show = card.age >= 18 && card.age <= 25;
+                else if (activeFilters.age === '26-35') show = card.age >= 26 && card.age <= 35;
+                else if (activeFilters.age === '36-45') show = card.age >= 36 && card.age <= 45;
+                else if (activeFilters.age === '46-55') show = card.age >= 46 && card.age <= 55;
+                else if (activeFilters.age === '55+') show = card.age >= 55;
             }
-            if (show && activeFilters.religion && !religion.includes(activeFilters.religion)) show = false;
-            if (show && activeFilters.status && !status.includes(activeFilters.status)) show = false;
-            if (show && activeFilters.health && !health.includes(activeFilters.health)) show = false;
             
-            card.style.display = show ? '' : 'none';
+            // Religion filter
+            if (show && activeFilters.religion) {
+                show = card.religion.includes(activeFilters.religion);
+            }
+            
+            // Job filter
+            if (show && activeFilters.job) {
+                show = card.job.includes(activeFilters.job);
+            }
+            
+            // Experience filter
+            if (show && activeFilters.experience) {
+                if (activeFilters.experience === '0-2') show = card.experience >= 0 && card.experience <= 2;
+                else if (activeFilters.experience === '3-5') show = card.experience >= 3 && card.experience <= 5;
+                else if (activeFilters.experience === '6-10') show = card.experience >= 6 && card.experience <= 10;
+                else if (activeFilters.experience === '10+') show = card.experience >= 10;
+            }
+            
+            card.element.style.display = show ? '' : 'none';
             if (show) visibleCount++;
         });
         
-        // Update result count display if exists
+        // Update count display
         const resultCount = document.getElementById('resultCount');
         if (resultCount) resultCount.innerText = visibleCount;
         
         // No results message
         let noResults = document.querySelector('.no-results-message');
-        if (visibleCount === 0 && cards.length > 0) {
+        if (visibleCount === 0 && cachedCards.length > 0) {
             if (!noResults) {
                 const grid = document.querySelector('.candidates-grid');
                 const msg = document.createElement('div');
@@ -1107,35 +1070,22 @@
                 msg.innerHTML = '<i class="fas fa-search fa-4x" style="color:#cbd5e1;"></i><h3 style="margin-top:20px;">No candidates found</h3><p>Try adjusting your filters</p>';
                 grid.appendChild(msg);
             }
-        } else if (noResults && visibleCount > 0) {
-            noResults.remove();
+        } else if (noResults && visibleCount > 0) { 
+            noResults.remove(); 
         }
     }
     
-    function applyFilters() {
-        filterCards();
+    function applyFilters() { 
+        filterCards(); 
     }
     
     function resetFilters() {
-        activeFilters = { job: null, exp: null, age: null, religion: null, status: null, health: null };
+        activeFilters = { age: null, religion: null, job: null, experience: null };
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-        document.getElementById('searchInput').value = '';
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
         updateActiveFiltersDisplay();
         filterCards();
-    }
-    
-    function toggleFilters() {
-        const grid = document.getElementById('filtersGrid');
-        const icon = document.getElementById('filterToggleIcon');
-        if (grid.style.display === 'none') {
-            grid.style.display = 'grid';
-            icon.classList.remove('fa-chevron-down');
-            icon.classList.add('fa-chevron-up');
-        } else {
-            grid.style.display = 'none';
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
-        }
     }
     
     function deleteCandidate(id, name) {
@@ -1180,20 +1130,35 @@
         }
     }
     
-    // Event listeners
+    // Setup search with debounce (waits for user to stop typing)
+    function setupSearchDebounce() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = setTimeout(() => {
+                    filterCards();
+                }, 300);
+            });
+        }
+    }
+    
+    // Initialize event listeners for checkboxes
     document.querySelectorAll('.candidate-checkbox').forEach(cb => {
         cb.addEventListener('change', updateMassSelection);
     });
     
-    document.getElementById('searchInput').addEventListener('input', function() {
-        filterCards();
-    });
-    
-    // Initialize
+    // Initialize everything on page load
     document.addEventListener('DOMContentLoaded', function() {
         initChips();
-        document.getElementById('filtersGrid').style.display = 'none';
-        filterCards();
+        cacheCardData();      // Cache all card data once
+        setupSearchDebounce(); // Setup debounced search
+        filterCards();         // Initial filter
     });
+
+    function goToCandidateDetail(candidateId) {
+    window.location.href = `/candidate/${candidateId}/`;
+}
 </script>
+
 {% endblock %}

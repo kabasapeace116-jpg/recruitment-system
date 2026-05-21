@@ -1681,3 +1681,40 @@ def confirm_selection(request):
             return JsonResponse({'success': False, 'message': str(e)})
     
     return JsonResponse({'success': False, 'message': 'Invalid request'})
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(is_admin_user)
+@csrf_exempt
+def update_candidate_inline(request, pk):
+    if request.method == 'POST':
+        try:
+            candidate = get_object_or_404(Candidate, pk=pk)
+            
+            # Handle JSON data (text fields)
+            json_data = json.loads(request.POST.get('json_data', '{}'))
+            
+            # Update text fields
+            for key, value in json_data.items():
+                if hasattr(candidate, key):
+                    if key in ['date_of_birth', 'passport_issue_date', 'passport_expiry_date']:
+                        if value:
+                            from datetime import datetime
+                            setattr(candidate, key, datetime.strptime(value, '%Y-%m-%d').date())
+                    elif key == 'years_of_experience':
+                        setattr(candidate, key, int(value) if value else 0)
+                    else:
+                        setattr(candidate, key, value if value else '')
+            
+            # Handle file uploads (including video)
+            file_fields = ['profile_photo', 'cv_pdf', 'passport_copy', 'visa_document', 
+                          'medical_certificate', 'training_certificates', 'candidate_video']
+            
+            for field in file_fields:
+                if field in request.FILES:
+                    setattr(candidate, field, request.FILES[field])
+            
+            candidate.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
