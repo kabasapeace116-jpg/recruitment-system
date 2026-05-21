@@ -668,21 +668,21 @@
             hasFilters = true;
             const tag = document.createElement('span');
             tag.className = 'filter-tag';
-            tag.innerHTML = `Religion: ${activeFilters.religion} <i class="fas fa-times" onclick="removeFilter('religion')"></i>`;
+            tag.innerHTML = `Religion: ${activeFilters.religion.charAt(0).toUpperCase() + activeFilters.religion.slice(1)} <i class="fas fa-times" onclick="removeFilter('religion')"></i>`;
             container.appendChild(tag);
         }
         if (activeFilters.job) {
             hasFilters = true;
             const tag = document.createElement('span');
             tag.className = 'filter-tag';
-            tag.innerHTML = `Job: ${activeFilters.job} <i class="fas fa-times" onclick="removeFilter('job')"></i>`;
+            tag.innerHTML = `Job: ${activeFilters.job.charAt(0).toUpperCase() + activeFilters.job.slice(1)} <i class="fas fa-times" onclick="removeFilter('job')"></i>`;
             container.appendChild(tag);
         }
         if (activeFilters.experience) {
             hasFilters = true;
             const tag = document.createElement('span');
             tag.className = 'filter-tag';
-            tag.innerHTML = `Exp: ${activeFilters.experience} <i class="fas fa-times" onclick="removeFilter('experience')"></i>`;
+            tag.innerHTML = `Exp: ${activeFilters.experience} years <i class="fas fa-times" onclick="removeFilter('experience')"></i>`;
             container.appendChild(tag);
         }
         bar.style.display = hasFilters ? 'flex' : 'none';
@@ -710,9 +710,11 @@
     }
     
     function initChips() {
+        // Age chips
         document.querySelectorAll('#ageFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const value = chip.dataset.age;
+            chip.addEventListener('click', (e) => {
+                e.preventDefault();
+                const value = chip.getAttribute('data-age');
                 if (activeFilters.age === value) { 
                     chip.classList.remove('active'); 
                     activeFilters.age = null; 
@@ -726,9 +728,11 @@
             });
         });
         
+        // Religion chips
         document.querySelectorAll('#religionFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const value = chip.dataset.religion;
+            chip.addEventListener('click', (e) => {
+                e.preventDefault();
+                const value = chip.getAttribute('data-religion');
                 if (activeFilters.religion === value) { 
                     chip.classList.remove('active'); 
                     activeFilters.religion = null; 
@@ -741,11 +745,12 @@
                 filterCards();
             });
         });
-<<<<<<< HEAD
         
+        // Job chips
         document.querySelectorAll('#jobFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const value = chip.dataset.job;
+            chip.addEventListener('click', (e) => {
+                e.preventDefault();
+                const value = chip.getAttribute('data-job');
                 if (activeFilters.job === value) { 
                     chip.classList.remove('active'); 
                     activeFilters.job = null; 
@@ -759,9 +764,11 @@
             });
         });
         
+        // Experience chips
         document.querySelectorAll('#experienceFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const value = chip.dataset.exp;
+            chip.addEventListener('click', (e) => {
+                e.preventDefault();
+                const value = chip.getAttribute('data-exp');
                 if (activeFilters.experience === value) { 
                     chip.classList.remove('active'); 
                     activeFilters.experience = null; 
@@ -783,19 +790,38 @@
         
         cards.forEach(card => {
             let show = true;
+            
+            // Get values from card
             const name = card.querySelector('.candidate-name-horizontal')?.innerText.toLowerCase() || '';
+            
+            // Get religion text (e.g., "Muslim" from "Muslim" or "Christian")
             const religionElem = card.querySelector('.candidate-religion')?.innerText.toLowerCase() || '';
+            let religionValue = '';
+            if (religionElem.includes('muslim')) religionValue = 'muslim';
+            else if (religionElem.includes('christian')) religionValue = 'christian';
+            else religionValue = 'other';
+            
+            // Get job text (e.g., "maid" from "Maid")
             const jobElem = card.querySelector('.candidate-job')?.innerText.toLowerCase() || '';
+            let jobValue = jobElem.trim();
+            
+            // Get age number
             const ageElem = card.querySelector('.candidate-age')?.innerText || '';
+            const ageMatch = ageElem.match(/\d+/);
+            const age = ageMatch ? parseInt(ageMatch[0]) : 0;
+            
+            // Get experience number
             const experienceElem = card.querySelector('.candidate-experience')?.innerText || '';
-            
-            const age = parseInt(ageElem) || 0;
-            let exp = 0;
             const expMatch = experienceElem.match(/\d+/);
-            if (expMatch) exp = parseInt(expMatch[0]);
+            const exp = expMatch ? parseInt(expMatch[0]) : 0;
             
+            // Debug logging (remove in production)
+            console.log('Candidate:', name, 'Religion:', religionValue, 'Job:', jobValue, 'Age:', age, 'Exp:', exp);
+            
+            // Search filter
             if (searchTerm && !name.includes(searchTerm)) show = false;
             
+            // Age filter
             if (show && activeFilters.age) {
                 if (activeFilters.age === '18-25') show = age >= 18 && age <= 25;
                 else if (activeFilters.age === '26-35') show = age >= 26 && age <= 35;
@@ -804,9 +830,17 @@
                 else if (activeFilters.age === '55+') show = age >= 55;
             }
             
-            if (show && activeFilters.religion) show = religionElem.includes(activeFilters.religion);
-            if (show && activeFilters.job) show = jobElem.includes(activeFilters.job);
+            // Religion filter
+            if (show && activeFilters.religion) {
+                show = religionValue === activeFilters.religion;
+            }
             
+            // Job filter
+            if (show && activeFilters.job) {
+                show = jobValue.includes(activeFilters.job);
+            }
+            
+            // Experience filter
             if (show && activeFilters.experience) {
                 if (activeFilters.experience === '0-2') show = exp >= 0 && exp <= 2;
                 else if (activeFilters.experience === '3-5') show = exp >= 3 && exp <= 5;
@@ -814,15 +848,34 @@
                 else if (activeFilters.experience === '10+') show = exp >= 10;
             }
             
-            card.style.display = show ? '' : 'none';
+            card.style.display = show ? 'flex' : 'none';
             if (show) visibleCount++;
         });
         
+        // Update count display
         const resultCount = document.getElementById('resultCount');
         if (resultCount) resultCount.innerText = visibleCount;
+        
+        // Show/hide no results message
+        const grid = document.querySelector('.candidates-grid');
+        let noResultsMsg = document.querySelector('.no-results-message');
+        
+        if (visibleCount === 0 && cards.length > 0) {
+            if (!noResultsMsg) {
+                const msg = document.createElement('div');
+                msg.className = 'no-results-message';
+                msg.style.cssText = 'text-align:center;padding:60px;background:white;border-radius:20px;grid-column:1/-1;';
+                msg.innerHTML = '<i class="fas fa-search fa-4x" style="color:#cbd5e1;"></i><h3 style="margin-top:20px;">No candidates found</h3><p>Try adjusting your filters</p>';
+                grid.appendChild(msg);
+            }
+        } else if (noResultsMsg && visibleCount > 0) { 
+            noResultsMsg.remove(); 
+        }
     }
     
-    function applyFilters() { filterCards(); }
+    function applyFilters() { 
+        filterCards(); 
+    }
     
     function resetFilters() {
         activeFilters = { age: null, religion: null, job: null, experience: null };
@@ -875,19 +928,22 @@
         return cookieValue;
     }
     
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing filters...');
         initChips();
         filterCards();
         
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
-            searchInput.addEventListener('input', function() { filterCards(); });
+            searchInput.addEventListener('input', function() { 
+                filterCards(); 
+            });
         }
     });
 </script>
 {% endblock %}
-=======
-    </script>
+    
 </body>
 </html>
->>>>>>> 82614cf47b9e1ff7db6d8bb813a07b4b1066e062
+
