@@ -683,6 +683,162 @@
         grid-template-columns: 1fr;
     }
 }
+/* ========== JOB CATEGORY COLORS ========== */
+/* Maid */
+.category-maid { background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%); color: white; }
+/* Cleaner */
+.category-cleaner { background: linear-gradient(135deg, #00CED1 0%, #20B2AA 100%); color: white; }
+/* Caregiver */
+.category-caregiver { background: linear-gradient(135deg, #FFA07A 0%, #FF7F50 100%); color: white; }
+/* Driver */
+.category-driver { background: linear-gradient(135deg, #4169E1 0%, #0000CD 100%); color: white; }
+/* Home Teacher */
+.category-home-teacher { background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%); color: white; }
+/* Waiter */
+.category-waiter { background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); color: white; }
+/* Waitress */
+.category-waitress { background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%); color: white; }
+/* Nanny */
+.category-nanny { background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%); color: #333; }
+/* Security */
+.category-security { background: linear-gradient(135deg, #2C3E50 0%, #1A252F 100%); color: white; }
+/* Housekeeper */
+.category-housekeeper { background: linear-gradient(135deg, #27AE60 0%, #1E8449 100%); color: white; }
+/* Gardener */
+.category-gardener { background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%); color: white; }
+/* Cook */
+.category-cook { background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%); color: white; }
+
+/* Larger Category Badge */
+.category-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 4px 0;
+}
+/* ========== UNIQUE FILTER CATEGORY COLORS ========== */
+
+/* Age Filter - Blue Theme */
+#ageFilter .chip {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+#ageFilter .chip.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-color: #3b82f6;
+}
+
+/* Religion Filter - Purple Theme */
+#religionFilter .chip {
+    background: #f5f3ff;
+    border-color: #ddd6fe;
+    color: #6d28d9;
+}
+#religionFilter .chip.active {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border-color: #8b5cf6;
+}
+
+/* Job Filter - Teal Theme */
+#jobFilter .chip {
+    background: #f0fdfa;
+    border-color: #99f6e4;
+    color: #0f766e;
+}
+#jobFilter .chip.active {
+    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+    color: white;
+    border-color: #14b8a6;
+}
+
+/* Experience Filter - Green/Orange Theme (already set inline) */
+#experienceFilter .chip, #expFilter .chip {
+    font-weight: 600;
+}
+#experienceFilter .chip[data-exp="experienced"], 
+#expFilter .chip[data-exp="experienced"] {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+#experienceFilter .chip[data-exp="not_experienced"], 
+#expFilter .chip[data-exp="not_experienced"] {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+/* Status Filter - Indigo Theme */
+#statusFilter .chip {
+    background: #eef2ff;
+    border-color: #c7d2fe;
+    color: #4338ca;
+}
+#statusFilter .chip.active {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    border-color: #6366f1;
+}
+
+/* Health Filter - Rose Theme */
+#healthFilter .chip {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+}
+#healthFilter .chip.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    color: white;
+    border-color: #f43f5e;
+}
+
+/* General Chip Styles */
+.chip {
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.chip:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.95);
+}
+/* Experience Filter Chips - Styled with icons */
+#experienceFilter .chip, #expFilter .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    padding: 6px 16px;
+}
+
+#experienceFilter .chip[data-exp="experienced"], 
+#expFilter .chip[data-exp="experienced"] {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #a7f3d0;
+}
+
+#experienceFilter .chip[data-exp="experienced"].active, 
+#expFilter .chip[data-exp="experienced"].active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+#experienceFilter .chip[data-exp="not_experienced"], 
+#expFilter .chip[data-exp="not_experienced"] {
+    background: #fed7aa;
+    color: #9a3412;
+    border-color: #fdba74;
+}
+
+#experienceFilter .chip[data-exp="not_experienced"].active, 
+#expFilter .chip[data-exp="not_experienced"].active {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
 </style>
 {% endblock %}
 
@@ -744,28 +900,16 @@
                 </div>
              </div>
 
-         <div class="filter-group">
-            <label><i class="fas fa-chart-line"></i> Experience</label>
-            <div class="chip-group" id="experienceFilter">
-                <div class="chip" data-exp="0-2">0-2 years</div>
-                <div class="chip" data-exp="3-5">3-5 years</div>
-                <div class="chip" data-exp="6-10">6-10 years</div>
-                <div class="chip" data-exp="10+">10+ years</div>
-            </div>
-        </div>
+         <!-- Experience Filter - Simplified -->
+<div class="filter-group">
+    <label><i class="fas fa-chart-line"></i> Experience</label>
+    <div class="chip-group" id="experienceFilter">
+        <div class="chip" data-exp="experienced">Experienced</div>
+        <div class="chip" data-exp="not-experienced">Not Experienced</div>
+    </div>
+</div>
 
-         <div class="filter-group">
-            
-        
-            <label><i class="fas fa-calendar"></i> Age Range</label>
-            <div class="chip-group" id="ageFilter">
-                <div class="chip" data-age="18-25">18-25 years</div>
-                <div class="chip" data-age="26-35">26-35 years</div>
-                <div class="chip" data-age="36-45">36-45 years</div>
-                <div class="chip" data-age="46-55">46-55 years</div>
-                <div class="chip" data-age="55+">55+ years</div>
-            </div>
-        </div>
+         
        
         <div class="filter-group">
             <label><i class="fas fa-briefcase"></i> Job Category</label>
@@ -859,14 +1003,15 @@
     <span><i class="fas fa-check-circle"></i> <span id="selectedCount">0</span> selected</span>
     <button onclick="confirmMassDelete()"><i class="fas fa-trash"></i> Delete</button>
 </div>
+
 <script>
     // Active filters storage
-    let activeFilters = { age: null, religion: null, job: null, experience: null };
+    let activeFilters = { job: null, exp: null, age: null, religion: null, status: null, health: null };
     let selectedCandidates = [];
     let searchDebounceTimer;
     let cachedCards = [];
     
-    // Cache card data on page load for faster filtering
+    // Cache card data on page load
     function cacheCardData() {
         const cards = document.querySelectorAll('.candidate-card');
         cachedCards = [];
@@ -882,7 +1027,9 @@
                     const expText = card.querySelector('.candidate-experience')?.innerText || '';
                     const match = expText.match(/\d+/);
                     return match ? parseInt(match[0]) : 0;
-                })()
+                })(),
+                status: card.querySelector('.card-badge')?.innerText.toLowerCase() || '',
+                health: card.querySelector('.health-badge')?.innerText.toLowerCase() || ''
             });
         });
     }
@@ -894,6 +1041,20 @@
         container.innerHTML = '';
         let hasFilters = false;
         
+        if (activeFilters.job) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Job: ${activeFilters.job} <i class="fas fa-times" onclick="removeFilter('job')"></i>`;
+            container.appendChild(tag);
+        }
+        if (activeFilters.exp) {
+            hasFilters = true;
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `Exp: ${activeFilters.exp === 'experienced' ? 'Experienced (1+ yrs)' : 'Not Experienced (0 yrs)'} <i class="fas fa-times" onclick="removeFilter('exp')"></i>`;
+            container.appendChild(tag);
+        }
         if (activeFilters.age) {
             hasFilters = true;
             const tag = document.createElement('span');
@@ -908,25 +1069,34 @@
             tag.innerHTML = `Religion: ${activeFilters.religion} <i class="fas fa-times" onclick="removeFilter('religion')"></i>`;
             container.appendChild(tag);
         }
-        if (activeFilters.job) {
+        if (activeFilters.status) {
             hasFilters = true;
             const tag = document.createElement('span');
             tag.className = 'filter-tag';
-            tag.innerHTML = `Job: ${activeFilters.job} <i class="fas fa-times" onclick="removeFilter('job')"></i>`;
+            tag.innerHTML = `Status: ${activeFilters.status} <i class="fas fa-times" onclick="removeFilter('status')"></i>`;
             container.appendChild(tag);
         }
-        if (activeFilters.experience) {
+        if (activeFilters.health) {
             hasFilters = true;
             const tag = document.createElement('span');
             tag.className = 'filter-tag';
-            tag.innerHTML = `Exp: ${activeFilters.experience} <i class="fas fa-times" onclick="removeFilter('experience')"></i>`;
+            tag.innerHTML = `Health: ${activeFilters.health} <i class="fas fa-times" onclick="removeFilter('health')"></i>`;
             container.appendChild(tag);
         }
+        
         bar.style.display = hasFilters ? 'flex' : 'none';
     }
     
     function removeFilter(category) {
-        if (category === 'age') { 
+        if (category === 'job') { 
+            activeFilters.job = null; 
+            document.querySelectorAll('#jobFilter .chip').forEach(c => c.classList.remove('active')); 
+        }
+        else if (category === 'exp') { 
+            activeFilters.exp = null; 
+            document.querySelectorAll('#experienceFilter .chip').forEach(c => c.classList.remove('active')); 
+        }
+        else if (category === 'age') { 
             activeFilters.age = null; 
             document.querySelectorAll('#ageFilter .chip').forEach(c => c.classList.remove('active')); 
         }
@@ -934,53 +1104,23 @@
             activeFilters.religion = null; 
             document.querySelectorAll('#religionFilter .chip').forEach(c => c.classList.remove('active')); 
         }
-        else if (category === 'job') { 
-            activeFilters.job = null; 
-            document.querySelectorAll('#jobFilter .chip').forEach(c => c.classList.remove('active')); 
+        else if (category === 'status') { 
+            activeFilters.status = null; 
+            document.querySelectorAll('#statusFilter .chip').forEach(c => c.classList.remove('active')); 
         }
-        else if (category === 'experience') { 
-            activeFilters.experience = null; 
-            document.querySelectorAll('#experienceFilter .chip').forEach(c => c.classList.remove('active')); 
+        else if (category === 'health') { 
+            activeFilters.health = null; 
+            document.querySelectorAll('#healthFilter .chip').forEach(c => c.classList.remove('active')); 
         }
         updateActiveFiltersDisplay();
         filterCards();
     }
     
     function initChips() {
-        document.querySelectorAll('#ageFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const value = chip.dataset.age;
-                if (activeFilters.age === value) { 
-                    chip.classList.remove('active'); 
-                    activeFilters.age = null; 
-                } else { 
-                    document.querySelectorAll('#ageFilter .chip').forEach(c => c.classList.remove('active')); 
-                    chip.classList.add('active'); 
-                    activeFilters.age = value; 
-                }
-                updateActiveFiltersDisplay(); 
-                filterCards();
-            });
-        });
-        
-        document.querySelectorAll('#religionFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const value = chip.dataset.religion;
-                if (activeFilters.religion === value) { 
-                    chip.classList.remove('active'); 
-                    activeFilters.religion = null; 
-                } else { 
-                    document.querySelectorAll('#religionFilter .chip').forEach(c => c.classList.remove('active')); 
-                    chip.classList.add('active'); 
-                    activeFilters.religion = value; 
-                }
-                updateActiveFiltersDisplay(); 
-                filterCards();
-            });
-        });
-        
+        // Job chips
         document.querySelectorAll('#jobFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const value = chip.dataset.job;
                 if (activeFilters.job === value) { 
                     chip.classList.remove('active'); 
@@ -995,16 +1135,90 @@
             });
         });
         
+        // Experience chips - FIXED: Changed from '#expFilter' to '#experienceFilter'
         document.querySelectorAll('#experienceFilter .chip').forEach(chip => {
-            chip.addEventListener('click', () => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const value = chip.dataset.exp;
-                if (activeFilters.experience === value) { 
+                if (activeFilters.exp === value) { 
                     chip.classList.remove('active'); 
-                    activeFilters.experience = null; 
+                    activeFilters.exp = null; 
                 } else { 
                     document.querySelectorAll('#experienceFilter .chip').forEach(c => c.classList.remove('active')); 
                     chip.classList.add('active'); 
-                    activeFilters.experience = value; 
+                    activeFilters.exp = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+        
+        // Age chips
+        document.querySelectorAll('#ageFilter .chip').forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const value = chip.dataset.age;
+                if (activeFilters.age === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.age = null; 
+                } else { 
+                    document.querySelectorAll('#ageFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.age = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+        
+        // Religion chips
+        document.querySelectorAll('#religionFilter .chip').forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const value = chip.dataset.religion;
+                if (activeFilters.religion === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.religion = null; 
+                } else { 
+                    document.querySelectorAll('#religionFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.religion = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+        
+        // Status chips
+        document.querySelectorAll('#statusFilter .chip').forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const value = chip.dataset.status;
+                if (activeFilters.status === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.status = null; 
+                } else { 
+                    document.querySelectorAll('#statusFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.status = value; 
+                }
+                updateActiveFiltersDisplay(); 
+                filterCards();
+            });
+        });
+        
+        // Health chips
+        document.querySelectorAll('#healthFilter .chip').forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const value = chip.dataset.health;
+                if (activeFilters.health === value) { 
+                    chip.classList.remove('active'); 
+                    activeFilters.health = null; 
+                } else { 
+                    document.querySelectorAll('#healthFilter .chip').forEach(c => c.classList.remove('active')); 
+                    chip.classList.add('active'); 
+                    activeFilters.health = value; 
                 }
                 updateActiveFiltersDisplay(); 
                 filterCards();
@@ -1012,56 +1226,70 @@
         });
     }
     
-    // Optimized filter function using cached data
     function filterCards() {
         const searchTerm = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
+        const cards = document.querySelectorAll('.candidate-card');
         let visibleCount = 0;
         
-        // Use cached data for faster filtering (no DOM queries)
-        cachedCards.forEach(card => {
+        cards.forEach(card => {
             let show = true;
             
+            const name = card.querySelector('.candidate-name-horizontal')?.innerText.toLowerCase() || '';
+            const jobElem = card.querySelector('.candidate-job')?.innerText.toLowerCase() || '';
+            const age = parseInt(card.querySelector('.candidate-age')?.innerText) || 0;
+            const religionElem = card.querySelector('.candidate-religion')?.innerText.toLowerCase() || '';
+            const expElem = card.querySelector('.candidate-experience')?.innerText || '';
+            const statusElem = card.querySelector('.card-badge')?.innerText.toLowerCase() || '';
+            const healthElem = card.querySelector('.health-badge')?.innerText.toLowerCase() || '';
+            
+            // Extract experience value
+            let exp = 0;
+            const expMatch = expElem.match(/\d+/);
+            if (expMatch) exp = parseInt(expMatch[0]);
+            
             // Search filter
-            if (searchTerm && !card.name.includes(searchTerm)) show = false;
+            if (searchTerm && !name.includes(searchTerm)) show = false;
             
             // Age filter
             if (show && activeFilters.age) {
-                if (activeFilters.age === '18-25') show = card.age >= 18 && card.age <= 25;
-                else if (activeFilters.age === '26-35') show = card.age >= 26 && card.age <= 35;
-                else if (activeFilters.age === '36-45') show = card.age >= 36 && card.age <= 45;
-                else if (activeFilters.age === '46-55') show = card.age >= 46 && card.age <= 55;
-                else if (activeFilters.age === '55+') show = card.age >= 55;
+                if (activeFilters.age === '18-25') show = age >= 18 && age <= 25;
+                else if (activeFilters.age === '26-35') show = age >= 26 && age <= 35;
+                else if (activeFilters.age === '36-45') show = age >= 36 && age <= 45;
+                else if (activeFilters.age === '46-55') show = age >= 46 && age <= 55;
+                else if (activeFilters.age === '55+') show = age >= 55;
             }
             
             // Religion filter
-            if (show && activeFilters.religion) {
-                show = card.religion.includes(activeFilters.religion);
-            }
+            if (show && activeFilters.religion) show = religionElem.includes(activeFilters.religion);
             
             // Job filter
-            if (show && activeFilters.job) {
-                show = card.job.includes(activeFilters.job);
+            if (show && activeFilters.job) show = jobElem.includes(activeFilters.job);
+            
+            // Experience filter - FIXED: Proper logic
+            if (show && activeFilters.exp) {
+                if (activeFilters.exp === 'experienced') {
+                    show = exp >= 1;  // At least 1 year experience
+                } else if (activeFilters.exp === 'not-experienced') {  // FIXED: Match the data attribute name
+                    show = exp === 0;  // No experience
+                }
             }
             
-            // Experience filter
-            if (show && activeFilters.experience) {
-                if (activeFilters.experience === '0-2') show = card.experience >= 0 && card.experience <= 2;
-                else if (activeFilters.experience === '3-5') show = card.experience >= 3 && card.experience <= 5;
-                else if (activeFilters.experience === '6-10') show = card.experience >= 6 && card.experience <= 10;
-                else if (activeFilters.experience === '10+') show = card.experience >= 10;
-            }
+            // Status filter
+            if (show && activeFilters.status) show = statusElem.includes(activeFilters.status);
             
-            card.element.style.display = show ? '' : 'none';
+            // Health filter
+            if (show && activeFilters.health) show = healthElem.includes(activeFilters.health);
+            
+            card.style.display = show ? '' : 'none';
             if (show) visibleCount++;
         });
         
-        // Update count display
         const resultCount = document.getElementById('resultCount');
         if (resultCount) resultCount.innerText = visibleCount;
         
-        // No results message
+        // Show/hide no results message
         let noResults = document.querySelector('.no-results-message');
-        if (visibleCount === 0 && cachedCards.length > 0) {
+        if (visibleCount === 0 && cards.length > 0) {
             if (!noResults) {
                 const grid = document.querySelector('.candidates-grid');
                 const msg = document.createElement('div');
@@ -1080,7 +1308,7 @@
     }
     
     function resetFilters() {
-        activeFilters = { age: null, religion: null, job: null, experience: null };
+        activeFilters = { job: null, exp: null, age: null, religion: null, status: null, health: null };
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         const searchInput = document.getElementById('searchInput');
         if (searchInput) searchInput.value = '';
@@ -1094,7 +1322,11 @@
         }
     }
     
-    // Mass selection
+    function goToCandidateDetail(id) {
+        window.location.href = `/candidate/${id}/`;
+    }
+    
+    // Mass selection functions
     function updateMassSelection() {
         selectedCandidates = Array.from(document.querySelectorAll('.candidate-checkbox:checked')).map(cb => ({
             id: cb.dataset.id,
@@ -1111,7 +1343,7 @@
     
     function confirmMassDelete() {
         if (selectedCandidates.length === 0) return;
-        if (confirm(`Delete ${selectedCandidates.length} candidate(s)?`)) {
+        if (confirm(`Delete ${selectedCandidates.length} candidate(s)? This action cannot be undone.`)) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '{% url "mass_delete_candidates" %}';
@@ -1130,7 +1362,14 @@
         }
     }
     
-    // Setup search with debounce (waits for user to stop typing)
+    // Setup checkbox listeners for mass selection
+    function setupMassSelection() {
+        document.querySelectorAll('.candidate-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateMassSelection);
+        });
+    }
+    
+    // Setup search with debounce
     function setupSearchDebounce() {
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -1143,22 +1382,14 @@
         }
     }
     
-    // Initialize event listeners for checkboxes
-    document.querySelectorAll('.candidate-checkbox').forEach(cb => {
-        cb.addEventListener('change', updateMassSelection);
-    });
-    
-    // Initialize everything on page load
+    // Initialize everything when DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
         initChips();
-        cacheCardData();      // Cache all card data once
-        setupSearchDebounce(); // Setup debounced search
-        filterCards();         // Initial filter
+        cacheCardData();
+        setupSearchDebounce();
+        setupMassSelection();
+        filterCards();
     });
-
-    function goToCandidateDetail(candidateId) {
-    window.location.href = `/candidate/${candidateId}/`;
-}
 </script>
 
 {% endblock %}

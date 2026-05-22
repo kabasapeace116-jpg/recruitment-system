@@ -507,6 +507,127 @@
             font-size: 0.6rem; 
         }
     }
+    /* ========== UNIQUE FILTER CATEGORY COLORS ========== */
+
+/* Age Filter - Blue Theme */
+#ageFilter .chip {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+#ageFilter .chip.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-color: #3b82f6;
+}
+
+/* Religion Filter - Purple Theme */
+#religionFilter .chip {
+    background: #f5f3ff;
+    border-color: #ddd6fe;
+    color: #6d28d9;
+}
+#religionFilter .chip.active {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border-color: #8b5cf6;
+}
+
+/* Job Filter - Teal Theme */
+#jobFilter .chip {
+    background: #f0fdfa;
+    border-color: #99f6e4;
+    color: #0f766e;
+}
+#jobFilter .chip.active {
+    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+    color: white;
+    border-color: #14b8a6;
+}
+
+/* Experience Filter - Green/Orange Theme (already set inline) */
+#experienceFilter .chip, #expFilter .chip {
+    font-weight: 600;
+}
+#experienceFilter .chip[data-exp="experienced"], 
+#expFilter .chip[data-exp="experienced"] {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+#experienceFilter .chip[data-exp="not_experienced"], 
+#expFilter .chip[data-exp="not_experienced"] {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+/* Status Filter - Indigo Theme */
+#statusFilter .chip {
+    background: #eef2ff;
+    border-color: #c7d2fe;
+    color: #4338ca;
+}
+#statusFilter .chip.active {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    border-color: #6366f1;
+}
+
+/* Health Filter - Rose Theme */
+#healthFilter .chip {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+}
+#healthFilter .chip.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    color: white;
+    border-color: #f43f5e;
+}
+
+/* General Chip Styles */
+.chip {
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.chip:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.95);
+}
+/* Experience Filter Chips - Styled with icons */
+#experienceFilter .chip, #expFilter .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    padding: 6px 16px;
+}
+
+#experienceFilter .chip[data-exp="experienced"], 
+#expFilter .chip[data-exp="experienced"] {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #a7f3d0;
+}
+
+#experienceFilter .chip[data-exp="experienced"].active, 
+#expFilter .chip[data-exp="experienced"].active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+#experienceFilter .chip[data-exp="not_experienced"], 
+#expFilter .chip[data-exp="not_experienced"] {
+    background: #fed7aa;
+    color: #9a3412;
+    border-color: #fdba74;
+}
+
+#experienceFilter .chip[data-exp="not_experienced"].active, 
+#expFilter .chip[data-exp="not_experienced"].active {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
 </style>
 {% endblock %}
 
@@ -537,30 +658,19 @@
                 <div class="chip-group" id="religionFilter">
                     <div class="chip" data-religion="muslim">Muslim</div>
                     <div class="chip" data-religion="christian">Christian</div>
-                    <div class="chip" data-religion="other">Other</div>
                 </div>
             </div>
 
-            <div class="filter-group">
-                <label><i class="fas fa-chart-line"></i> Experience</label>
-                <div class="chip-group" id="experienceFilter">
-                    <div class="chip" data-exp="0-2">0-2 years</div>
-                    <div class="chip" data-exp="3-5">3-5 years</div>
-                    <div class="chip" data-exp="6-10">6-10 years</div>
-                    <div class="chip" data-exp="10+">10+ years</div>
-                </div>
-            </div>
+            <!-- Experience Filter - Simplified -->
+<div class="filter-group">
+    <label><i class="fas fa-chart-line"></i> Experience</label>
+    <div class="chip-group" id="experienceFilter">
+        <div class="chip" data-exp="experienced">Experienced</div>
+        <div class="chip" data-exp="not-experienced">Not Experienced</div>
+    </div>
+</div>
 
-            <div class="filter-group">
-                <label><i class="fas fa-calendar"></i> Age Range</label>
-                <div class="chip-group" id="ageFilter">
-                    <div class="chip" data-age="18-25">18-25 years</div>
-                    <div class="chip" data-age="26-35">26-35 years</div>
-                    <div class="chip" data-age="36-45">36-45 years</div>
-                    <div class="chip" data-age="46-55">46-55 years</div>
-                    <div class="chip" data-age="55+">55+ years</div>
-                </div>
-            </div>
+            
             
             <div class="filter-group">
                 <label><i class="fas fa-briefcase"></i> Job Category</label>
@@ -764,25 +874,24 @@
             });
         });
         
-        // Experience chips
+                // Experience chips (single-select)
         document.querySelectorAll('#experienceFilter .chip').forEach(chip => {
-            chip.addEventListener('click', (e) => {
-                e.preventDefault();
-                const value = chip.getAttribute('data-exp');
-                if (activeFilters.experience === value) { 
-                    chip.classList.remove('active'); 
-                    activeFilters.experience = null; 
-                } else { 
-                    document.querySelectorAll('#experienceFilter .chip').forEach(c => c.classList.remove('active')); 
-                    chip.classList.add('active'); 
-                    activeFilters.experience = value; 
+            chip.addEventListener('click', () => {
+                const value = chip.dataset.exp;
+                if (activeFilters.experience === value) {
+                    chip.classList.remove('active');
+                    activeFilters.experience = null;
+                } else {
+                    document.querySelectorAll('#experienceFilter .chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    activeFilters.experience = value;
                 }
-                updateActiveFiltersDisplay(); 
+                updateActiveFiltersDisplay();
                 filterCards();
             });
         });
-    }
-    
+            }
+            
     function filterCards() {
         const searchTerm = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
         const cards = document.querySelectorAll('.candidate-card');
@@ -841,12 +950,14 @@
             }
             
             // Experience filter
+            // Experience filter - Updated
             if (show && activeFilters.experience) {
-                if (activeFilters.experience === '0-2') show = exp >= 0 && exp <= 2;
-                else if (activeFilters.experience === '3-5') show = exp >= 3 && exp <= 5;
-                else if (activeFilters.experience === '6-10') show = exp >= 6 && exp <= 10;
-                else if (activeFilters.experience === '10+') show = exp >= 10;
-            }
+                if (activeFilters.experience === 'experienced') {
+                    show = exp >= 1;
+                } else if (activeFilters.experience === 'not-experienced') {
+                    show = exp === 0;
+                }
+}
             
             card.style.display = show ? 'flex' : 'none';
             if (show) visibleCount++;
