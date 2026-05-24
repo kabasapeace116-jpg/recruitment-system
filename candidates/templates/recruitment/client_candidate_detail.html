@@ -435,6 +435,25 @@
 .no-video-placeholder span {
     font-size: 0.8rem;
 }
+/* Download Video Button for Client */
+.btn-download-video-client {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-download-video-client:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
 </style>
 {% endblock %}
 
@@ -531,30 +550,35 @@
             </div>
             
             
-            <!-- Media & Documents Section -->
+           <!-- Media & Documents Section -->
 <div class="info-section">
     <h3 class="section-title"><i class="fas fa-file-alt"></i> Media & Documents</h3>
     
-    <!-- Video Section -->
+    <!-- Video Section - FIXED -->
     <div style="margin-bottom: 20px;">
         <div class="info-label" style="margin-bottom: 8px; font-weight: 600;">
-            <i class="fas fa-video"></i> Video Introduction
+            <i class="fas fa-video"></i> Video Interview
         </div>
+        
         {% if candidate.candidate_video %}
-            <video width="100%" controls style="max-width: 500px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            <div class="video-container">
+                <video width="100%" controls style="max-width: 500px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <a href="{{ candidate.candidate_video.url }}" download class="btn-download-video-client" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #3b82f6; color: white; border-radius: 8px; text-decoration: none;">
+                    <i class="fas fa-download"></i> Download Video
+                </a>
+            </div>
         {% else %}
-            <div class="no-video-placeholder">
-                <i class="fas fa-video-slash"></i>
-                <span>No video uploaded</span>
+            <div class="no-video-placeholder" style="display: flex; align-items: center; gap: 10px; padding: 20px; background: #f8fafc; border-radius: 12px; color: #64748b;">
+                <i class="fas fa-video-slash fa-2x"></i>
+                <span>No video uploaded for this candidate</span>
             </div>
         {% endif %}
     </div>
     
-    
-    <!-- Documents Grid - All Documents -->
+    <!-- Documents Grid - All Documents (FIXED) -->
     <div class="documents-grid">
         <!-- Profile Photo -->
         <div class="doc-card">
@@ -602,11 +626,12 @@
         
         
         
+        
     </div>
     
     {% if not candidate.profile_photo and not candidate.cv_pdf and not candidate.passport_copy and not candidate.visa_document and not candidate.medical_certificate and not candidate.training_certificates and not candidate.candidate_video %}
-    <div style="text-align: center; padding: 30px; color: #64748b;">
-        <i class="fas fa-cloud-upload-alt fa-2x"></i>
+    <div style="text-align: center; padding: 40px; color: #64748b;">
+        <i class="fas fa-cloud-upload-alt fa-3x"></i>
         <p style="margin-top: 10px;">No documents or media uploaded yet.</p>
     </div>
     {% endif %}

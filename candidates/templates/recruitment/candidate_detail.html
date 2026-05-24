@@ -415,6 +415,63 @@
     color: #64748b;
     margin-top: 5px;
 }
+/* Download Video Button */
+.btn-download-video {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-download-video:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+}
+/* Video and Document Edit Mode Styles */
+#videoEditContainer {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.doc-edit-input {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    margin-top: 8px;
+}
+
+.doc-edit-note {
+    display: block;
+    font-size: 0.6rem;
+    color: #64748b;
+    margin-top: 5px;
+}
+
+.current-file {
+    font-size: 0.65rem;
+    color: #64748b;
+    margin-top: 5px;
+    word-break: break-all;
+}
+
+.no-video-placeholder {
+    text-align: center;
+    padding: 40px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px dashed #cbd5e1;
+}
 </style>
 {% endblock %}
 
@@ -506,47 +563,56 @@
                     <div class="info-item"><span class="info-label">Health Status:</span><span class="info-value" data-field="health_status">{{ candidate.get_health_status_display }}</span></div>
                 </div>
             </div>
-            
-          <!-- Media & Documents Section -->
+
+
+         <!-- Media & Documents Section -->
 <div class="info-section">
     <h3 class="section-title"><i class="fas fa-file-alt"></i> Media & Documents</h3>
     
-    <!-- Video Interview - Editable in edit mode -->
-    <div class="video-section" data-doc-field="candidate_video">
+    <!-- Video Section -->
+    <div id="videoContainer">
         <div class="info-label" style="margin-bottom: 8px; font-weight: 600;">
-            <i class="fas fa-video"></i> Video Introduction
+            <i class="fas fa-video"></i> Video Interview
         </div>
-        <div class="video-container" id="videoContainer">
+        <a href="{{ candidate.candidate_video.url }}" download class="btn-download-video-client" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #3b82f6; color: white; border-radius: 8px; text-decoration: none;">
+                    <i class="fas fa-download"></i> Download Video
+                </a>
+        <div class="video-wrapper">
             {% if candidate.candidate_video %}
                 <video width="100%" controls style="max-width: 500px; border-radius: 12px; border: 1px solid #e2e8f0;">
                     <source src="{{ candidate.candidate_video.url }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                <div class="current-file-info">
-                    <span class="file-name">Current: {{ candidate.candidate_video.name|slice:"20:" }}</span>
-                </div>
             {% else %}
-                <div class="no-video-message" style="padding: 20px; background: #f8fafc; border-radius: 12px; text-align: center; color: #64748b;">
-                    <i class="fas fa-video fa-2x"></i>
-                    <p style="margin-top: 8px;">No video uploaded</p>
+                <div class="no-video-placeholder" style="text-align: center; padding: 40px; background: #f8fafc; border-radius: 12px;">
+                    <i class="fas fa-video-slash fa-2x" style="color: #cbd5e1;"></i>
+                    <p style="margin-top: 10px; color: #64748b;">No video uploaded</p>
                 </div>
             {% endif %}
         </div>
-        <div class="video-edit-input" style="display: none;">
-            <input type="file" class="doc-edit-input" data-doc-field="candidate_video" accept="video/mp4,video/mov,video/avi,video/webm">
-            <small class="doc-edit-note">Upload MP4, MOV, AVI, or WebM (Max 50MB)</small>
+    </div>
+    
+    <!-- Video Edit Input (hidden by default) -->
+    <div id="videoEditContainer" style="display: none;">
+        <div class="info-label" style="margin-bottom: 8px; font-weight: 600;">
+            <i class="fas fa-upload"></i> Upload Video
+        </div>
+        <input type="file" id="videoUploadInput" class="doc-edit-input" data-doc-field="candidate_video" accept="video/mp4,video/mov,video/avi,video/webm">
+        <small class="doc-edit-note">Upload a new video (MP4, MOV, WebM) - Max 50MB</small>
+        <div class="current-file" style="font-size: 0.7rem; color: #64748b; margin-top: 5px;">
+            {% if candidate.candidate_video %}Current: Video file is available{% else %}No video currently uploaded{% endif %}
         </div>
     </div>
     
-    <!-- Documents Grid -->
+    <!-- Documents Grid - All Documents -->
     <div class="documents-grid">
         <!-- Profile Photo -->
         <div class="doc-card" data-doc-field="profile_photo">
             <div class="doc-icon"><i class="fas fa-camera"></i></div>
             <div class="doc-title">Profile Photo</div>
-            <div class="doc-value" data-doc="profile_photo">
+            <div class="doc-value">
                 {% if candidate.profile_photo %}
-                    <a href="{{ candidate.profile_photo.url }}" target="_blank" class="doc-link">View Current</a>
+                    <a href="{{ candidate.profile_photo.url }}" target="_blank" class="doc-link">View Photo</a>
                 {% else %}
                     <span class="doc-empty">Not uploaded</span>
                 {% endif %}
@@ -557,9 +623,9 @@
         <div class="doc-card" data-doc-field="cv_pdf">
             <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
             <div class="doc-title">CV / Resume</div>
-            <div class="doc-value" data-doc="cv_pdf">
+            <div class="doc-value">
                 {% if candidate.cv_pdf %}
-                    <a href="{{ candidate.cv_pdf.url }}" target="_blank" class="doc-link">View Current</a>
+                    <a href="{{ candidate.cv_pdf.url }}" target="_blank" class="doc-link">View Document</a>
                 {% else %}
                     <span class="doc-empty">Not uploaded</span>
                 {% endif %}
@@ -570,9 +636,9 @@
         <div class="doc-card" data-doc-field="passport_copy">
             <div class="doc-icon"><i class="fas fa-passport"></i></div>
             <div class="doc-title">Passport Copy</div>
-            <div class="doc-value" data-doc="passport_copy">
+            <div class="doc-value">
                 {% if candidate.passport_copy %}
-                    <a href="{{ candidate.passport_copy.url }}" target="_blank" class="doc-link">View Current</a>
+                    <a href="{{ candidate.passport_copy.url }}" target="_blank" class="doc-link">View Document</a>
                 {% else %}
                     <span class="doc-empty">Not uploaded</span>
                 {% endif %}
@@ -583,9 +649,9 @@
         <div class="doc-card" data-doc-field="visa_document">
             <div class="doc-icon"><i class="fas fa-stamp"></i></div>
             <div class="doc-title">Visa Document</div>
-            <div class="doc-value" data-doc="visa_document">
+            <div class="doc-value">
                 {% if candidate.visa_document %}
-                    <a href="{{ candidate.visa_document.url }}" target="_blank" class="doc-link">View Current</a>
+                    <a href="{{ candidate.visa_document.url }}" target="_blank" class="doc-link">View Document</a>
                 {% else %}
                     <span class="doc-empty">Not uploaded</span>
                 {% endif %}
@@ -594,9 +660,9 @@
         
         
         
+        
     </div>
 </div>
-            
             
             {% if candidate.notes %}
             <div class="info-section">
@@ -705,15 +771,15 @@
         el.innerHTML = inputHtml;
     });
     
-    // Handle Video Section
+    // Handle Video Section - Hide video player, show upload input
     const videoContainer = document.getElementById('videoContainer');
-    const videoEditInput = document.querySelector('.video-edit-input');
-    if (videoContainer && videoEditInput) {
+    const videoEditContainer = document.getElementById('videoEditContainer');
+    if (videoContainer && videoEditContainer) {
         videoContainer.style.display = 'none';
-        videoEditInput.style.display = 'block';
+        videoEditContainer.style.display = 'block';
     }
     
-    // Handle Documents (files)
+    // Handle Documents (file uploads)
     document.querySelectorAll('.doc-card[data-doc-field]').forEach(card => {
         const docField = card.dataset.docField;
         const valueDiv = card.querySelector('.doc-value');
@@ -724,23 +790,29 @@
         
         // Determine accepted file types
         let acceptTypes = '.pdf,.jpg,.jpeg,.png';
-        if (docField === 'candidate_video') {
-            acceptTypes = 'video/mp4,video/mov,video/avi,video/webm';
-        } else if (docField === 'profile_photo') {
+        let buttonText = 'Upload Document';
+        
+        if (docField === 'profile_photo') {
             acceptTypes = '.jpg,.jpeg,.png';
+            buttonText = 'Upload Photo';
+        } else if (docField === 'candidate_video') {
+            // Skip video here since we handled separately
+            return;
         }
         
         valueDiv.innerHTML = `
-            <input type="file" class="doc-edit-input" data-doc-field="${docField}" accept="${acceptTypes}">
-            <small class="doc-edit-note">Leave empty to keep current file</small>
+            <input type="file" class="doc-edit-input" data-doc-field="${docField}" accept="${acceptTypes}" style="width: 100%; padding: 6px; margin-bottom: 8px;">
+            <small class="doc-edit-note" style="display: block; font-size: 0.6rem; color: #64748b;">Leave empty to keep current</small>
             <div class="current-file" style="font-size: 0.65rem; color: #64748b; margin-top: 5px;">${currentHtml}</div>
         `;
     });
     
     document.querySelector('.profile-container').classList.add('edit-mode');
 }
-    
- function saveChanges() {
+ 
+
+
+function saveChanges() {
     const updatedData = {};
     const formData = new FormData();
     
@@ -760,7 +832,13 @@
         updatedData[field] = value;
     });
     
-    // Collect file uploads (including video)
+    // Collect video file upload
+    const videoInput = document.getElementById('videoUploadInput');
+    if (videoInput && videoInput.files && videoInput.files.length > 0) {
+        formData.append('candidate_video', videoInput.files[0]);
+    }
+    
+    // Collect other document uploads
     document.querySelectorAll('.doc-edit-input').forEach(input => {
         const field = input.dataset.docField;
         if (input.files && input.files.length > 0) {
@@ -798,6 +876,7 @@
         saveBtn.disabled = false;
     });
 }
+
     
     function cancelEdit() {
         location.reload();
