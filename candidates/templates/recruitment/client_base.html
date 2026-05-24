@@ -380,12 +380,14 @@
                 <a href="{% url 'client_portal' %}" class="nav-link {% if request.resolver_match.url_name == 'client_portal' %}active{% endif %}">
                     <i class="fas fa-search"></i> Find Candidates
                 </a>
+
+                 <a href="{% url 'client_reservations' %}" class="nav-link nav-link-reservations {% if request.resolver_match.url_name == 'client_reservations' %}active{% endif %}">
+                    <i class="fas fa-calendar-check"></i> My Bookings
+                </a>
                 <a href="{% url 'client_selections' %}" class="nav-link nav-link-selections {% if request.resolver_match.url_name == 'client_selections' %}active{% endif %}">
                     <i class="fas fa-heart"></i> My Selections
                 </a>
-                <a href="{% url 'client_reservations' %}" class="nav-link nav-link-reservations {% if request.resolver_match.url_name == 'client_reservations' %}active{% endif %}">
-                    <i class="fas fa-calendar-check"></i> My Bookings
-                </a>
+               
             </div>
             <div class="user-menu">
                 <div class="user-avatar">{{ user.username|first|upper }}</div>

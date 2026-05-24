@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.utils import timezone
 from datetime import date
+from cloudinary.models import CloudinaryField
 
 def profile_photo_path(instance, filename):
     return f'candidates/{instance.passport_number}/photo_{filename}'
@@ -106,11 +107,12 @@ class Candidate(models.Model):
         upload_to=profile_photo_path,
         null=True, blank=True
     )
-    candidate_video = models.FileField(
-        upload_to=document_path,
-        validators=[FileExtensionValidator(['mp4', 'mov', 'avi', 'webm'])],
-        null=True, blank=True,
-        help_text="Upload a short video introduction of the candidate (max 50MB)"
+    candidate_video = CloudinaryField(
+        'video',
+        resource_type='video',
+        null=True, 
+        blank=True,
+        help_text="Upload a short video introduction of the candidate (max 100MB)"
     )
     passport_copy = models.FileField(
         upload_to=document_path,
